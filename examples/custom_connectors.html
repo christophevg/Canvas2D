@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <style>
+      #mydiagram {
+      border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body onload="drawIt();">
+    <canvas id="mydiagram" width="700" height="500"></canvas>
+    <textarea id="mydiagramConsole" style="height:250" cols="25"></textarea>
+    
+    <script src="../build/Canvas2D.js"></script>
+    
+    <script>
+      var custom_connector = 
+      {n:{lines:[[ -5, -10],[ +5,-10],[  0,  0]],end:[ 0,-10]},
+       e:{lines:[[+10,  +5],[+10, -5],[  0,  0]],end:[10,  0]},
+       s:{lines:[[ +5, +10],[ -5,+10],[  0,  0]],end:[ 0, 10]},
+       w:{lines:[[-10,  -5],[-10, +5],[  0,  0]],end:[-10, 0]}};
+
+      function drawIt() {
+        var diagram = new Canvas2D.Canvas("mydiagram");
+        with( diagram ) {
+          freeze();
+          var rect1 = at (225, 105)
+              .put(new Canvas2D.Rectangle({width:75,height:75,color:"green"} ));
+          var rect2 = at(100, 250)
+              .put(new Canvas2D.Rectangle({width:50,height:50,color:"red"  } ));
+          var rect3 = at(310, 250)
+              .put(new Canvas2D.Rectangle({width:50,height:50,color:"red"  } ));
+
+          var conn1 = put(new Canvas2D.Connector( rect1, rect2, 
+                                                  {style: "horizontal",
+                                                   end: custom_connector } ));
+          var conn2 = put(new Canvas2D.Connector( rect1, rect3, 
+                                                  {style: "vertical",
+                                                   lineStyle: "dashed",
+                                                   begin: custom_connector } ));
+          thaw();
+        }
+      }
+    </script>
+
+  </body>
+</html>

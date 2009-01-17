@@ -1,0 +1,34 @@
+- break connector tree lines not nicely half way, but with an initial fixed part
+- extend support for events
+- split source into seperate (class) files + clean up code in general
+- introduce global logging framework with fallbacks (print, console, alert)
+    - http://www.depressedpress.com/Content/Development/JavaScript/Extensions/DP%5FDeBug/
+- group selection
+  - move
+- getmouseXY should take in account possible viewports ?! (for UMLWebEditor)
+  - maybe more active with an external adjuster function
+- canvas tag parameter passing (IE?)
+- display shape layout settings (see also shapes DSL)
+- toolbar: appear in "edit modus"
+  - canvas navigation tools
+    - zooming
+    - panning
+    - mini canvas viewer
+  - shape layout tools
+    - align: top, left, bottom, right, center-h, center-v
+    - size: same height, same width, same both
+  ---> this should be handled outside of the control
+  ---> API level support should be provided, control should be
+       outside, e.g. in umlcanvas, mediawiki extension or WebEditor
+       - multi select
+       - align methods
+- do less automagically, more API with external control (e.g. source detection)
+- clean up licensing information -> link to website with all info
+- start using JSDoc-toolkit
+- use Maven to manage project
+- remove lib/* and fetch dependencies dynamically (see Maven)
+- add some shapes, to make nicer demo (see visio ;-))
+- shapes DSL -> adl from umlcanvas should be adopted at this level
+- mediawiki extension
+- look into using other existing toolkits to build this on (or replace with)
+  - http://code.google.com/p/cakejs/

@@ -1,0 +1,21 @@
+Canvas2D
+
+---
+
+Canvas2D is a lightweight wrapper API around the HTML5 canvas
+element. It offers a shape-oriented interface.
+
+...
+
+Note: I'm trying to get things as polished as possible, but my current
+focus is on a project that uses Canvas2D. When that reaches a stable
+state, I'll add documentation and examples here also :-)
+
+In a nutshell:
+$ make
+...
+$ ls build
+Canvas2D.js
+
+Visit examples/ with your browser to see things in action and
+while waiting for me to write decent documentation, study the code.
