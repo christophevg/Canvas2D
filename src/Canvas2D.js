@@ -10,6 +10,7 @@ if( typeof Prototype == "undefined" ) {
 var Canvas2D = {};
 
 Canvas2D.Canvas = Class.create( {
+    dynamic    : false,
     wait       : false,
     canvas     : null,
     htmlcanvas : null,
@@ -25,6 +26,7 @@ Canvas2D.Canvas = Class.create( {
     fillStyle   : "black",
     
     initialize: function(id) {
+	this.dynamic = false;
 	this.wait = false;
 	this.shapes = new Array();
 
@@ -54,6 +56,14 @@ Canvas2D.Canvas = Class.create( {
 	CanvasTextFunctions.enable(this.canvas);
 
 	this.eventHandlers = new Hash();
+    },
+
+    makeDynamic: function() {
+	this.dynamic = true;
+    },
+
+    makeStatic: function() {
+	this.dynamic = false;
     },
 
     on: function( event, handler ) {
@@ -116,6 +126,7 @@ Canvas2D.Canvas = Class.create( {
     },
 
     handleMouseDown: function(event) {
+	if( !this.dynamic ) { return; }
 	this.mousepressed = true;
 	var pos = this.getXY(event);
 	//this.log( "mousedown " + pos.x + ", " + pos.y );
@@ -126,6 +137,7 @@ Canvas2D.Canvas = Class.create( {
     },
 
     handleMouseUp: function(event) {
+	if( !this.dynamic ) { return; }
 	this.mousepressed = false;
 	if( this.currentShape ) {
 	    var pos = this.currentShape.getPosition();
@@ -137,12 +149,14 @@ Canvas2D.Canvas = Class.create( {
     },
 
     handleMouseMove: function(event) {
+	if( !this.dynamic ) { return; }
 	if( this.mousepressed ) {
 	    this.handleMouseDrag(event);
 	}
     },
 
     handleMouseDrag: function(event) {
+	if( !this.dynamic ) { return; }
 	var pos = this.getXY(event);
 	//this.log( "mousedrag " + pos.x + ", " + pos.y );
 	if( this.currentShape ) {
