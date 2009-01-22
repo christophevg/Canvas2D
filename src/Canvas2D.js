@@ -39,11 +39,18 @@ Canvas2D.Canvas = Class.create( {
 
 	// setup HTML5 canvas
 	this.htmlcanvas = document.getElementById(id);
+	this.wireCanvas();
+
+	// look for a console for this canvas
+	this.console = document.getElementById( id+"Console" );
+
+	this.eventHandlers = new Hash();
+    },
+
+    wireCanvas: function() {
 	if( this.htmlcanvas ) {
 	    this.canvas = this.htmlcanvas.getContext('2d');
 	}
-	// look for a console for this canvas
-	this.console = document.getElementById( id+"Console" );
 
 	// attach eventhandlers for mouse events
 	Event.observe(this.htmlcanvas, 'mousedown', 
@@ -54,8 +61,6 @@ Canvas2D.Canvas = Class.create( {
 		      this.handleMouseMove.bindAsEventListener(this));
 	// add textfunctions
 	CanvasTextFunctions.enable(this.canvas);
-
-	this.eventHandlers = new Hash();
     },
 
     makeDynamic: function() {
@@ -64,6 +69,38 @@ Canvas2D.Canvas = Class.create( {
 
     makeStatic: function() {
 	this.dynamic = false;
+    },
+
+    // TODO: this is ugly, try to find a better solution
+    makeTabbed: function() {
+	var source = this.htmlcanvas;
+	var tabber = document.createElement("div");
+	tabber.className="tabber";
+	tabber.style.width = ( parseInt(source.width) + 17 );
+	var tab1 = document.createElement("div");
+	tab1.className = "tabbertab";
+	tabber.appendChild(tab1);
+	var h1 = document.createElement("h2");
+	var t1 = document.createTextNode("Diagram");
+	h1.appendChild(t1);
+	tab1.appendChild(h1);
+	var newCanvas = document.createElement("canvas");
+	newCanvas.id = source.id;
+	newCanvas.className = source.className;
+	newCanvas.width = source.width;
+	newCanvas.height = source.height;
+	this.canvas = this.htmlcanvas.getContext("2d");
+	tab1.appendChild(newCanvas);
+	source.parentNode.replaceChild(tabber, source);
+	// apply excanvas to new element
+	try {
+	    this.htmlcanvas = G_vmlCanvasManager.initElement(newCanvas);
+	} catch(err) {
+	    this.htmlcanvas = newCanvas;	   
+	}
+	tabberAutomatic(); // activate Tabber
+	this.wireCanvas(); // rewire Canvas2D events,...
+	this.render();     // force rerender
     },
 
     on: function( event, handler ) {

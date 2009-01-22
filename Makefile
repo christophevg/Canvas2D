@@ -1,8 +1,10 @@
 PROTOTYPE-DIST=prototype-1.6.0.3.js
 EXCANVAS-DIST=excanvas_0002.zip
+TABBER-DIST=tabber.zip
 
 APP=Canvas2D
-SRCS=src/${APP}.js src/Shape.js src/Rectangle.js src/Connector.js
+SRCS=src/${APP}.js src/Shape.js src/Rectangle.js src/Connector.js lib/tabber/tabber.js
+CSSSRCS=lib/tabber/example.css
 VERSION=0.0.1
 LIBS=lib/${PROTOTYPE-DIST} \
      lib/excanvas/excanvas.js lib/canvastext.js \
@@ -17,6 +19,7 @@ PROTOTYPE-URL=http://www.prototypejs.org/assets/2008/9/29/${PROTOTYPE-DIST}
 EXCANVAS-URL=http://surfnet.dl.sourceforge.net/sourceforge/excanvas/
 CANVASTEXT-URL=http://www.federated.com/~jim/canvastext/canvastext.js
 ADL-URL=http://git.thesoftwarefactory.be/pub/adl.git
+TABBER-URL=http://www.barelyfitz.com/projects/tabber/${TABBER-DIST}
 
 DIST=${APP}-${VERSION}.tar.gz
 DISTSRCS=build/${APP}.js examples/*.html LICENSE
@@ -28,7 +31,7 @@ PUB=moonbase:~/dist/
 
 all: build ${RUNLIBS}
 
-build: build/${APP}.js
+build: build/${APP}.js build/${APP}.css
 
 dist: dist/${DIST} dist/${DIST-SRC}
 
@@ -53,10 +56,23 @@ lib/adl/build/adl.js:
 	@${GIT-FETCH} ${ADL-URL} lib/adl
 	@(cd lib/adl; make)
 
+lib/tabber/%: lib/tabber
+
+lib/tabber:
+	@echo "*** importing Tabber"
+	@mkdir -p lib
+	@(cd lib; ${FETCH} ${TABBER-URL})
+	@(cd lib; mkdir tabber; cd tabber; ${UNZIP} ../${TABBER-DIST})
+
 build/${APP}.js: ${SRCS} ${LIBS}
-	@echo "*** building Canvas2D"
+	@echo "*** building $@"
 	@mkdir -p build
 	@cat ${LIBS} ${SRCS} > $@
+
+build/${APP}.css: ${CSSSRCS}
+	@echo "*** building $@"
+	@mkdir -p build
+	@cat ${CSSSRCS} > $@
 
 publish: dist/${DIST} dist/${DIST-SRC}
 	@echo "*** publishing distributions to ${PUB}"
