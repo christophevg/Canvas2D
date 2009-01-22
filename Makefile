@@ -1,25 +1,25 @@
+PROTOTYPE-DIST=prototype-1.6.0.3.js
+EXCANVAS-DIST=excanvas_0002.zip
+
 APP=Canvas2D
-SRCS=src/${APP}.js
+SRCS=src/${APP}.js src/Shape.js src/Rectangle.js src/Connector.js
 VERSION=0.0.1
-LIBS=lib/prototype.js lib/excanvas.js lib/canvastext.js lib/adl.js
+LIBS=lib/${PROTOTYPE-DIST} \
+     lib/excanvas/excanvas.js lib/canvastext.js \
+     lib/adl/build/adl.js
 
 FETCH=wget -q
 GIT-FETCH=git clone -q
 UNZIP=unzip -q
 UNTAR=tar -zxf
 
-PROTOTYPE-DIST=prototype-1.6.0.3.js
 PROTOTYPE-URL=http://www.prototypejs.org/assets/2008/9/29/${PROTOTYPE-DIST}
-
 EXCANVAS-URL=http://surfnet.dl.sourceforge.net/sourceforge/excanvas/
-EXCANVAS-DIST=excanvas_0002.zip
-
 CANVASTEXT-URL=http://www.federated.com/~jim/canvastext/canvastext.js
-
 ADL-URL=http://git.thesoftwarefactory.be/pub/adl.git
 
 DIST=${APP}-${VERSION}.tar.gz
-DISTSRCS=build/${APP}.js examples LICENSE
+DISTSRCS=build/${APP}.js examples/*.html LICENSE
 
 DIST-SRC=${APP}-${VERSION}-src.tar.gz
 DIST-SRCSRCS=LICENSE README examples Makefile doc src
@@ -32,38 +32,25 @@ build: build/${APP}.js
 
 dist: dist/${DIST} dist/${DIST-SRC}
 
-lib/prototype.js: lib/${PROTOTYPE-DIST}
-	@echo "*** importing $@"
-	@cp $< $@
-
 lib/${PROTOTYPE-DIST}:
-	@echo "*** fetching prototype dist"
+	@echo "*** importing $@"
 	@mkdir -p lib
 	@(cd lib; ${FETCH} ${PROTOTYPE-URL})
 
-lib/excanvas.js: lib/excanvas
-	@echo "*** importing excanvas.js"
-	@cp lib/excanvas/excanvas.js $@
-
-lib/excanvas: lib/${EXCANVAS-DIST}
-	@echo "*** unpacing excanvas dist"
+lib/excanvas/excanvas.js: 
+	@echo "*** importing $@"
+	@mkdir -p lib
+	@(cd lib; ${FETCH} ${EXCANVAS-URL}/${EXCANVAS-DIST})
 	@(cd lib; mkdir excanvas; cd excanvas; ${UNZIP} ../${EXCANVAS-DIST})
 
-lib/${EXCANVAS-DIST}:
-	@echo "*** fetching excanvas dist"
-	@(cd lib; ${FETCH} ${EXCANVAS-URL}/${EXCANVAS-DIST})
-
 lib/canvastext.js:
-	@echo "*** fetching canvastext.js"
+	@echo "*** importing $@"
+	@mkdir -p lib
 	@(cd lib; ${FETCH} ${CANVASTEXT-URL} )
 
-lib/adl.js: lib/adl
+lib/adl/build/adl.js:
 	@echo "*** importing $@"
-	@cp lib/adl/build/adl.js $@
-
-lib/adl:
-	@echo "*** cloning adl repository"
-	@${GIT-FETCH} ${ADL-URL} $@
+	@${GIT-FETCH} ${ADL-URL} lib/adl
 	@(cd lib/adl; make)
 
 build/${APP}.js: ${SRCS} ${LIBS}
@@ -77,8 +64,10 @@ publish: dist/${DIST} dist/${DIST-SRC}
 
 dist/${DIST}: ${DISTSRCS}
 	@echo "*** packaging ${APP}"
-	@mkdir -p dist/js/${APP}
-	@cp -r ${DISTSRCS} dist/js/${APP}
+	@mkdir -p dist/js/${APP}/{examples,build}
+	@for f in ${DISTSRCS}; do \
+	    cat $$f | sed -e 's/\.\.\/build/../' > dist/js/${APP}/$$f; done
+	@mv dist/js/${APP}/build/* dist/js/${APP}/; rm -rf dist/js/${APP}/build
 	@(cd dist/js; tar -zcf ../${DIST} ${APP})
 
 dist/${DIST-SRC}: 
