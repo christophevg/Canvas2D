@@ -1,17 +1,37 @@
 <html>
   <head>
     <style>
-      #mydiagram {
+      canvas {
         border: 2px solid #ccc;
       }
+      .box {
+        border: 2px solid #000;
+        float:left;
+        margin:10px; 
+        height: 375px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
     </style>
+    <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
     <script src="../build/Canvas2D.js"></script>
   </head>
   <body onload="drawIt();">
-    <canvas id="mydiagram" width="300" height="250"></canvas>
+    <h1>Diagram Styles Example</h1>
+    <div class="box">
+      <h2>Static</h2>
+      <canvas id="myStaticDiagram"  width="300" height="250"></canvas>
+    </div>
+    <div class="box">
+      <h2>Dynamic</h2>
+      <canvas id="myDynamicDiagram" width="300" height="250"></canvas>
+    </div>
+    <div class="box">
+      <h2>Dynamic + Tabs</h2>
+      <canvas id="myTabbedDiagram"  width="300" height="250"></canvas>
+    </div>
     <script>
-      function drawIt() {
-        var diagram = new Canvas2D.Canvas("mydiagram");
+      function drawRect(diagram, dyna, tabs) {
         with( diagram ) {
           freeze();
           var rect1 = at(75, 55)
@@ -34,7 +54,16 @@
           var conn4 = put(new Canvas2D.Connector( rect1, rect5, 
                                                   {style: "vertical"} ));
           thaw();
+
+          if( dyna ) { makeDynamic(); }
+          if( tabs ) { makeTabbed( [ "console", "about" ] ); }
         }
+      }
+
+      function drawIt() {
+        drawRect(new Canvas2D.Canvas("myStaticDiagram"),  false, false );
+        drawRect(new Canvas2D.Canvas("myDynamicDiagram"), true,  false );
+        drawRect(new Canvas2D.Canvas("myTabbedDiagram"),  true,  true  );
       }
     </script>
   </body>

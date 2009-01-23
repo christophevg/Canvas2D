@@ -1,6 +1,4 @@
-- break connector tree lines not nicely half way, but with an initial fixed part
 - extend support for events
-- split source into seperate (class) files + clean up code in general
 - introduce global logging framework with fallbacks (print, console, alert)
     - http://www.depressedpress.com/Content/Development/JavaScript/Extensions/DP%5FDeBug/
 - group selection

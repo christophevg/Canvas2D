@@ -71,15 +71,40 @@ Canvas2D.Canvas = Class.create( {
 	this.dynamic = false;
     },
 
+    getAboutTab: function(height) {
+	var tab = document.createElement("div");
+	tab.className = "tabbertab";
+	tab.style.height = height + 4;
+	var head = document.createElement("h2");
+	var txt = document.createTextNode("About");
+	head.appendChild(txt);
+	tab.appendChild(head);
+	var about = document.createElement("div");
+	about.style.border = "2px solid #ccc";
+	about.style.height = height;
+	about.style.overflow = "auto";
+	about.innerHTML = '<span class="about"><b>Canvas2D</b><br>&copy 2009, '+
+	    '<a href="http://christophe.vg" target="_blank">Christophe VG</a>'+ 
+	    ' & <a href="http://thesoftwarefactory.be" ' +
+	    'target="_blank">The Software Factory</a><br>' + 
+	    'Visit <a href="http://thesoftwarefactory.be/wiki/Canvas2D" ' +
+	    'target="_blank">http://thesoftwarefactory.be/wiki/Canvas2D</a> ' +
+	    'for more info. Licensed under the ' +
+	    '<a href="http://thesoftwarefactory.be/wiki/BSD_License" ' + 
+	    'target="_blank">BSD License</a>.</span>';
+	tab.appendChild(about);
+	return tab;
+    },
+
     // TODO: this is ugly, try to find a better solution
     makeTabbed: function() {
 	var source = this.htmlcanvas;
 	var tabber = document.createElement("div");
 	tabber.className="tabber";
 	tabber.style.width = ( parseInt(source.width) + 17 );
+	tabber.style.height = ( parseInt(source.height) + 37 );
 	var tab1 = document.createElement("div");
 	tab1.className = "tabbertab";
-	tabber.appendChild(tab1);
 	var h1 = document.createElement("h2");
 	var t1 = document.createTextNode("Diagram");
 	h1.appendChild(t1);
@@ -91,6 +116,8 @@ Canvas2D.Canvas = Class.create( {
 	newCanvas.height = source.height;
 	this.canvas = this.htmlcanvas.getContext("2d");
 	tab1.appendChild(newCanvas);
+	tabber.appendChild(tab1);
+	tabber.appendChild(this.getAboutTab(source.height));
 	source.parentNode.replaceChild(tabber, source);
 	// apply excanvas to new element
 	try {
@@ -166,7 +193,6 @@ Canvas2D.Canvas = Class.create( {
 	if( !this.dynamic ) { return; }
 	this.mousepressed = true;
 	var pos = this.getXY(event);
-	//this.log( "mousedown " + pos.x + ", " + pos.y );
 	this.currentShape = this.getShapeAt( pos.x, pos.y );
 	this.fireEvent( "selectShape", this.currentShape.getProperties() );
 	this.currentPos = pos;
@@ -195,7 +221,6 @@ Canvas2D.Canvas = Class.create( {
     handleMouseDrag: function(event) {
 	if( !this.dynamic ) { return; }
 	var pos = this.getXY(event);
-	//this.log( "mousedrag " + pos.x + ", " + pos.y );
 	if( this.currentShape ) {
 	    var dx = pos.x - this.currentPos.x;
 	    var dy = pos.y - this.currentPos.y;
@@ -287,7 +312,6 @@ Canvas2D.Canvas = Class.create( {
     },
 
     _plotPixel: function( x, y, c ) {
-	//this.log( "dot( " + x + ", " + y + " )" );
 	with( this.canvas ) {
 	    var oldStyle = strokeStyle;
 	    beginPath();
@@ -310,8 +334,6 @@ Canvas2D.Canvas = Class.create( {
 
 	var c = this.strokeStyle;
 	var style = this.lineStyle;
-
-	//this.log( "line( " + x1 + ", "+ y1 + ", "+ x2 + ", "+ y2 +")" );
 
 	var steep = Math.abs(y2 - y1) > Math.abs(x2 - x1);
 	if (steep) {
@@ -360,32 +382,14 @@ Canvas2D.Canvas = Class.create( {
 	this.fireEvent( "selectShape", {} );
     },
 
-    render: function() {
-	if(  this.wait   ) { return; }
-	if( !this.canvas ) { return; }
+    addWaterMark: function() {
+	this.strokeStyle = "rgba(0,0,0,0.50)";
+	this.canvas.rotate(3.1415/2);
+	this.drawText( "Sans", 6, 3, (this.htmlcanvas.width * -1) + 7, 
+		       "Canvas2D / Christophe VG" ); 
+    },
 
-	//this.log( "render" );
-	this.canvas.clearRect( 0, 0, 
-			       this.htmlcanvas.width, 
-			       this.htmlcanvas.height );
-	// draw all shapes
-	this.shapes.each(function(shape) { shape.render(); } );
-	
-	// mark surrounding box of currently selected shape
-	if( this.currentShape ) {
-	    var box = this.currentShape.getBox();
-	    this.canvas.fillStyle = "rgba( 200, 200, 255, 1 )";
-	    var corners = [[ box.left, box.top    ], [ box.right, box.top    ],
-		           [ box.left, box.bottom ], [ box.right, box.bottom ]];
-	    var canvas = this.canvas;
-	    corners.each( function(corner) {
-		canvas.beginPath();
-		canvas.arc( corner[0],  corner[1], 5, 0, Math.PI*2, true );
-		canvas.fill();	
-	    } );
-	}
-	
-	// selection overlay
+    addSelectionOverlay: function() {
 	if( this.showSelection ) { 
 	    var pos = this.selectionPos;
 	    var dx = pos.x - this.currentPos.x;
@@ -398,6 +402,36 @@ Canvas2D.Canvas = Class.create( {
 				  pos.y : this.currentPos.y,
 				  Math.abs(dx), Math.abs(dy) );
 	}
+    },
+
+    addSelectionMarkers: function() {
+	if( this.currentShape ) {
+	    var box = this.currentShape.getBox();
+	    this.canvas.fillStyle = "rgba( 200, 200, 255, 1 )";
+	    var corners = [[ box.left, box.top    ], [ box.right, box.top    ],
+		           [ box.left, box.bottom ], [ box.right, box.bottom ]];
+	    var canvas = this.canvas;
+	    corners.each( function(corner) {
+		canvas.beginPath();
+		canvas.arc( corner[0],  corner[1], 5, 0, Math.PI*2, true );
+		canvas.fill();	
+	    } );
+	}
+    },
+
+    render: function() {
+	if(  this.wait   ) { return; }
+	if( !this.canvas ) { return; }
+
+	this.canvas.clearRect( 0, 0, 
+			       this.htmlcanvas.width, 
+			       this.htmlcanvas.height );
+	
+	this.shapes.each(function(shape) { shape.render(); } );
+	this.addSelectionMarkers();
+	this.addSelectionOverlay();
+	this.addWaterMark();
+
 	this.dirty = false;
     }
 } );

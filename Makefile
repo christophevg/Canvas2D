@@ -4,7 +4,7 @@ TABBER-DIST=tabber.zip
 
 APP=Canvas2D
 SRCS=src/${APP}.js src/Shape.js src/Rectangle.js src/Connector.js lib/tabber/tabber.js
-CSSSRCS=lib/tabber/example.css
+CSSSRCS=lib/tabber/example.css src/${APP}.css
 VERSION=0.0.1
 LIBS=lib/${PROTOTYPE-DIST} \
      lib/excanvas/excanvas.js lib/canvastext.js \
