@@ -384,7 +384,7 @@ Canvas2D.Canvas = Class.create( {
 
     addWaterMark: function() {
 	this.strokeStyle = "rgba(0,0,0,0.50)";
-	this.canvas.rotate(3.1415/2);
+	this.canvas.rotate(Math.PI/2);
 	this.drawText( "Sans", 6, 3, (this.htmlcanvas.width * -1) + 7, 
 		       "Canvas2D / Christophe VG" ); 
     },
