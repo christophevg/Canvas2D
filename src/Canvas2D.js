@@ -311,6 +311,10 @@ Canvas2D.Canvas = Class.create( {
 	this.canvas.drawText(font, size, left, top, text);
     },
 
+    rotate: function(ang) {
+	this.canvas.rotate(ang);
+    },
+
     _plotPixel: function( x, y, c ) {
 	with( this.canvas ) {
 	    var oldStyle = strokeStyle;
@@ -384,7 +388,7 @@ Canvas2D.Canvas = Class.create( {
 
     addWaterMark: function() {
 	this.strokeStyle = "rgba(0,0,0,0.50)";
-	this.canvas.rotate(Math.PI/2);
+	this.rotate(Math.PI/2);
 	this.drawText( "Sans", 6, 3, (this.htmlcanvas.width * -1) + 7, 
 		       "Canvas2D / Christophe VG" ); 
     },
