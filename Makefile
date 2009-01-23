@@ -22,7 +22,7 @@ ADL-URL=http://git.thesoftwarefactory.be/pub/adl.git
 TABBER-URL=http://www.barelyfitz.com/projects/tabber/${TABBER-DIST}
 
 DIST=${APP}-${VERSION}.tar.gz
-DISTSRCS=build/${APP}.js examples/*.html LICENSE
+DISTSRCS=build/${APP}.js build/${APP}.css examples/*.html LICENSE
 
 DIST-SRC=${APP}-${VERSION}-src.tar.gz
 DIST-SRCSRCS=LICENSE README examples Makefile doc src
