@@ -3,13 +3,13 @@ EXCANVAS-DIST=excanvas_0002.zip
 TABBER-DIST=tabber.zip
 
 APP=Canvas2D
-SRCS=src/${APP}.js src/Shape.js src/Rectangle.js src/Connector.js lib/tabber/tabber.js
+SRCS=src/${APP}.js src/Shape.js src/Rectangle.js src/Connector.js src/Visitor.js
 CSSSRCS=lib/tabber/example.css src/${APP}.css
 VERSION=0.0.1
 LIBS=lib/${PROTOTYPE-DIST} \
      lib/excanvas/excanvas.js lib/canvastext.js \
-     lib/adl/build/adl.js
-
+     lib/adl/build/adl.js \
+     lib/tabber/tabber.js
 FETCH=wget -q
 GIT-FETCH=git clone -q
 UNZIP=unzip -q

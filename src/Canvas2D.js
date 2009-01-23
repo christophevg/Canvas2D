@@ -10,7 +10,11 @@ if( typeof Prototype == "undefined" ) {
 var Canvas2D = {};
 
 Canvas2D.Canvas = Class.create( {
+    counter : 0,
+
     dynamic    : false,
+    tabbed     : false,
+
     wait       : false,
     canvas     : null,
     htmlcanvas : null,
@@ -26,7 +30,10 @@ Canvas2D.Canvas = Class.create( {
     fillStyle   : "black",
     
     initialize: function(id) {
+	this.counter = 1;
 	this.dynamic = false;
+	this.tabbed  = false;
+
 	this.wait = false;
 	this.shapes = new Array();
 
@@ -98,6 +105,7 @@ Canvas2D.Canvas = Class.create( {
 
     // TODO: this is ugly, try to find a better solution
     makeTabbed: function() {
+	if( this.tabbed ) { return; }
 	var source = this.htmlcanvas;
 	var tabber = document.createElement("div");
 	tabber.className="tabber";
@@ -114,7 +122,6 @@ Canvas2D.Canvas = Class.create( {
 	newCanvas.className = source.className;
 	newCanvas.width = source.width;
 	newCanvas.height = source.height;
-	this.canvas = this.htmlcanvas.getContext("2d");
 	tab1.appendChild(newCanvas);
 	tabber.appendChild(tab1);
 	tabber.appendChild(this.getAboutTab(source.height));
@@ -128,6 +135,8 @@ Canvas2D.Canvas = Class.create( {
 	tabberAutomatic(); // activate Tabber
 	this.wireCanvas(); // rewire Canvas2D events,...
 	this.render();     // force rerender
+
+	this.tabbed = true;
     },
 
     on: function( event, handler ) {
@@ -387,10 +396,12 @@ Canvas2D.Canvas = Class.create( {
     },
 
     addWaterMark: function() {
+	this.canvas.save();
 	this.strokeStyle = "rgba(0,0,0,0.50)";
 	this.rotate(Math.PI/2);
 	this.drawText( "Sans", 6, 3, (this.htmlcanvas.width * -1) + 7, 
 		       "Canvas2D / Christophe VG" ); 
+	this.canvas.restore();
     },
 
     addSelectionOverlay: function() {
@@ -430,12 +441,25 @@ Canvas2D.Canvas = Class.create( {
 	this.canvas.clearRect( 0, 0, 
 			       this.htmlcanvas.width, 
 			       this.htmlcanvas.height );
-	
+
 	this.shapes.each(function(shape) { shape.render(); } );
 	this.addSelectionMarkers();
 	this.addSelectionOverlay();
 	this.addWaterMark();
 
 	this.dirty = false;
+    },
+
+    show: function(source) {    
+	this.clear();
+
+	var parser = new ADL.Parser();
+	var tree;
+	if( ( tree = parser.parse( source ) ) ) {
+	    this.freeze();
+	    tree.getRoot().accept( new Canvas2D.ADLVisitor(), this );
+	    this.thaw();
+	}
     }
+
 } );
