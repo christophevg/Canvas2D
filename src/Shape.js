@@ -38,6 +38,11 @@ Canvas2D.Shape = Class.create( {
 	this.forceRedraw();
     },
 
+    toString: function() {
+	if( this.props.left == null || this.props.top == null ) { return ""; }
+	return "[@" + this.props.left + "," + this.props.top + "] ";
+    },
+
     // the remaining methods are not applicable for abstract shapes
     getBox    : function() { return null; },
     render    : function() { },

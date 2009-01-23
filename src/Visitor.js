@@ -19,7 +19,8 @@ Canvas2D.ADLVisitor = Class.create( {
 	    var w = parseInt(construct.modifiers.get( "width"  ).value.value);
 	    var h = parseInt(construct.modifiers.get( "height" ).value.value);
 	    var c = construct.modifiers.get( "color"  ).value.value;
-	    shape = new Canvas2D.Rectangle({ width: w, height: h, color: c });
+	    shape = new Canvas2D.Rectangle({ name: construct.name,
+					     width: w, height: h, color: c });
 	    this.shapes[construct.name] = shape;
 	    if( construct.annotation ) {
 		var pos = construct.annotation.data.split(",");

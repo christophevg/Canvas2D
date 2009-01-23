@@ -54,5 +54,13 @@ Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
 		     left: this.props.left };
 	    break;
 	}
+    },
+
+    toString: function($super) {
+	var s = $super();
+	s += "Rectangle " + this.props.name;
+	s += "+width=" + this.props.width + " +height=" + this.props.height;
+	s += "+color=\"" + this.props.color + "\";";
+	return s;
     }
 } );

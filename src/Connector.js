@@ -213,6 +213,15 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
     hitArea: function(left, top, width, height) {
 	// connectors aren't selectable ("en mass")
 	return false;
+    },
+
+    toString: function($super) {
+	var s = $super();
+	s += "Connector " + this.props.name;
+	s += "+from=" + this.from.props.name 
+	  + " +to=" + this.to.props.name;
+	s += "+style=\"" + this.props.style + "\";";
+	return s;
     }
 
 } );

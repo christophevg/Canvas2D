@@ -10,15 +10,16 @@ if( typeof Prototype == "undefined" ) {
 var Canvas2D = {};
 
 Canvas2D.Canvas = Class.create( {
-    counter : 0,
-
     dynamic    : false,
     tabbed     : false,
 
     wait       : false,
     canvas     : null,
     htmlcanvas : null,
+
     console    : null,
+    source     : null,
+
     shapes:    [],
     eventHandlers : new Hash(),
 
@@ -30,7 +31,6 @@ Canvas2D.Canvas = Class.create( {
     fillStyle   : "black",
     
     initialize: function(id) {
-	this.counter = 1;
 	this.dynamic = false;
 	this.tabbed  = false;
 
@@ -48,8 +48,9 @@ Canvas2D.Canvas = Class.create( {
 	this.htmlcanvas = document.getElementById(id);
 	this.wireCanvas();
 
-	// look for a console for this canvas
+	// look for a console and sources for this canvas
 	this.console = document.getElementById( id+"Console" );
+	this.source  = document.getElementById( id+"Source" );
 
 	this.eventHandlers = new Hash();
     },
@@ -78,18 +79,22 @@ Canvas2D.Canvas = Class.create( {
 	this.dynamic = false;
     },
 
-    getAboutTab: function(height) {
+    makeTab: function(name, height, content) {
 	var tab = document.createElement("div");
 	tab.className = "tabbertab";
 	tab.style.height = height + 4;
 	var head = document.createElement("h2");
-	var txt = document.createTextNode("About");
+	var txt = document.createTextNode(name);
 	head.appendChild(txt);
 	tab.appendChild(head);
+	tab.appendChild(content);
+	return tab;
+    },
+
+    getAboutTab: function(height) {
 	var about = document.createElement("div");
-	about.style.border = "2px solid #ccc";
+	about.className = "Canvas2D-about";
 	about.style.height = height;
-	about.style.overflow = "auto";
 	about.innerHTML = '<span class="about"><b>Canvas2D</b><br>&copy 2009, '+
 	    '<a href="http://christophe.vg" target="_blank">Christophe VG</a>'+ 
 	    ' & <a href="http://thesoftwarefactory.be" ' +
@@ -99,12 +104,31 @@ Canvas2D.Canvas = Class.create( {
 	    'for more info. Licensed under the ' +
 	    '<a href="http://thesoftwarefactory.be/wiki/BSD_License" ' + 
 	    'target="_blank">BSD License</a>.</span>';
-	tab.appendChild(about);
-	return tab;
+	return this.makeTab("About", height, about );
+    },
+
+    getConsoleTab: function(height) {
+	this.console = document.createElement("textarea");
+	this.console.className = "Canvas2D-console";
+	this.console.style.height = height;
+	return this.makeTab("Console", height, this.console );
+    },
+
+    getSourceTab: function(height) {
+	this.source = document.createElement("textarea");
+	this.source.className = "Canvas2D-source";
+	this.source.style.height = height;
+	return this.makeTab("Source", height, this.source );
+    },
+
+    updateSource: function(source) {
+	if( this.source ) {
+	    this.source.value = this.toString();
+	}
     },
 
     // TODO: this is ugly, try to find a better solution
-    makeTabbed: function() {
+    makeTabbed: function(tabs) {
 	if( this.tabbed ) { return; }
 	var source = this.htmlcanvas;
 	var tabber = document.createElement("div");
@@ -124,7 +148,20 @@ Canvas2D.Canvas = Class.create( {
 	newCanvas.height = source.height;
 	tab1.appendChild(newCanvas);
 	tabber.appendChild(tab1);
-	tabber.appendChild(this.getAboutTab(source.height));
+
+	if( tabs ) {
+	    if( tabs.indexOf("console") > -1 ) {
+		tabber.appendChild(this.getConsoleTab(source.height));
+	    }
+	    if( tabs.indexOf("source") > -1 ) {
+		tabber.appendChild(this.getSourceTab(source.height));
+	    }
+
+	    if( tabs.indexOf("about") > -1 ) { 
+		tabber.appendChild(this.getAboutTab(source.height));
+	    }
+	}
+
 	source.parentNode.replaceChild(tabber, source);
 	// apply excanvas to new element
 	try {
@@ -450,6 +487,7 @@ Canvas2D.Canvas = Class.create( {
 	this.addSelectionMarkers();
 	this.addSelectionOverlay();
 	this.addWaterMark();
+	this.updateSource();
 
 	this.dirty = false;
     },
@@ -464,6 +502,14 @@ Canvas2D.Canvas = Class.create( {
 	    tree.getRoot().accept( new Canvas2D.ADLVisitor(), this );
 	    this.thaw();
 	}
+    },
+
+    toString: function() {
+	var s = "";
+	this.shapes.each(function(shape) {
+	    s += shape.toString() + "\n";
+	} );
+	return s;
     }
 
 } );
