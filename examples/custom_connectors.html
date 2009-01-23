@@ -1,17 +1,32 @@
 <html>
   <head>
     <style>
-      #mydiagram {
-      border: 1px solid black;
+      canvas {
+        border: 2px solid #ccc;
+      }
+      .box {
+        border: 2px solid #000;
+        float:left;
+        margin:10px; 
+        height: 385px;
+        padding-left: 10px;
+        padding-right: 10px;
       }
     </style>
+    <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
+    <script src="../build/Canvas2D.js"></script>
   </head>
   <body onload="drawIt();">
-    <canvas id="mydiagram" width="700" height="500"></canvas>
-    <textarea id="mydiagramConsole" style="height:250" cols="25"></textarea>
-    
-    <script src="../build/Canvas2D.js"></script>
-    
+    <h1>Custom Connectors and Console</h1>
+    <div class="box">
+      <h2>Canvas</h2>
+      <canvas id="mydiagram"  width="300" height="250"></canvas>
+    </div>
+    <div class="box">
+      <h2>Console</h2>
+      <textarea id="mydiagramConsole" style="height:250" cols="50"></textarea>
+    </div>
+  
     <script>
       var custom_connector = 
       {n:{lines:[[ -5, -10],[ +5,-10],[  0,  0]],end:[ 0,-10]},
@@ -23,11 +38,12 @@
         var diagram = new Canvas2D.Canvas("mydiagram");
         with( diagram ) {
           freeze();
-          var rect1 = at (225, 105)
+          makeDynamic();
+          var rect1 = at(100, 10)
               .put(new Canvas2D.Rectangle({width:75,height:75,color:"green"} ));
-          var rect2 = at(100, 250)
+          var rect2 = at( 25,150)
               .put(new Canvas2D.Rectangle({width:50,height:50,color:"red"  } ));
-          var rect3 = at(310, 250)
+          var rect3 = at(150,150)
               .put(new Canvas2D.Rectangle({width:50,height:50,color:"red"  } ));
 
           var conn1 = put(new Canvas2D.Connector( rect1, rect2, 

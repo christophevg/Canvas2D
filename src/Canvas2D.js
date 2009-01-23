@@ -253,7 +253,11 @@ Canvas2D.Canvas = Class.create( {
 	this.shapes.push( shape );
 	shape.setCanvas(this);
 	this.render();
-	this.log( "canvas2d: added shape @" + this.newLeft + "," +this.newTop);
+	this.log( "canvas2d: added shape" + 
+		  ( this.newLeft != null ? "@" + this.newLeft + "," 
+		    + this.newTop : "" ) );
+	this.newLeft = null;
+	this.newTop = null;
 	return shape;
     },
 
