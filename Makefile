@@ -56,7 +56,8 @@ lib/adl/build/adl.js:
 	@${GIT-FETCH} ${ADL-URL} lib/adl
 	@(cd lib/adl; make)
 
-lib/tabber/%: lib/tabber
+lib/tabber/tabber.js: lib/tabber
+lib/tabber/tabber.css: lib/tabber
 
 lib/tabber:
 	@echo "*** importing Tabber"
