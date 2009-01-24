@@ -1,10 +1,6 @@
 0.1.0
-- mediawiki extension
-
-- do less automagically, more API with external control (e.g. source detection)
 - clean up licensing information -> link to website with all info
-- add some shapes, to make nicer demo (see visio ;-))
-
+- add some shapes, to make nicer demo (think visio ;-))
 - extend support for events
 
 LATER
@@ -12,7 +8,7 @@ LATER
   - http://www.depressedpress.com/Content/Development/JavaScript/Extensions/DP%5FDeBug/
 - group selection
   - move of
-- getmouseXY should take in account possible viewports ?! (for uWe)
+- getmouseXY should take in account possible viewports ?! (e.g. for uWe)
   - this should be done with a registerable modifier function from outside
 - toolbar: appear in "edit modus"
   - canvas navigation tools

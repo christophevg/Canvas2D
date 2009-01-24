@@ -4,16 +4,20 @@ canvas {
 
 .Canvas2D-about {
   font: 9pt Verdana, sans-serif;
+  overflow: auto;
 }
 
 .Canvas2D-console {
-  width: 100%;
   border: 2px solid #ccc;
   overflow: auto;
 }
 
 .Canvas2D-source {
-  width: 100%;
   border: 2px solid #ccc;
   overflow: auto;
+}
+
+.Canvas2D-container {
+  margin-left: 10px;
+  margin-right: 10px;
 }

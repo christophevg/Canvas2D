@@ -82,7 +82,7 @@ Canvas2D.Canvas = Class.create( {
     makeTab: function(name, height, content) {
 	var tab = document.createElement("div");
 	tab.className = "tabbertab";
-	tab.style.height = height + 4;
+	tab.style.height = ( height + 4 ) + "px";
 	var head = document.createElement("h2");
 	var txt = document.createTextNode(name);
 	head.appendChild(txt);
@@ -91,10 +91,11 @@ Canvas2D.Canvas = Class.create( {
 	return tab;
     },
 
-    getAboutTab: function(height) {
+    getAboutTab: function(width,height) {
 	var about = document.createElement("div");
 	about.className = "Canvas2D-about";
-	about.style.height = height;
+	about.style.height = height + "px";
+	about.style.height = width  + "px";
 	about.innerHTML = '<span class="about"><b>Canvas2D</b><br>&copy 2009, '+
 	    '<a href="http://christophe.vg" target="_blank">Christophe VG</a>'+ 
 	    ' & <a href="http://thesoftwarefactory.be" ' +
@@ -107,17 +108,19 @@ Canvas2D.Canvas = Class.create( {
 	return this.makeTab("About", height, about );
     },
 
-    getConsoleTab: function(height) {
+    getConsoleTab: function(width, height) {
 	this.console = document.createElement("textarea");
 	this.console.className = "Canvas2D-console";
-	this.console.style.height = height;
+	this.console.style.height = height + "px";
+	this.console.style.width  = width  + "px";
 	return this.makeTab("Console", height, this.console );
     },
 
-    getSourceTab: function(height) {
+    getSourceTab: function(width, height) {
 	this.source = document.createElement("textarea");
 	this.source.className = "Canvas2D-source";
-	this.source.style.height = height;
+	this.source.style.height = height + "px";
+	this.source.style.width  = width  + "px";
 	return this.makeTab("Source", height, this.source );
     },
 
@@ -133,8 +136,8 @@ Canvas2D.Canvas = Class.create( {
 	var source = this.htmlcanvas;
 	var tabber = document.createElement("div");
 	tabber.className="tabber";
-	tabber.style.width = ( parseInt(source.width) + 17 );
-	tabber.style.height = ( parseInt(source.height) + 37 );
+	tabber.style.width = (parseInt(source.width) + 17) + "px";
+	tabber.style.height = (parseInt(source.height) + 37) + "px";
 	var tab1 = document.createElement("div");
 	tab1.className = "tabbertab";
 	var h1 = document.createElement("h2");
@@ -151,14 +154,17 @@ Canvas2D.Canvas = Class.create( {
 
 	if( tabs ) {
 	    if( tabs.indexOf("console") > -1 ) {
-		tabber.appendChild(this.getConsoleTab(source.height));
+		tabber.appendChild(this.getConsoleTab(source.width, 
+						      source.height));
 	    }
 	    if( tabs.indexOf("source") > -1 ) {
-		tabber.appendChild(this.getSourceTab(source.height));
+		tabber.appendChild(this.getSourceTab(source.width,
+						     source.height));
 	    }
 
 	    if( tabs.indexOf("about") > -1 ) { 
-		tabber.appendChild(this.getAboutTab(source.height));
+		tabber.appendChild(this.getAboutTab(source.width,
+						    source.height));
 	    }
 	}
 
