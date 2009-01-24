@@ -82,7 +82,7 @@ Canvas2D.Canvas = Class.create( {
     makeTab: function(name, height, content) {
 	var tab = document.createElement("div");
 	tab.className = "tabbertab";
-	tab.style.height = ( height + 4 ) + "px";
+	tab.style.height = ( 4 + parseInt(height) ) + "px";
 	var head = document.createElement("h2");
 	var txt = document.createTextNode(name);
 	head.appendChild(txt);
@@ -95,8 +95,9 @@ Canvas2D.Canvas = Class.create( {
 	var about = document.createElement("div");
 	about.className = "Canvas2D-about";
 	about.style.height = height + "px";
-	about.style.height = width  + "px";
-	about.innerHTML = '<span class="about"><b>Canvas2D</b><br>&copy 2009, '+
+	about.style.width = (parseInt(width)-4)  + "px";
+	about.innerHTML = '<span class="Canvas2D-about-text">' +
+	    '<b>Canvas2D</b><br>Copyright &copy 2009, ' +
 	    '<a href="http://christophe.vg" target="_blank">Christophe VG</a>'+ 
 	    ' & <a href="http://thesoftwarefactory.be" ' +
 	    'target="_blank">The Software Factory</a><br>' + 
@@ -112,7 +113,7 @@ Canvas2D.Canvas = Class.create( {
 	this.console = document.createElement("textarea");
 	this.console.className = "Canvas2D-console";
 	this.console.style.height = height + "px";
-	this.console.style.width  = width  + "px";
+	this.console.style.width  = ( parseInt(width) - 4 )  + "px";
 	return this.makeTab("Console", height, this.console );
     },
 
@@ -120,7 +121,7 @@ Canvas2D.Canvas = Class.create( {
 	this.source = document.createElement("textarea");
 	this.source.className = "Canvas2D-source";
 	this.source.style.height = height + "px";
-	this.source.style.width  = width  + "px";
+	this.source.style.width  = ( parseInt(width) - 4 )  + "px";
 	return this.makeTab("Source", height, this.source );
     },
 

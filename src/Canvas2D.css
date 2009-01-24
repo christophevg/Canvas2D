@@ -3,8 +3,11 @@ canvas {
 }
 
 .Canvas2D-about {
-  font: 9pt Verdana, sans-serif;
   overflow: auto;
+}
+
+.Canvas2D-about-text {
+  font: 9pt Verdana, sans-serif;
 }
 
 .Canvas2D-console {
