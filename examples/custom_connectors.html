@@ -32,8 +32,8 @@
        w:{lines:[[-10,  -5],[-10, +5],[  0,  0]],end:[-10, 0]}};
 
       function drawIt() {
-        var diagram = new Canvas2D.Canvas("mydiagram");
-        with( diagram ) {
+        var canvas = new Canvas2D.Canvas("mydiagram");
+        with( canvas.addSheet( new Canvas2D.Sheet() ) ) {
           freeze();
           makeDynamic();
           var rect1 = at(100, 10)

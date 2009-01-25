@@ -11,7 +11,7 @@
       }
     </style>
     <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
-    <script src="../build/Canvas2D.standalone.min.js"></script>
+    <script src="../build/Canvas2D.standalone.js"></script>
   </head>
   <body onload="drawIt();">
     <h1>Diagram Styles Example</h1>
@@ -28,8 +28,9 @@
       <canvas id="myTabbedDiagram"  width="300" height="250"></canvas>
     </div>
     <script>
-      function drawRect(diagram, dyna, tabs) {
-        with( diagram ) {
+      function drawRect(canvas, dyna, tabs) {
+        if( tabs ) { canvas.makeTabbed( [ "about" ] ); }
+        with( canvas.addSheet( new Canvas2D.Sheet() ) ) {
           freeze();
           var rect1 = at(75, 55)
               .put(new Canvas2D.Rectangle({width:75,height:75,color:"green"}));
@@ -50,10 +51,8 @@
                                                   {style: "horizontal"}));
           var conn4 = put(new Canvas2D.Connector( rect1, rect5, 
                                                   {style: "vertical"} ));
-          thaw();
-
           if( dyna ) { makeDynamic(); }
-          if( tabs ) { makeTabbed( [ "about" ] ); }
+          thaw();
         }
       }
 

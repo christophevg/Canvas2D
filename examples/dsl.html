@@ -11,7 +11,7 @@
       }
     </style>
     <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
-    <script src="../build/Canvas2D.standalone.min.js"></script>
+    <script src="../build/Canvas2D.standalone.js"></script>
   </head>
   <body onload="startIt();">
     <h1>Diagram DSL Example</h1>
@@ -22,35 +22,35 @@
     <div class="box">
       <h2>Original Source</h2>
       <textarea id="src" cols="60" style="height:285px">  
-/* define some shapes */
-[@ 75, 55] Rectangle rect1 +width=75 +height=75 +color="green";  
-[@ 50,175] Rectangle rect2 +width=50 +height=50 +color="red";  
-[@200,100] Rectangle rect3 +width=50 +height=50 +color="blue";  
-[@200, 25] Rectangle rect4 +width=50 +height=50 +color="yellow";  
-[@125,175] Rectangle rect5 +width=50 +height=50 +color="red";  
+Sheet mySheet +style="dynamic" {
+  /* define some shapes */
+  [@ 75, 55] Rectangle rect1 +width=75 +height=75 +color="green";  
+  [@ 50,175] Rectangle rect2 +width=50 +height=50 +color="red";  
+  [@200,100] Rectangle rect3 +width=50 +height=50 +color="blue";  
+  [@200, 25] Rectangle rect4 +width=50 +height=50 +color="yellow";  
+  [@125,175] Rectangle rect5 +width=50 +height=50 +color="red";  
 
-/* connect them  */
-Connector conn1 +from="rect1" +to="rect2" +style="vertical";  
-Connector conn2 +from="rect1" +to="rect3" +style="horizontal";  
-Connector conn3 +from="rect1" +to="rect4" +style="horizontal";  
-Connector conn4 +from="rect1" +to="rect5" +style="vertical";  
+  /* connect them  */
+  Connector conn1 +from="rect1" +to="rect2" +style="vertical";  
+  Connector conn2 +from="rect1" +to="rect3" +style="horizontal";  
+  Connector conn3 +from="rect1" +to="rect4" +style="horizontal";  
+  Connector conn4 +from="rect1" +to="rect5" +style="vertical";  
+}
       </textarea>  
       <br>
       <input type="button" value="drawIt" onclick="drawIt();"/>
     </div>
   
     <script>  
-      var diagram;
+      var canvas;
 
       function drawIt() {
-          diagram.show(document.getElementById("src").value);  
+          canvas.load(document.getElementById("src").value);
       }
 
       function startIt() {
-        diagram = new Canvas2D.Canvas("myTabbedDiagram");
-        diagram.makeDynamic();
-        diagram.makeTabbed( [ "source", "console", "about" ]);
-
+        canvas = new Canvas2D.Canvas("myTabbedDiagram");
+        canvas.makeTabbed( [ "source", "console", "about" ]);
         drawIt();
       }
     </script>  

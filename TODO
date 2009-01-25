@@ -1,5 +1,5 @@
 0.1.0
-- ext: take in account show="" ...
+- introduce Book construct and move more stuff from Canvas to Book
 - add short hand ADL support (decorator ?)
 - add some shapes, to make nicer demo (think visio ;-))
 - extend support for events
@@ -15,7 +15,8 @@ LATER
   - move of
 - getmouseXY should take in account possible viewports ?! (e.g. for uWe)
   - this should be done with a registerable modifier function from outside
-- toolbar: appear in "edit modus"
+- toolbar: appear on mouse over
+  - diagram navigation (next/prev)
   - canvas navigation tools
     - zooming
     - panning

@@ -42,9 +42,12 @@ Canvas2D.Shape = Class.create( {
 	this.forceRedraw();
     },
 
-    toString: function() {
-	if( this.props.left == null || this.props.top == null ) { return ""; }
-	return "[@" + this.props.left + "," + this.props.top + "] ";
+    toString: function(prefix) {
+	prefix = prefix || "";
+	if( this.props.left == null || this.props.top == null ) { 
+	    return prefix; 
+	}
+	return prefix + "[@" + this.props.left + "," + this.props.top + "] ";
     },
 
     // the remaining methods are not applicable for abstract shapes

@@ -1,12 +1,18 @@
 Canvas2D.Kickstart = function() {
-    var canvases = document.getElementsByTagName( "canvas" );
-    for(var c=0; c<canvases.length; c++ ) {
-	var canvas = canvases[c];
-	if( canvas.className == "Canvas2D" ) {
-	    var name = canvas.id;
-	    var diagram = new Canvas2D.Canvas(name); 
-	    diagram.makeDynamic();
-	    diagram.makeTabbed( [ "source", "console", "about" ]); 
+    var htmlCanvases = document.getElementsByTagName( "canvas" );
+    for(var c=0; c<htmlCanvases.length; c++ ) {
+	var htmlCanvas = htmlCanvases[c];
+	var classes = htmlCanvas.className;
+	if( classes.include("Canvas2D") ) {
+	    var name = htmlCanvas.id;
+	    var canvas = new Canvas2D.Canvas(name); 
+	    if( classes.include("Tabbed") ) {
+		var tabs = [];
+		if( classes.include("withSource" ) ) { tabs.push("source" ); }
+		if( classes.include("withConsole") ) { tabs.push("console"); }
+		if( classes.include("withAbout"  ) ) { tabs.push("about"  ); }
+		canvas.makeTabbed(tabs); 
+	    }
 	    
 	    var sourceElement = document.getElementById(name+"Source")
 	    if( sourceElement ) {
@@ -18,7 +24,7 @@ Canvas2D.Kickstart = function() {
 		    // TEXTAREA
 		    source = sourceElement.value;
 		}
-		diagram.show(source);
+		canvas.load(source);
 	    }
 	}
     }

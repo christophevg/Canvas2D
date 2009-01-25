@@ -44,21 +44,23 @@ function Canvas2DRender( $input, $args, $parser ) {
   $width  = isset($args['width'] ) ? $args['width']  : 375;
   $height = isset($args['height']) ? $args['height'] : 200;
   $float  = isset($args['float'])  ? $args['float']  : "left";
-  $showSource = isset( $args['show'] ) ? 
-    (strpos( $args['show'], "source"  ) !== false ) : true;
-  $showConsole = isset( $args['show'] ) ? 
-    (strpos( $args['show'], "console" ) !== false ) : true;
-  $showAbout = isset( $args['show'] ) ? 
-    (strpos( $args['show'], "about"   ) !== false ) : true;
-  
-  $tabberWidth   = $width  + 20;
-  $tabberHeight  = $height + 55;
-  $sourceHeight  = $height - 27;
-  $consoleHeight = $height;
-  $aboutHeight   = $height;
 
+  $showSource = isset( $args['show'] ) ? 
+    (strpos( $args['show'], "source"  ) !== false ) : false;
+  $showConsole = isset( $args['show'] ) ? 
+    (strpos( $args['show'], "console" ) !== false ) : false;
+  $showAbout = isset( $args['show'] ) ? 
+    (strpos( $args['show'], "about"   ) !== false ) : false;
+
+  if( $showSource || $showConsole || $showAbout ) {
+    $classes = " Tabbed";
+    $classes .= ( $showSource  ? " withSource"  : "" );
+    $classes .= ( $showConsole ? " withConsole" : "" );
+    $classes .= ( $showAbout   ? " withAbout"   : "" );
+  }
+    
   $canvas = '<div class="Canvas2D-container" style="float:'.$float.'">' .
-    '<canvas class="Canvas2D" id="' . $name . 
+    '<canvas class="Canvas2D'.$classes.'" id="' . $name . 
     '" width="'.$width.'" height="'.$height.'"></canvas></div>';
   $canvas .= '<pre id="'.$name.'Source" style="display:none">'.$input.'</pre>';
 

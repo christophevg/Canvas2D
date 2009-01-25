@@ -56,8 +56,8 @@ Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
 	}
     },
 
-    toString: function($super) {
-	var s = $super();
+    toString: function($super, prefix) {
+	var s = $super(prefix);
 	s += "Rectangle " + this.props.name;
 	s += "+width=" + this.props.width + " +height=" + this.props.height;
 	s += "+color=\"" + this.props.color + "\";";
@@ -69,7 +69,7 @@ Canvas2D.Rectangle.getNames = function() {
     return [ "rectangle", "box" ];
 }
 
-    Canvas2D.Rectangle.from = function( construct, parent ) {
+Canvas2D.Rectangle.from = function( construct, diagram ) {
     var w = parseInt(construct.modifiers.get( "width"  ).value.value);
     var h = parseInt(construct.modifiers.get( "height" ).value.value);
     var c = construct.modifiers.get( "color"  ).value.value;
@@ -84,8 +84,8 @@ Canvas2D.Rectangle.getNames = function() {
 	left = this.offset * ( this.unknownIndex++ );
 	top = left;
     }
-
-    return { shape: shape, pos: { left: left, top: top } };
+    shape.setPosition(left,top);
+    return shape;
 };
 
-Canvas2D.ADLVisitor.registerShape(Canvas2D.Rectangle);
+Canvas2D.ADLVisitor.registerConstruct(Canvas2D.Rectangle);

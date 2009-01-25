@@ -15,8 +15,10 @@ COMPRESS=java -jar ${COMPRESS-JAR} --type js
 APP=Canvas2D
 TARGETS=build/${APP}.shared.min.js build/${APP}.standalone.min.js \
         build/${APP}.css 
-SRCS=src/${APP}.js \
-     src/Visitor.js \
+SRCS=src/SanityChecks.js \
+     src/Canvas.js \
+     src/ADLVisitor.js \
+     src/Sheet.js \
      src/Shape.js src/Rectangle.js src/Connector.js \
      src/KickStart.js
 CSSSRCS=lib/tabber/example.css src/${APP}.css

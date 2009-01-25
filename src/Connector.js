@@ -215,11 +215,11 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
 	return false;
     },
 
-    toString: function($super) {
-	var s = $super();
+    toString: function($super, prefix) {
+	var s = $super(prefix);
 	s += "Connector " + this.props.name;
-	s += "+from=" + this.from.props.name 
-	  + " +to=" + this.to.props.name;
+	s += "+from=\"" + this.from.props.name + "\"" 
+	  + " +to=\"" + this.to.props.name + "\"";
 	s += "+style=\"" + this.props.style + "\";";
 	return s;
     }
@@ -234,10 +234,9 @@ Canvas2D.Connector.from = function(construct, diagram) {
     var from  = construct.modifiers.get( "from"  ).value.value;
     var to    = construct.modifiers.get( "to"    ).value.value;
     var style = construct.modifiers.get( "style" ).value.value;
-    return { shape: new Canvas2D.Connector( diagram.shapesMap[from], 
-					    diagram.shapesMap[to],
-					    { style: style } ),
-	     pos: null };
+    return new Canvas2D.Connector( diagram.shapesMap[from], 
+				   diagram.shapesMap[to],
+				   { name: construct.name, style: style } );
 };
 
-Canvas2D.ADLVisitor.registerShape(Canvas2D.Connector);
+Canvas2D.ADLVisitor.registerConstruct(Canvas2D.Connector);

@@ -1,47 +1,42 @@
-if( typeof Prototype == "undefined" ) {
-    alert( "Canvas2D requires the Prototype JS library." );
-} else if( !window.CanvasRenderingContext2D ) {
-    alert( "Could not find CanvasRenderingContext2D. " +
-	   "If you're using IE, ExplorerCanvas is required." );
-} else if( typeof CanvasTextFunctions == "undefined" ) {
-    alert( "Canvas2D requires the CanvasText implementation." );
-}
-
-if( typeof Canvas2D != "undefined" ) {
-    alert( "WARNING: Canvas2D is already defined and will be redefined!!!" );
-}
-
+// namespace for holding all Canvas2D related classes and functions
 var Canvas2D = {};
 
+// technical wrapper class for the HTML5 Canvas element
 Canvas2D.Canvas = Class.create( {
-    dynamic    : false,
-    tabbed     : false,
+    tabbed     : false, // tabbed interface
 
-    wait       : false,
-    canvas     : null,
-    htmlcanvas : null,
+    wait       : false, // indicator not to draw
 
-    console    : null,
-    source     : null,
+    htmlcanvas : null,  // the Canvas Element 
+    canvas     : null,  // the Canvas Element 2D context
 
-    shapes:    [],
-    eventHandlers : new Hash(),
+    console    : null,  // the HTML element to use as Console
+    source     : null,  // the HTML element to use as SourceViewer
 
-    currentX    : 0,
-    currentY    : 0,
-    lineWidth   : 1,
-    lineStyle   : "solid",
-    strokeStyle : "black",
-    fillStyle   : "black",
+    sheets       : [], // list of sheets on this Canvas
+    currentSheet : 0,  // index of the current show sheet
+
+    eventHandlers : {}, // map of registered eventHandlers
+
+    mouseOver : false,   // indicator if the mouse is currently over the canvas
+    mousePos  : { x:0, y:0 }, // current mouse position
+
+    currentX    : 0,       // current drawing position on X-axis
+    currentY    : 0,       // current drawing position on Y-axis
+    lineWidth   : 1,       // current drawing lineWidth
+    lineStyle   : "solid", // current drawing lineStyle [solid|dashed]
+    strokeStyle : "black", // current drawing strokeStyle
+    fillStyle   : "black", // current drawing fillStyle
     
     initialize: function(id) {
-	this.dynamic = false;
 	this.tabbed  = false;
 
 	this.wait = false;
 
-	this.shapes = new Array();
-	this.shapesMap = {};
+	this.sheets = new Array();
+	this.currentSheet = 0;
+
+	this.eventHandlers = {},
 
 	this.currentX    = 0;
 	this.currentY    = 0;
@@ -57,32 +52,27 @@ Canvas2D.Canvas = Class.create( {
 	// look for a console and sources for this canvas
 	this.console = document.getElementById( id+"Console" );
 	this.source  = document.getElementById( id+"Source" );
+    },
 
-	this.eventHandlers = new Hash();
+    clear: function() {
+	this.sheets = [];
     },
 
     wireCanvas: function() {
 	if( this.htmlcanvas ) {
 	    this.canvas = this.htmlcanvas.getContext('2d');
+	    if( this.canvas ) {
+		// attach eventhandlers for mouse events
+		Event.observe(this.htmlcanvas, 'mousedown', 
+			      this.handleMouseDown.bindAsEventListener(this));
+		Event.observe(this.htmlcanvas, 'mouseup', 
+			      this.handleMouseUp.bindAsEventListener(this));
+		Event.observe(window, 'mousemove', 
+			      this.handleMouseMove.bindAsEventListener(this));
+		// add textfunctions
+		CanvasTextFunctions.enable(this.canvas);
+	    }
 	}
-
-	// attach eventhandlers for mouse events
-	Event.observe(this.htmlcanvas, 'mousedown', 
-		      this.handleMouseDown.bindAsEventListener(this));
-	Event.observe(this.htmlcanvas, 'mouseup', 
-		      this.handleMouseUp.bindAsEventListener(this));
-	Event.observe(this.htmlcanvas, 'mousemove', 
-		      this.handleMouseMove.bindAsEventListener(this));
-	// add textfunctions
-	CanvasTextFunctions.enable(this.canvas);
-    },
-
-    makeDynamic: function() {
-	this.dynamic = true;
-    },
-
-    makeStatic: function() {
-	this.dynamic = false;
     },
 
     makeTab: function(name, height, content) {
@@ -131,9 +121,13 @@ Canvas2D.Canvas = Class.create( {
 	return this.makeTab("Source", height, this.source );
     },
 
+    getCurrentSheet: function() {
+	return this.sheets[this.currentSheet];
+    },
+
     updateSource: function(source) {
-	if( this.source ) {
-	    this.source.value = this.toString();
+	if( this.source && this.getCurrentSheet() ) {
+	    this.source.value = this.getCurrentSheet().toString();
 	}
     },
 
@@ -229,87 +223,47 @@ Canvas2D.Canvas = Class.create( {
 	if( event == null ) { event = window.event; }
 	if( event == null ) { return null;          }
 	if( event.pageX || event.pageY ) {
-            return { x:event.pageX - this.getLeft(), 
-		     y:event.pageY - this.getTop()  };
+            return { x: event.pageX - this.getLeft(), 
+		     y: event.pageY - this.getTop()  };
 	}
 	return null;
-    },
-
-    getShapeAt: function(x,y) {
-	for( var s = this.shapes.length-1; s>=0; s-- ) {
-	    if( this.shapes[s].hit(x,y) ) {
-		return this.shapes[s];
-	    }
-	}
-	return null;
-    },
-
-    getShapesIn: function(left, top, width, height) {
-	alert( "Canvas2D.Canvas::getShapesIn: not implemented yet" );
     },
 
     handleMouseDown: function(event) {
-	if( !this.dynamic ) { return; }
 	this.mousepressed = true;
 	var pos = this.getXY(event);
-	this.currentShape = this.getShapeAt( pos.x, pos.y );
-	this.fireEvent( "selectShape", this.currentShape.getProperties() );
-	this.currentPos = pos;
+	this.fireEvent( "mousedown", pos );
+	this.mousePos = pos;
 	this.render();
     },
 
     handleMouseUp: function(event) {
-	if( !this.dynamic ) { return; }
 	this.mousepressed = false;
-	if( this.currentShape ) {
-	    var pos = this.currentShape.getPosition();
-	    this.log( "canvas2d: shape moved to " + pos.left + ", " + pos.top );
-	} else {
-	    this.showSelection = false;
-	    this.render();
-	}
+	var pos = this.getXY();
+	this.fireEvent( "mouseup", pos );
+	this.mousePos = pos;
+	this.render();
     },
 
     handleMouseMove: function(event) {
-	if( !this.dynamic ) { return; }
 	if( this.mousepressed ) {
 	    this.handleMouseDrag(event);
 	}
+	var pos = this.getXY();
+	this.mouseOver = 
+	    ( pos.x >= 0 && pos.x <= this.htmlcanvas.width )
+	    &&  
+	    ( pos.y >= 0 && pos.y <= this.htmlcanvas.height );
     },
 
     handleMouseDrag: function(event) {
-	if( !this.dynamic ) { return; }
 	var pos = this.getXY(event);
-	if( this.currentShape ) {
-	    var dx = pos.x - this.currentPos.x;
-	    var dy = pos.y - this.currentPos.y;
-	    this.currentShape.move( dx, dy );
-	    this.currentPos = pos;
-	} else {
-	    this.showSelection = true;
-	    this.selectionPos  = pos;
-	    this.render();
-	}
-    },
-
-    at: function(left, top) {
-	this.newTop = top;
-	this.newLeft = left;
-	return this;
-    },
-
-    put: function(shape) {
-	shape.setPosition(this.newLeft, this.newTop);
-	this.shapes.push( shape );
-	this.shapesMap[shape.getName()] = shape;
-	shape.setCanvas(this);
+	this.fireEvent( "mousedrag", { x: pos.x, 
+				       y: pos.y, 
+				       dx: pos.x - this.mousePos.x,
+				       dy: pos.y - this.mousePos.y } );
+	this.mousePos = pos;
 	this.render();
-	this.log( "canvas2d: added shape" + 
-		  ( this.newLeft != null ? "@" + this.newLeft + "," 
-		    + this.newTop : "" ) );
-	this.newLeft = null;
-	this.newTop = null;
-	return shape;
     },
 
     clearRect: function(x, y, w, h ) {
@@ -379,6 +333,11 @@ Canvas2D.Canvas = Class.create( {
 	this.canvas.rotate(ang);
     },
 
+    arc: function(left, top, radius, startAngle, endAngle, anticlockwise ) {
+	this.canvas.arc(left, top, radius, 
+			startAngle, endAngle, anticlockwise );
+    },
+
     _plotPixel: function( x, y, c ) {
 	with( this.canvas ) {
 	    var oldStyle = strokeStyle;
@@ -443,13 +402,6 @@ Canvas2D.Canvas = Class.create( {
 	this.render();
     },
 
-    clear: function() {
-	this.shapes = new Array();
-	this.currentSelection = false;
-	this.currentShape = null;
-	this.fireEvent( "selectShape", {} );
-    },
-
     addWaterMark: function() {
 	this.canvas.save();
 	this.strokeStyle = "rgba(0,0,0,0.50)";
@@ -459,54 +411,46 @@ Canvas2D.Canvas = Class.create( {
 	this.canvas.restore();
     },
 
-    addSelectionOverlay: function() {
-	if( this.showSelection ) { 
-	    var pos = this.selectionPos;
-	    var dx = pos.x - this.currentPos.x;
-	    var dy = pos.y - this.currentPos.y;
-	    
-	    this.canvas.fillStyle = "rgba( 0, 0, 255, 0.10 )";
-	    this.canvas.fillRect( pos.x <= this.currentPos.x ? 
-				  pos.x : this.currentPos.x, 
-				  pos.y <= this.currentPos.y ?
-				  pos.y : this.currentPos.y,
-				  Math.abs(dx), Math.abs(dy) );
-	}
-    },
-
-    addSelectionMarkers: function() {
-	if( this.currentShape ) {
-	    var box = this.currentShape.getBox();
-	    this.canvas.fillStyle = "rgba( 200, 200, 255, 1 )";
-	    var corners = [[ box.left, box.top    ], [ box.right, box.top    ],
-		           [ box.left, box.bottom ], [ box.right, box.bottom ]];
-	    var canvas = this.canvas;
-	    corners.each( function(corner) {
-		canvas.beginPath();
-		canvas.arc( corner[0],  corner[1], 5, 0, Math.PI*2, true );
-		canvas.fill();	
-	    } );
+    addToolbar: function() {
+	if( this.mouseOver ) {
+	    // TODO: future feature ;-)
 	}
     },
 
     render: function() {
-	if(  this.wait   ) { return; }
-	if( !this.canvas ) { return; }
+	if( this.wait || !this.canvas ) { return; }
 
-	this.canvas.clearRect( 0, 0, 
-			       this.htmlcanvas.width, 
-			       this.htmlcanvas.height );
+	if( this.getCurrentSheet() ) {
+	    this.canvas.clearRect( 0, 0, 
+				   this.htmlcanvas.width, 
+				   this.htmlcanvas.height );
+	    this.getCurrentSheet().render();
+	    this.updateSource();
+	}
 
-	this.shapes.each(function(shape) { shape.render(); } );
-	this.addSelectionMarkers();
-	this.addSelectionOverlay();
 	this.addWaterMark();
-	this.updateSource();
-
-	this.dirty = false;
+	this.addToolbar();
     },
 
-    show: function(source) {    
+    toString: function() {
+	var s = "";
+	this.sheets.each(function(sheet) {
+	    s += sheet.toString() + "\n";
+	} );
+	return s;
+    },
+
+    addSheet: function(sheet) {
+	this.sheets.push(sheet);
+	sheet.setCanvas(this);
+	return sheet;
+    },
+
+    add: function(sheet) {
+	return this.addSheet(sheet);
+    },
+
+    load: function(source) {    
 	this.clear();
 
 	var parser = new ADL.Parser();
@@ -516,13 +460,6 @@ Canvas2D.Canvas = Class.create( {
 	    tree.getRoot().accept(new Canvas2D.ADLVisitor(), this );
 	    this.thaw();
 	}
-    },
-
-    toString: function() {
-	var s = "";
-	this.shapes.each(function(shape) {
-	    s += shape.toString() + "\n";
-	} );
-	return s;
     }
+
 } );
