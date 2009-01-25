@@ -1,8 +1,13 @@
 0.1.0
+- ext: take in account show="" ...
+- add short hand ADL support (decorator ?)
 - add some shapes, to make nicer demo (think visio ;-))
 - extend support for events
+- make UmlCanvas diagram with class model of Canvas2D
 
 LATER
+- shape definition language
+- Visio export tool
 - build custom prototype.js from repository including only what we need
 - introduce global logging framework with fallbacks (print, console, alert)
   - http://www.depressedpress.com/Content/Development/JavaScript/Extensions/DP%5FDeBug/
