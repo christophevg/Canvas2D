@@ -1,9 +1,9 @@
 0.1.0
-- clean up licensing information -> link to website with all info
 - add some shapes, to make nicer demo (think visio ;-))
 - extend support for events
 
 LATER
+- build custom prototype.js from repository including only what we need
 - introduce global logging framework with fallbacks (print, console, alert)
   - http://www.depressedpress.com/Content/Development/JavaScript/Extensions/DP%5FDeBug/
 - group selection

@@ -1,8 +1,20 @@
 PROTOTYPE-DIST=prototype-1.6.0.3.js
 EXCANVAS-DIST=excanvas_0002.zip
 TABBER-DIST=tabber.zip
+COMPRESSOR-VERSION=2.4.2
+COMPRESSOR-DIST=yuicompressor-${COMPRESSOR-VERSION}.zip
+COMPRESS-JAR=lib/yuicompressor/build/yuicompressor-${COMPRESSOR-VERSION}.jar
+
+FETCH=wget -q
+GIT-FETCH=git clone -q
+ZIP=zip -q
+UNZIP=unzip -q
+UNTAR=tar -zxf
+COMPRESS=java -jar ${COMPRESS-JAR} --type js
 
 APP=Canvas2D
+TARGETS=build/${APP}.shared.min.js build/${APP}.standalone.min.js \
+        build/${APP}.css 
 SRCS=src/${APP}.js \
      src/Visitor.js \
      src/Shape.js src/Rectangle.js src/Connector.js \
@@ -13,11 +25,6 @@ LIBS=lib/${PROTOTYPE-DIST} \
      lib/excanvas/excanvas.js lib/canvastext.js \
      lib/adl/build/adl.js \
      lib/tabber/tabber.js
-FETCH=wget -q
-GIT-FETCH=git clone -q
-ZIP=zip -q
-UNZIP=unzip -q
-UNTAR=tar -zxf
 
 PROTOTYPE-URL=http://www.prototypejs.org/assets/2008/9/29/${PROTOTYPE-DIST}
 EXCANVAS-URL=http://surfnet.dl.sourceforge.net/sourceforge/excanvas/
@@ -25,20 +32,23 @@ CANVASTEXT-URL=http://www.federated.com/~jim/canvastext/canvastext.js
 ADL-URL=http://git.thesoftwarefactory.be/pub/adl.git
 TABBER-URL=http://www.barelyfitz.com/projects/tabber/${TABBER-DIST}
 
+COMPRESSOR-URL=http://www.julienlecomte.net/yuicompressor/${COMPRESSOR-DIST}
+
 DIST=${APP}-${VERSION}.zip
-DISTSRCS=build/${APP}.js build/${APP}.css examples/*.html LICENSE README
+DISTSRCS=${TARGETS} examples/*.html LICENSE README
 
 DIST-SRC=${APP}-${VERSION}-src.zip
 DIST-SRCSRCS=LICENSE README examples Makefile doc src
 
 DIST-EXT=${APP}-${VERSION}-ext.zip
-DIST-EXTSRCS=LICENSE build/${APP}.js build/${APP}.css src/ext/${APP}.php
+DIST-EXTSRCS=LICENSE build/${APP}.standalone.min.js build/${APP}.css \
+             src/ext/${APP}.php
 
 PUB=moonbase:~/dist/
 
-all: build ${RUNLIBS}
+all: build
 
-build: build/${APP}.js build/${APP}.css
+build: ${TARGETS}
 
 dist: dist/${DIST} dist/${DIST-SRC} dist/${DIST-EXT}
 
@@ -72,10 +82,29 @@ lib/tabber:
 	@(cd lib; ${FETCH} ${TABBER-URL})
 	@(cd lib; mkdir tabber; cd tabber; ${UNZIP} ../${TABBER-DIST})
 
-build/${APP}.js: ${SRCS} ${LIBS}
+lib/yuicompressor/build/yuicompressor-2.4.2.jar:
+	@echo "*** importing yuicompressor"
+	@mkdir -p lib
+	@(cd lib; ${FETCH} ${COMPRESSOR-URL}; ${UNZIP} ${COMPRESSOR-DIST})
+	@(cd lib/yuicompressor; ant)
+
+build/${APP}.shared.js: ${SRCS}
 	@echo "*** building $@"
 	@mkdir -p build
-	@cat ${LIBS} ${SRCS} > $@
+	@cat ${SRCS} > $@
+
+build/${APP}.standalone.js: build/${APP}.shared.js ${LIBS}
+	@echo "*** building $@"
+	@mkdir -p build
+	@cat ${LIBS} $< > $@
+
+build/${APP}.shared.min.js: build/${APP}.shared.js ${COMPRESS-JAR}
+	@echo "*** building $@"
+	@${COMPRESS} $< > $@
+
+build/${APP}.standalone.min.js: build/${APP}.standalone.js ${COMPRESS-JAR}
+	@echo "*** building $@"
+	@${COMPRESS} $< > $@
 
 build/${APP}.css: ${CSSSRCS}
 	@echo "*** building $@"

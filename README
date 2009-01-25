@@ -1,9 +1,11 @@
 Canvas2D
+by Christophe VG <xtof@thesoftwarefactory.be>
+Copyright 2009, TheSoftwareFactory
 
 ---
 
-Canvas2D is a lightweight wrapper API around the HTML5 canvas
-element. It offers a shape-oriented interface.
+Canvas2D is a lightweight OO wrapper API around the HTML5 canvas
+element. It offers an extensible shape-oriented interface.
 
 ...
 
@@ -13,9 +15,40 @@ state, I'll add documentation and examples here also :-)
 
 In a nutshell:
 $ make
-...
-$ ls build
-Canvas2D.js
+*** building build/Canvas2D.js
+*** building build/Canvas2D.css
 
 Visit examples/ with your browser to see things in action and
 while waiting for me to write decent documentation, study the code.
+
+There is also a Mediawiki extension:
+
+$ make dist
+*** packaging Canvas2D distribution
+*** packaging Canvas2D src distribution
+*** packaging Canvas2D Mediawiki extenstion
+
+$ ls dist/ext/Canvas2D/
+Canvas2D.css	Canvas2D.js	Canvas2D.php	LICENSE
+
+Symlink/copy the extension directory to the Mediawiki extensions
+directory and add
+
+  require_once( "$IP/extensions/Canvas2D/Canvas2D.php" );
+
+to your LocalSettings.php.
+
+In your wiki pages you can include Canvas2D like this:
+
+<canvas2d show="source,console,about" height="250" width="300">
+[@ 75, 55] Rectangle rect1 +width=75 +height=75 +color="green";  
+[@ 50,175] Rectangle rect2 +width=50 +height=50 +color="red";  
+[@200,100] Rectangle rect3 +width=50 +height=50 +color="blue";  
+[@200, 25] Rectangle rect4 +width=50 +height=50 +color="yellow";  
+[@125,175] Rectangle rect5 +width=50 +height=50 +color="red";  
+
+Connector conn1 +from="rect1" +to="rect2" +style="vertical";  
+Connector conn2 +from="rect1" +to="rect3" +style="horizontal";  
+Connector conn3 +from="rect1" +to="rect4" +style="horizontal";  
+Connector conn4 +from="rect1" +to="rect5" +style="vertical";  
+</canvas2d>
