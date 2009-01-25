@@ -7,7 +7,7 @@ COMPRESS-JAR=lib/yuicompressor/build/yuicompressor-${COMPRESSOR-VERSION}.jar
 
 FETCH=wget -q
 GIT-FETCH=git clone -q
-ZIP=zip -q
+ZIP=zip -qr
 UNZIP=unzip -q
 UNTAR=tar -zxf
 COMPRESS=java -jar ${COMPRESS-JAR} --type js
@@ -113,7 +113,7 @@ build/${APP}.css: ${CSSSRCS}
 
 publish: dist/${DIST} dist/${DIST-SRC} dist/${DIST-EXT}
 	@echo "*** publishing distributions to ${PUB}"
-	@scp dist/${DIST} dist/${DIST-SRC} ${PUB}
+	@scp dist/${DIST} dist/${DIST-SRC} dist/${DIST-EXT} ${PUB}
 
 dist/${DIST}: ${DISTSRCS}
 	@echo "*** packaging ${APP} distribution"
