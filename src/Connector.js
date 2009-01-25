@@ -225,3 +225,19 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
     }
 
 } );
+
+Canvas2D.Connector.getNames = function() {
+    return [ "connector", "link" ];
+};
+
+Canvas2D.Connector.from = function(construct, diagram) {
+    var from  = construct.modifiers.get( "from"  ).value.value;
+    var to    = construct.modifiers.get( "to"    ).value.value;
+    var style = construct.modifiers.get( "style" ).value.value;
+    return { shape: new Canvas2D.Connector( diagram.shapesMap[from], 
+					    diagram.shapesMap[to],
+					    { style: style } ),
+	     pos: null };
+};
+
+Canvas2D.ADLVisitor.registerShape(Canvas2D.Connector);

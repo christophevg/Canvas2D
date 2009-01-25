@@ -64,3 +64,28 @@ Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
 	return s;
     }
 } );
+
+Canvas2D.Rectangle.getNames = function() {
+    return [ "rectangle", "box" ];
+}
+
+    Canvas2D.Rectangle.from = function( construct, parent ) {
+    var w = parseInt(construct.modifiers.get( "width"  ).value.value);
+    var h = parseInt(construct.modifiers.get( "height" ).value.value);
+    var c = construct.modifiers.get( "color"  ).value.value;
+    var shape = new Canvas2D.Rectangle({ name: construct.name,
+	                                 width: w, height: h, color: c });
+    var left, top;
+    if( construct.annotation ) {    
+	var pos = construct.annotation.data.split(",");
+	left = parseInt(pos[0]);
+	top  = parseInt(pos[1]);
+    } else {
+	left = this.offset * ( this.unknownIndex++ );
+	top = left;
+    }
+
+    return { shape: shape, pos: { left: left, top: top } };
+};
+
+Canvas2D.ADLVisitor.registerShape(Canvas2D.Rectangle);

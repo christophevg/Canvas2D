@@ -3,6 +3,10 @@ Canvas2D.Shape = Class.create( {
 	this.props = props;
     },
 
+    getName: function() {
+	return this.props.name;
+    },
+
     getProperties: function() {
 	return { type: "Shape",
 		 left: this.props.left,
@@ -44,6 +48,7 @@ Canvas2D.Shape = Class.create( {
     },
 
     // the remaining methods are not applicable for abstract shapes
+    getNames  : function() { return []; },
     getBox    : function() { return null; },
     render    : function() { },
     hit       : function(x,y) { return false; },

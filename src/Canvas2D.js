@@ -35,7 +35,9 @@ Canvas2D.Canvas = Class.create( {
 	this.tabbed  = false;
 
 	this.wait = false;
+
 	this.shapes = new Array();
+	this.shapesMap = {};
 
 	this.currentX    = 0;
 	this.currentY    = 0;
@@ -295,6 +297,7 @@ Canvas2D.Canvas = Class.create( {
     put: function(shape) {
 	shape.setPosition(this.newLeft, this.newTop);
 	this.shapes.push( shape );
+	this.shapesMap[shape.getName()] = shape;
 	shape.setCanvas(this);
 	this.render();
 	this.log( "canvas2d: added shape" + 
@@ -506,7 +509,7 @@ Canvas2D.Canvas = Class.create( {
 	var tree;
 	if( ( tree = parser.parse( source ) ) ) {
 	    this.freeze();
-	    tree.getRoot().accept( new Canvas2D.ADLVisitor(), this );
+	    tree.getRoot().accept(new Canvas2D.ADLVisitor(), this );
 	    this.thaw();
 	}
     },
@@ -518,5 +521,4 @@ Canvas2D.Canvas = Class.create( {
 	} );
 	return s;
     }
-
 } );

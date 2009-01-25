@@ -4,8 +4,8 @@ TABBER-DIST=tabber.zip
 
 APP=Canvas2D
 SRCS=src/${APP}.js \
-     src/Shape.js src/Rectangle.js src/Connector.js \
      src/Visitor.js \
+     src/Shape.js src/Rectangle.js src/Connector.js \
      src/KickStart.js
 CSSSRCS=lib/tabber/example.css src/${APP}.css
 VERSION=0.0.1
