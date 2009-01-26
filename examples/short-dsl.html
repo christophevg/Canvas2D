@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <style>
+      .box {
+        border: 2px solid #000;
+        float:left;
+        margin:10px; 
+        height: 385px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    </style>
+    <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
+    <script src="../build/Canvas2D.standalone.js"></script>
+  </head>
+  <body onload="startIt();">
+    <h1>Diagram Short-Hand DSL Example</h1>
+    <div class="box">
+      <h2>Dynamic + Tabs</h2>
+      <canvas id="myTabbedDiagram"  width="300" height="250"></canvas>
+    </div>
+    <div class="box">
+      <h2>Short-Hand Source</h2>
+      <textarea id="src" cols="60" style="height:285px">  
+Sheet mySheet +dynamic {
+  [@ 75, 55] box rect1 +geo="75x75" +green;  
+  [@ 50,175] box rect2 +geo="50x50" +red;  
+  [@200,100] box rect3 +geo="50x50" +blue;  
+  [@200, 25] box rect4 +geo="50x50" +yellow;  
+  [@125,175] box rect5 +geo="50x50" +red;  
+  
+  link conn1 +rect1-rect2 +vertical;  
+  link conn2 +rect1-rect3 +horizontal;  
+  link conn3 +rect1-rect4 +horizontal;  
+  link conn4 +rect1-rect5 +vertical;  
+}
+      </textarea>  
+      <br>
+      <input type="button" value="drawIt" onclick="drawIt();"/>
+    </div>
+  
+    <script>  
+      var canvas;
+
+      function drawIt() {
+          canvas.load(document.getElementById("src").value);
+      }
+
+      function startIt() {
+        canvas = new Canvas2D.Canvas("myTabbedDiagram");
+        canvas.makeTabbed( [ "source", "console", "about" ]);
+        drawIt();
+      }
+    </script>  
+
+  </body>
+</html>

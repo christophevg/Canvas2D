@@ -59,8 +59,8 @@ Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
     toString: function($super, prefix) {
 	var s = $super(prefix);
 	s += "Rectangle " + this.props.name;
-	s += "+width=" + this.props.width + " +height=" + this.props.height;
-	s += "+color=\"" + this.props.color + "\";";
+	s += "+geo=\"" + this.props.width + "x" + this.props.height + "\"";
+	s += "+" + this.props.color + ";";
 	return s;
     }
 } );
@@ -70,10 +70,32 @@ Canvas2D.Rectangle.getNames = function() {
 }
 
 Canvas2D.Rectangle.from = function( construct, diagram ) {
-    var w = parseInt(construct.modifiers.get( "width"  ).value.value);
-    var h = parseInt(construct.modifiers.get( "height" ).value.value);
-    var c = construct.modifiers.get( "color"  ).value.value;
-    var shape = new Canvas2D.Rectangle({ name: construct.name,
+    var w, h, c;
+    var widthModifier = construct.modifiers.get( "width"  );
+    if( widthModifier ) {
+	w = parseInt(widthModifier.value.value);
+    }
+    var heightModifier = construct.modifiers.get( "height" );
+    if( heightModifier ) {
+	h = parseInt(heightModifier.value.value);
+    }   
+    var colorModifier = construct.modifiers.get( "color"  );
+    if( colorModifier ) {
+	c = colorModifier.value.value;
+    }
+    var geoModifier = construct.modifiers.get( "geo" );
+    if( geoModifier ) {
+	var parts = geoModifier.value.value.split("x");
+	w = parseInt(parts[0]);
+	h = parseInt(parts[1]);
+    }
+    construct.modifiers.each(function(pair) {
+	if(pair.value.value == null) {
+	    c = pair.key;
+	}
+    });
+    
+   var shape = new Canvas2D.Rectangle({ name: construct.name,
 	                                 width: w, height: h, color: c });
     var left, top;
     if( construct.annotation ) {    

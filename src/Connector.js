@@ -218,9 +218,8 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
     toString: function($super, prefix) {
 	var s = $super(prefix);
 	s += "Connector " + this.props.name;
-	s += "+from=\"" + this.from.props.name + "\"" 
-	  + " +to=\"" + this.to.props.name + "\"";
-	s += "+style=\"" + this.props.style + "\";";
+	s += "+" + this.from.props.name + "-" + this.to.props.name;
+	s += " +" + this.props.style + ";";
 	return s;
     }
 
@@ -231,9 +230,30 @@ Canvas2D.Connector.getNames = function() {
 };
 
 Canvas2D.Connector.from = function(construct, diagram) {
-    var from  = construct.modifiers.get( "from"  ).value.value;
-    var to    = construct.modifiers.get( "to"    ).value.value;
-    var style = construct.modifiers.get( "style" ).value.value;
+    var from, to, style;
+    var fromModifier = construct.modifiers.get( "from"  );
+    if( fromModifier ) {
+	from = fromModifier.value.value;
+    }
+    var toModifier = construct.modifiers.get( "to" );
+    if( toModifier ) {
+	to = toModifier.value.value;
+    }
+    var styleModifier = construct.modifiers.get( "style" );
+    if( styleModifier ) {
+	style = styleModifier.value.value;
+    }
+    construct.modifiers.each(function(pair) {
+	if( pair.value.value == null ) {
+	    if( pair.key.include("-") ) {
+		var parts = pair.key.split( "-" );
+		from = parts[0];
+		to   = parts[1];
+	    } else {
+		style = pair.key;
+	    }
+	}
+    });
     return new Canvas2D.Connector( diagram.shapesMap[from], 
 				   diagram.shapesMap[to],
 				   { name: construct.name, style: style } );

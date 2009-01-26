@@ -176,7 +176,7 @@ Canvas2D.Sheet = Class.create( {
     toString: function() {
 	var s = "";
 	s += "Sheet "  + this.name;
-	s += " +style=\"" + this.style + "\" {\n";
+	s += " +" + this.style + " {\n";
 	this.shapes.each(function(shape) { 
 	    s += shape.toString("  ") + "\n";
 	} );
@@ -191,13 +191,20 @@ Canvas2D.Sheet.getNames = function() {
 }
 
 Canvas2D.Sheet.from = function(construct, canvas) {
-    var style = construct.modifiers.get( "style" );
-    if( style ) {
-	return new Canvas2D.Sheet({ name: construct.name, 
-				    style: style.value.value } );
-    } else {
-	return new Canvas2D.Sheet({ name: construct.name } );
+    var style = "static";
+    var styleModifier = construct.modifiers.get( "style" );
+    if( styleModifier ) {
+	style = styleModifier.value.value.toLowerCase();
     }
+    
+    construct.modifiers.each(function(pair) {
+	if( pair.key.toLowerCase() == "static" 
+	    || pair.key.toLowerCase() == "dynamic" ) {
+	    style = pair.key.toLowerCase();
+	}
+    });
+
+    return new Canvas2D.Sheet({ name: construct.name, style: style } );
 };
 
 Canvas2D.ADLVisitor.registerConstruct(Canvas2D.Sheet);

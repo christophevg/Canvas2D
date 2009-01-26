@@ -1,12 +1,11 @@
 0.1.0
-- introduce Book construct and move more stuff from Canvas to Book
-- add short hand ADL support (decorator ?)
-- add some shapes, to make nicer demo (think visio ;-))
 - extend support for events
 - make UmlCanvas diagram with class model of Canvas2D
 
 LATER
-- shape definition language
+- introduce Book construct and move more stuff from Canvas to Book
+- shape/path definition language (svg?)
+- add some shapes, to make nicer demo (think visio ;-))
 - Visio export tool
 - build custom prototype.js from repository including only what we need
 - introduce global logging framework with fallbacks (print, console, alert)
