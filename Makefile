@@ -3,7 +3,7 @@ EXCANVAS-DIST=excanvas_0002.zip
 TABBER-DIST=tabber.zip
 COMPRESSOR-VERSION=2.4.2
 COMPRESSOR-DIST=yuicompressor-${COMPRESSOR-VERSION}.zip
-COMPRESS-JAR=lib/yuicompressor/build/yuicompressor-${COMPRESSOR-VERSION}.jar
+COMPRESS-JAR=lib/yuicompressor-${COMPRESSOR-VERSION}/build/yuicompressor-${COMPRESSOR-VERSION}.jar
 
 FETCH=wget -q
 GIT-FETCH=git clone -q
@@ -84,11 +84,11 @@ lib/tabber:
 	@(cd lib; ${FETCH} ${TABBER-URL})
 	@(cd lib; mkdir tabber; cd tabber; ${UNZIP} ../${TABBER-DIST})
 
-lib/yuicompressor/build/yuicompressor-2.4.2.jar:
+${COMPRESS-JAR}:
 	@echo "*** importing yuicompressor"
 	@mkdir -p lib
 	@(cd lib; ${FETCH} ${COMPRESSOR-URL}; ${UNZIP} ${COMPRESSOR-DIST})
-	@(cd lib/yuicompressor; ant)
+	@(cd lib/yuicompressor-${COMPRESSOR-VERSION}; ant > /dev/null)
 
 build/${APP}.shared.js: ${SRCS}
 	@echo "*** building $@"
