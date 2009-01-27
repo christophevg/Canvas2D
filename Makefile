@@ -48,9 +48,20 @@ DIST-EXTSRCS=LICENSE build/${APP}.standalone.min.js build/${APP}.css \
 
 PUB=moonbase:~/dist/
 
-all: build
+all: check-deps build
 
-build: ${TARGETS}
+build: check-deps ${TARGETS}
+
+check-deps:
+	@echo "*** checking dependencies"
+	@echo "    (if you get errors in this section the cmd right before"
+	@echo "     the error, is not found in your PATH)"
+	@echo "    - zip"; which zip >/dev/null
+	@echo "    - unzip"; which unzip >/dev/null
+	@echo "    - wget";  which wget >/dev/null
+	@echo "    - git"; which git >/dev/null
+	@echo "    - java";  which java >/dev/null
+	@echo "*** FOUND all required commands on your system"
 
 dist: dist/${DIST} dist/${DIST-SRC} dist/${DIST-EXT}
 
