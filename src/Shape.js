@@ -23,6 +23,7 @@ Canvas2D.Shape = Class.create( {
 	this.props.left = left;
 	this.props.top  = top;
 	this.forceRedraw();
+	return this;
     },
 
     forceRedraw: function() {
