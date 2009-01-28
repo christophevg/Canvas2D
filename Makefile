@@ -1,5 +1,4 @@
 PROTOTYPE-DIST=prototype-1.6.0.3.js
-EXCANVAS-DIST=excanvas_0002.zip
 TABBER-DIST=tabber.zip
 COMPRESSOR-VERSION=2.4.2
 COMPRESSOR-DIST=yuicompressor-${COMPRESSOR-VERSION}.zip
@@ -24,12 +23,12 @@ SRCS=src/SanityChecks.js \
 CSSSRCS=lib/tabber/example.css src/${APP}.css
 VERSION=0.0.2
 LIBS=lib/${PROTOTYPE-DIST} \
-     lib/excanvas/excanvas.js lib/canvastext.js \
+     lib/excanvas.js lib/canvastext.js \
      lib/adl/build/adl.js \
      lib/tabber/tabber.js
 
 PROTOTYPE-URL=http://www.prototypejs.org/assets/2008/9/29/${PROTOTYPE-DIST}
-EXCANVAS-URL=http://surfnet.dl.sourceforge.net/sourceforge/excanvas/
+EXCANVAS-URL=http://excanvas.svn.sourceforge.net/viewvc/excanvas/excanvas.js
 CANVASTEXT-URL=http://www.federated.com/~jim/canvastext/canvastext.js
 ADL-URL=http://git.thesoftwarefactory.be/pub/adl.git
 TABBER-URL=http://www.barelyfitz.com/projects/tabber/${TABBER-DIST}
@@ -72,11 +71,10 @@ lib/${PROTOTYPE-DIST}:
 	@mkdir -p lib
 	@(cd lib; ${FETCH} ${PROTOTYPE-URL})
 
-lib/excanvas/excanvas.js: 
+lib/excanvas.js: 
 	@echo "*** importing $@"
 	@mkdir -p lib
-	@(cd lib; ${FETCH} ${EXCANVAS-URL}/${EXCANVAS-DIST})
-	@(cd lib; mkdir excanvas; cd excanvas; ${UNZIP} ../${EXCANVAS-DIST})
+	@(cd lib; ${FETCH} ${EXCANVAS-URL})
 
 lib/canvastext.js:
 	@echo "*** importing $@"
