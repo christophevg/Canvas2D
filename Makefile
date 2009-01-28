@@ -22,7 +22,7 @@ SRCS=src/SanityChecks.js \
      src/Shape.js src/Rectangle.js src/Connector.js \
      src/KickStart.js
 CSSSRCS=lib/tabber/example.css src/${APP}.css
-VERSION=0.0.1
+VERSION=0.0.2
 LIBS=lib/${PROTOTYPE-DIST} \
      lib/excanvas/excanvas.js lib/canvastext.js \
      lib/adl/build/adl.js \
@@ -48,20 +48,22 @@ DIST-EXTSRCS=LICENSE build/${APP}.standalone.min.js build/${APP}.css \
 
 PUB=moonbase:~/dist/
 
-all: check-deps build
+all: build
 
-build: check-deps ${TARGETS}
+build: .check-deps ${TARGETS}
 
-check-deps:
+.check-deps:
 	@echo "*** checking dependencies"
 	@echo "    (if you get errors in this section the cmd right before"
 	@echo "     the error, is not found in your PATH)"
 	@echo "    - zip"; which zip >/dev/null
+	@echo "    - touch"; which touch >/dev/null
 	@echo "    - unzip"; which unzip >/dev/null
 	@echo "    - wget";  which wget >/dev/null
 	@echo "    - git"; which git >/dev/null
 	@echo "    - java";  which java >/dev/null
 	@echo "*** FOUND all required commands on your system"
+	@touch $@
 
 dist: dist/${DIST} dist/${DIST-SRC} dist/${DIST-EXT}
 
