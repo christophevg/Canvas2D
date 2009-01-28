@@ -168,7 +168,17 @@ Canvas2D.Sheet = Class.create( {
     },
 
     render: function() {
-	this.shapes.each(function(shape) { shape.render(); } );
+	var delayed = [];
+	this.shapes.each( function(shape) { 
+	    if( shape.delayRender() ) {
+		delayed.push(shape);
+	    } else {
+		shape.render(); 
+	    }
+	} );
+
+	delayed.each( function(shape) { shape.render(); } );
+
 	this.addSelectionOverlay();
 	this.addSelectionMarkers();
     },

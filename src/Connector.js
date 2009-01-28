@@ -5,6 +5,10 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
 		begin: null, 
 		end: null },
 
+    delayRender: function() {
+	return true;
+    },
+    
     initialize: function($super, from, to, props) {
 	$super(props || {});
 	this.from = from;

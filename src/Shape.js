@@ -51,6 +51,10 @@ Canvas2D.Shape = Class.create( {
 	return prefix + "[@" + this.props.left + "," + this.props.top + "] ";
     },
 
+    delayRender: function() {
+	return false;
+    },
+
     // the remaining methods are not applicable for abstract shapes
     getNames  : function() { return []; },
     getBox    : function() { return null; },
