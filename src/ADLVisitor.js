@@ -11,7 +11,6 @@ Canvas2D.ADLVisitor = Class.create( {
 	} else if( Canvas2D.ADLVisitor.knownConstructs[constructType] ) {
 	    var elem = Canvas2D.ADLVisitor.knownConstructs[constructType]
 	                     .from(construct, parent);
-	    parent.add( elem );
 	    construct.childrenAccept(this, elem);
 	    return construct;
 	} else {

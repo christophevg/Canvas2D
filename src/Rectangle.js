@@ -69,7 +69,7 @@ Canvas2D.Rectangle.getNames = function() {
     return [ "rectangle", "box" ];
 }
 
-Canvas2D.Rectangle.from = function( construct, diagram ) {
+Canvas2D.Rectangle.from = function( construct, sheet ) {
     var w, h, c;
     var widthModifier = construct.modifiers.get( "width"  );
     if( widthModifier ) {
@@ -106,7 +106,7 @@ Canvas2D.Rectangle.from = function( construct, diagram ) {
 	left = this.offset * ( this.unknownIndex++ );
 	top = left;
     }
-    shape.setPosition(left,top);
+    sheet.at(left,top).put( shape );
     return shape;
 };
 

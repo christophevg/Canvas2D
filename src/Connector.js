@@ -233,7 +233,7 @@ Canvas2D.Connector.getNames = function() {
     return [ "connector", "link" ];
 };
 
-Canvas2D.Connector.from = function(construct, diagram) {
+Canvas2D.Connector.from = function(construct, sheet) {
     var from, to, style;
     var fromModifier = construct.modifiers.get( "from"  );
     if( fromModifier ) {
@@ -258,9 +258,11 @@ Canvas2D.Connector.from = function(construct, diagram) {
 	    }
 	}
     });
-    return new Canvas2D.Connector( diagram.shapesMap[from], 
-				   diagram.shapesMap[to],
-				   { name: construct.name, style: style } );
+    var conn = new Canvas2D.Connector( sheet.shapesMap[from], 
+		 		       sheet.shapesMap[to],
+				       { name: construct.name, style: style } );
+    sheet.put(conn);
+    return conn;
 };
 
 Canvas2D.ADLVisitor.registerConstruct(Canvas2D.Connector);

@@ -214,7 +214,9 @@ Canvas2D.Sheet.from = function(construct, canvas) {
 	}
     });
 
-    return new Canvas2D.Sheet({ name: construct.name, style: style } );
+    var sheet = new Canvas2D.Sheet({ name: construct.name, style: style } );
+    canvas.add(sheet);
+    return sheet;
 };
 
 Canvas2D.ADLVisitor.registerConstruct(Canvas2D.Sheet);
