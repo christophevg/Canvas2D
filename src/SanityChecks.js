@@ -8,6 +8,9 @@ if( typeof Prototype == "undefined" ) {
     alert( "Canvas2D requires the CanvasText implementation." );
 }
 
+/*
 if( typeof Canvas2D != "undefined" ) {
     alert( "WARNING: Canvas2D is already defined and will be redefined!!!" );
 }
+*/
+
