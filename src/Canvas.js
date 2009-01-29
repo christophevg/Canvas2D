@@ -239,7 +239,7 @@ Canvas2D.Canvas = Class.create( {
 
     handleMouseUp: function(event) {
 	this.mousepressed = false;
-	var pos = this.getXY();
+	var pos = this.getXY(event);
 	this.fireEvent( "mouseup", pos );
 	this.mousePos = pos;
 	this.render();
@@ -249,11 +249,13 @@ Canvas2D.Canvas = Class.create( {
 	if( this.mousepressed ) {
 	    this.handleMouseDrag(event);
 	}
-	var pos = this.getXY();
-	this.mouseOver = 
-	    ( pos.x >= 0 && pos.x <= this.htmlcanvas.width )
-	    &&  
-	    ( pos.y >= 0 && pos.y <= this.htmlcanvas.height );
+	var pos = this.getXY(event);
+	if( pos ) {
+	    this.mouseOver = 
+		( pos.x >= 0 && pos.x <= this.htmlcanvas.width )
+		&&  
+		( pos.y >= 0 && pos.y <= this.htmlcanvas.height );
+	}
     },
 
     handleMouseDrag: function(event) {
