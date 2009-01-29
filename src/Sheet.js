@@ -1,5 +1,6 @@
 Canvas2D.Sheet = Class.create( {
-    style     : "static", // description of the style [static|dynamic]
+    style         : "static",                // selected style
+    allowedStyles : [ "static", "dynamic" ], // allowed styls
 
     canvas    : null, // reference to the canvas this sheet needs to render on
 
@@ -25,6 +26,7 @@ Canvas2D.Sheet = Class.create( {
 	this.clear();
 
 	this.eventHandlers = {};
+	this.allowedStyles = new Array("static", "dynamic");
     },
 
     isDynamic: function() {
@@ -43,6 +45,13 @@ Canvas2D.Sheet = Class.create( {
 
     setCanvas: function( canvas ) {
 	this.canvas = canvas;
+
+	if( this.allowedStyles.indexOf(this.style) < 0 ) {
+    	    this.log(this.style + " is an unknown style, reverted to static.\n"+
+    		     "Allowed styles are " + this.allowedStyles);
+    	    this.style = "static";
+	}
+
 	this.canvas.on( "mousedown", this.handleMouseDown.bind(this) );
 	this.canvas.on( "mouseup",   this.handleMouseUp  .bind(this) );
 	this.canvas.on( "mousedrag", this.handleMouseDrag.bind(this) );
