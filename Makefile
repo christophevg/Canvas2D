@@ -21,7 +21,7 @@ SRCS=src/SanityChecks.js \
      src/Shape.js src/Rectangle.js src/Connector.js \
      src/KickStart.js
 CSSSRCS=lib/tabber/example.css src/${APP}.css
-VERSION=0.0.3
+VERSION=0.0.4
 LIBS=lib/${PROTOTYPE-DIST} \
      lib/excanvas.js lib/canvastext.js \
      lib/adl/build/adl.js \

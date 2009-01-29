@@ -29,9 +29,11 @@ function Canvas2DInit() {
 
   $wgParser->setHook( 'canvas2d', 'Canvas2DRender' );
 
-  $wgOut->addHeadItem('Canvas2D-JS', 
-		      "<script src=\"$path/Canvas2D.standalone.min.js\">".
-		      "</script>");
+  if( !$wgOut->hasHeadItem("Canvas2D-JS") ) {
+    $wgOut->addHeadItem('Canvas2D-JS', 
+			"<script src=\"$path/Canvas2D.standalone.min.js\">".
+			"</script>");
+  }
   $wgOut->addHeadItem('Canvas2D-CSS', 
 		      "<link href=\"$path/Canvas2D.css\" ".
 		      "rel=\"stylesheet\" type=\"text/css\" />");
