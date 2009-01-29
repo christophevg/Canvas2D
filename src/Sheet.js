@@ -25,6 +25,7 @@ Canvas2D.Sheet = Class.create( {
 	this.clear();
 
 	this.eventHandlers = {};
+	this.allowedStyles = new Array("static", "dynamic");
     },
 
     isDynamic: function() {
@@ -42,6 +43,12 @@ Canvas2D.Sheet = Class.create( {
     },
 
     setCanvas: function( canvas ) {
+	if (!(this.allowedStyles.indexOf(this.style) > -1)) {
+    	canvas.log(this.style + " is an unknown style, reverting to static style");
+    	canvas.log("Allowed styles are " + this.allowedStyles);
+    	this.style = "static";
+    }
+
 	this.canvas = canvas;
 	this.canvas.on( "mousedown", this.handleMouseDown.bind(this) );
 	this.canvas.on( "mouseup",   this.handleMouseUp  .bind(this) );
