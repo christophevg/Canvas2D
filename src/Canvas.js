@@ -67,7 +67,7 @@ Canvas2D.Canvas = Class.create( {
 			      this.handleMouseDown.bindAsEventListener(this));
 		Event.observe(this.htmlcanvas, 'mouseup', 
 			      this.handleMouseUp.bindAsEventListener(this));
-		Event.observe(window, 'mousemove', 
+		Event.observe(document, 'mousemove', 
 			      this.handleMouseMove.bindAsEventListener(this));
 		// add textfunctions
 		CanvasTextFunctions.enable(this.canvas);
