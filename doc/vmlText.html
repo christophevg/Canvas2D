@@ -1,0 +1,56 @@
+<html>
+<head>
+<style>
+#container {
+  position: relative;
+  border: 1px solid blue;
+  width: 350px;
+  height: 200px;
+}
+#console {
+  position: relative;
+  border: 1px solid blue;
+  width: 350px;
+  height: 200px;
+}
+</style>
+</head>
+
+<body topmargin="0">
+
+<h1>Text in VML</h1>
+
+<hr>
+
+<style>v\: * { behavior: url(#default#VML);display:inline-block }</style>
+<xml:namespace ns="urn:schemas-microsoft-com:vml" prefix="v"/>
+
+<div id="container"></div>
+<textarea id="console"></textarea>
+<hr>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+<script>
+
+function drawText(font, size, left, top, text) {
+  var v = "<v:textbox style=\"position:absolute;left:" 
+          + left + "px;top:"+(top-size)+"px;\">"
+	  + "<span style=\"font-size:"+size+"px;\">"+text+"</v:textbox>";
+  document.getElementById("container").insertAdjacentHTML("beforeEnd", v);
+}
+
+var start = (new Date).getTime();
+for(var y=0; y<100; y++ ) {
+  for(var x=0; x<100; x++ ) {
+    drawText( "sans", 14, x, 10+y, "VML Testing Text a B c D e F G H i j" );
+  }
+}
+var diff = (new Date).getTime() - start;
+document.getElementById("console").value = diff + "ms";
+
+</script>
+
+</body>
+
+</html>
