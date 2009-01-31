@@ -1,4 +1,5 @@
 0.1.0
+- add some shapes, to make nicer demo (think visio ;-))
 - use props.validation
 - split off and use tsf.commons
 - implement better font rendering for IE (vml-based, textcanvas-based)
@@ -8,8 +9,8 @@
 LATER
 - introduce Book construct and move more stuff from Canvas to Book
 - shape/path definition language (svg?)
-- add some shapes, to make nicer demo (think visio ;-))
 - Visio export tool
+- add lirary concept
 - build custom prototype.js from repository including only what we need
 - introduce global logging framework with fallbacks (print, console, alert)
   - http://www.depressedpress.com/Content/Development/JavaScript/Extensions/DP%5FDeBug/
