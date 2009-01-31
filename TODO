@@ -1,4 +1,5 @@
 0.1.0
+- split off and use tsf.commons
 - implement better font rendering for IE (vml-based, textcanvas-based)
 - extend support for events
 - make UmlCanvas diagram with class model of Canvas2D
