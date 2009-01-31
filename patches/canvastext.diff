@@ -1,0 +1,42 @@
+--- canvastext.js.org	2009-01-29 20:35:52.000000000 +0100
++++ canvastext.js	2009-01-29 20:38:57.000000000 +0100
+@@ -129,6 +129,23 @@
+     return total;
+ }
+ 
++CanvasTextFunctions.italics = {};
++CanvasTextFunctions.makeItalic = function(letter, c, size) {
++    if( !CanvasTextFunctions.italics[letter] ) {
++	var italic = [];
++	for( var i=0; i < c.points.length; i++) {
++	    var a = c.points[i];
++	    if( a[0] != -1 && a[1] != -1) {
++		italic[i] = [ a[0]+(a[1]/3), a[1] ];
++	    } else {
++		italic[i] = [-1,-1];
++	    }
++	}
++	CanvasTextFunctions.italics[letter] = { width:c.width, points:italic };
++    }
++    return CanvasTextFunctions.italics[letter];
++}
++
+ CanvasTextFunctions.draw = function(ctx,font,size,x,y,str)
+ {
+     var total = 0;
+@@ -140,9 +157,12 @@
+     ctx.lineWidth = 2.0 * mag;
+ 
+     for ( i = 0; i < len; i++) {
+-	var c = CanvasTextFunctions.letter( str.charAt(i));
+-	if ( !c) continue;
+-
++	var character = str.charAt(i);
++	var c = CanvasTextFunctions.letter(character);
++	if ( !c ) continue;
++	if ( font.toLowerCase().indexOf("italic") > -1 ) {
++	    c = CanvasTextFunctions.makeItalic( character, c, size );
++	}
+ 	ctx.beginPath();
+ 
+ 	var penUp = 1;

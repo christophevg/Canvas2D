@@ -10,6 +10,7 @@ ZIP=zip -qr
 UNZIP=unzip -q
 UNTAR=tar -zxf
 COMPRESS=java -jar ${COMPRESS-JAR} --type js
+PATCH=patch -N -s
 
 APP=Canvas2D
 TARGETS=build/${APP}.shared.min.js build/${APP}.standalone.min.js \
@@ -60,6 +61,7 @@ build: .check-deps ${TARGETS}
 	@echo "    - unzip"; which unzip >/dev/null
 	@echo "    - wget";  which wget >/dev/null
 	@echo "    - git"; which git >/dev/null
+	@echo "    - patch"; which patch >/dev/null
 	@echo "    - java";  which java >/dev/null
 	@echo "*** FOUND all required commands on your system"
 	@touch $@
@@ -79,7 +81,8 @@ lib/excanvas.js:
 lib/canvastext.js:
 	@echo "*** importing $@"
 	@mkdir -p lib
-	@(cd lib; ${FETCH} ${CANVASTEXT-URL} )
+	@(cd lib; ${FETCH} ${CANVASTEXT-URL}; \
+                  ${PATCH} <../patches/canvastext.diff )
 
 lib/adl/build/adl.js:
 	@echo "*** importing $@"
@@ -150,6 +153,7 @@ dist/${DIST-EXT}: ${DIST-EXTSRCS}
 
 clean:
 	@find . | grep "~$$" | xargs rm
+	@rm -f lib/*.rej
 	@rm -rf build dist
 
 mrproper: clean
