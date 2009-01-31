@@ -43,12 +43,16 @@ Canvas2D.Shape = Class.create( {
 	this.forceRedraw();
     },
 
-    toString: function(prefix) {
+    positionToString: function(prefix) {
 	prefix = prefix || "";
 	if( this.props.left == null || this.props.top == null ) { 
 	    return prefix; 
 	}
 	return prefix + "[@" + this.props.left + "," + this.props.top + "] ";
+    },
+
+    toString: function(prefix) {
+	return this.positionToString(prefix);
     },
 
     delayRender: function() {
