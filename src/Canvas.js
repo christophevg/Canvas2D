@@ -127,7 +127,7 @@ Canvas2D.Canvas = Class.create( {
 
     updateSource: function(source) {
 	if( this.source && this.getCurrentSheet() ) {
-	    this.source.value = this.getCurrentSheet().toString();
+	    this.source.value = this.getCurrentSheet().toADL();
 	}
     },
 
@@ -434,10 +434,10 @@ Canvas2D.Canvas = Class.create( {
 	this.addToolbar();
     },
 
-    toString: function() {
+    toADL: function() {
 	var s = "";
 	this.sheets.each(function(sheet) {
-	    s += sheet.toString() + "\n";
+	    s += sheet.toADL() + "\n";
 	} );
 	return s;
     },

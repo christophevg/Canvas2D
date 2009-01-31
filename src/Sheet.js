@@ -192,12 +192,12 @@ Canvas2D.Sheet = Class.create( {
 	this.addSelectionMarkers();
     },
 
-    toString: function() {
+    toADL: function() {
 	var s = "";
 	s += "Sheet "  + this.name;
 	s += " +" + this.style + " {\n";
 	this.shapes.each(function(shape) { 
-	    s += shape.toString("  ") + "\n";
+	    s += shape.toADL("  ") + "\n";
 	} );
 	s += "}";
 	return s;

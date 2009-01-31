@@ -56,7 +56,7 @@ Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
 	}
     },
 
-    toString: function(prefix) {
+    toADL: function(prefix) {
 	var s = this.positionToString(prefix);
 	s += "Rectangle " + this.props.name;
 	s += "+geo=\"" + this.props.width + "x" + this.props.height + "\"";

@@ -51,7 +51,7 @@ Canvas2D.Shape = Class.create( {
 	return prefix + "[@" + this.props.left + "," + this.props.top + "] ";
     },
 
-    toString: function(prefix) {
+    toADL: function(prefix) {
 	return this.positionToString(prefix);
     },
 
