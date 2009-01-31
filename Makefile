@@ -31,7 +31,7 @@ LIBS=lib/${PROTOTYPE-DIST} \
 PROTOTYPE-URL=http://www.prototypejs.org/assets/2008/9/29/${PROTOTYPE-DIST}
 EXCANVAS-URL=http://excanvas.svn.sourceforge.net/viewvc/excanvas/excanvas.js
 CANVASTEXT-URL=http://www.federated.com/~jim/canvastext/canvastext.js
-ADL-URL=http://git.thesoftwarefactory.be/pub/adl.git
+ADL-URL=http://git.thesoftwarefactory.be/pub/ADL.git
 TABBER-URL=http://www.barelyfitz.com/projects/tabber/${TABBER-DIST}
 
 COMPRESSOR-URL=http://www.julienlecomte.net/yuicompressor/${COMPRESSOR-DIST}
