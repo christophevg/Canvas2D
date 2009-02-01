@@ -197,7 +197,8 @@ Canvas2D.Sheet = Class.create( {
 	s += "Sheet "  + this.name;
 	s += " +" + this.style + " {\n";
 	this.shapes.each(function(shape) { 
-	    s += shape.toADL("  ") + "\n";
+	    var t = shape.toADL("  ");
+	    if( t ) { s += t + "\n"; }
 	} );
 	s += "}";
 	return s;

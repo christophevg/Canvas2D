@@ -48,7 +48,7 @@ Canvas2D.Shape = Class.create( {
 	if( this.props.left == null || this.props.top == null ) { 
 	    return prefix; 
 	}
-	return prefix + "[@" + this.props.left + "," + this.props.top + "] ";
+	return prefix + "[@" + this.props.left + "," + this.props.top + "]\n";
     },
 
     toADL: function(prefix) {
