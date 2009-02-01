@@ -1,6 +1,12 @@
 // namespace for holding all Canvas2D related classes and functions
 var Canvas2D = {};
 
+Canvas2D.canvases = {};
+
+Canvas2D.getCanvas = function(id) {
+    return Canvas2D.canvases[id];
+};
+
 // technical wrapper class for the HTML5 Canvas element
 Canvas2D.Canvas = Class.create( {
     tabbed     : false, // tabbed interface
@@ -52,6 +58,9 @@ Canvas2D.Canvas = Class.create( {
 	// look for a console and sources for this canvas
 	this.console = document.getElementById( id+"Console" );
 	this.source  = document.getElementById( id+"Source" );
+
+	// register a global reference
+	Canvas2D.canvases[id] = this;
     },
 
     clear: function() {
