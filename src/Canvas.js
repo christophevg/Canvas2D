@@ -136,7 +136,11 @@ Canvas2D.Canvas = Class.create( {
 
     updateSource: function(source) {
 	if( this.source && this.getCurrentSheet() ) {
-	    this.source.value = this.getCurrentSheet().toADL();
+	    var newSource = this.getCurrentSheet().toADL();
+	    if( newSource != this.source.value ) {
+		this.source.value = newSource;
+		this.fireEvent( "sourceUpdated", newSource );
+	    }
 	}
     },
 

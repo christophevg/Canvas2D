@@ -116,7 +116,7 @@ Canvas2D.Sheet = Class.create( {
 	if( !this.isDynamic() ) { return; }
 	this.selectedShape = this.getShapeAt( pos.x, pos.y );
 	if( this.selectedShape ) {
-	    this.fireEvent( "shapeselected", this.selectedShape );
+	    this.fireEvent( "shapeSelected", this.selectedShape );
 	}
 	this.currentPos = pos;
     },
