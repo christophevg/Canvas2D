@@ -46,7 +46,7 @@ Canvas2D.Shape = Class.create( {
     positionToString: function(prefix) {
 	prefix = prefix || "";
 	if( this.props.left == null || this.props.top == null ) { 
-	    return prefix; 
+	    return ""; 
 	}
 	return prefix + "[@" + this.props.left + "," + this.props.top + "]\n";
     },
