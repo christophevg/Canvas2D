@@ -64,7 +64,8 @@ function Canvas2DRender( $input, $args, $parser ) {
   $canvas = '<div class="Canvas2D-container" style="float:'.$float.'">' .
     '<canvas class="Canvas2D'.$classes.'" id="' . $name . 
     '" width="'.$width.'" height="'.$height.'"></canvas></div>';
-  $canvas .= '<pre id="'.$name.'Source" style="display:none">'.$input.'</pre>';
+  $canvas .= '<pre id="'.$name.'Source" style="display:none">' . 
+    str_replace( " :", ":", str_replace( ": ", ":", $input ) ) . '</pre>';
 
   return $canvas;
 }
