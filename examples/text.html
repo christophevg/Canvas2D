@@ -17,7 +17,7 @@
     <h1>Diagram Text Example</h1>
     <div class="box">
       <h2>Text</h2>
-      <canvas id="myTextDiagram" width="300" height="250"></canvas>
+      <canvas id="myTextDiagram" width="500" height="250"></canvas>
     </div>
 
     <script>
@@ -25,11 +25,17 @@ function drawdemo() {
   var canvas = new Canvas2D.Canvas("myTextDiagram");
 
   var font = "sans";
-  var fontsize = 16;
+  var fontsize = 12;
 
   canvas.strokeStyle = "rgba(0,0,0,0.75)";
   canvas.drawText( font,            fontsize, 10, 10+fontsize, "Normal Text" );
+  canvas.strokeRect( 10, 10, canvas.measureText(font, fontsize, "Normal Text"), fontsize );
   canvas.drawText( font + "italic", fontsize, 10, 50+fontsize, "Italic Text" );
+  canvas.strokeRect( 10, 50, canvas.measureText(font, fontsize, "Italic Text"), fontsize );
+  canvas.drawTextCenter( font,            fontsize, 250, 90+fontsize, "Normal Centered Text" );
+  canvas.strokeRect( 250-(canvas.measureText(font, fontsize, "Normal Centered Text") / 2), 90, canvas.measureText(font, fontsize, "Normal Centered Text"), fontsize );
+  canvas.drawTextCenter( font + "italic", fontsize, 250, 130+fontsize, "Italic Centered Text" );
+  canvas.strokeRect( 250-(canvas.measureText(font, fontsize, "Italic Centered Text") / 2), 130, canvas.measureText(font, fontsize, "Italic Centered Text"), fontsize );
 }
     </script>
   </body>
