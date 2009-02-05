@@ -23,6 +23,8 @@
     <script>
 function drawdemo() {
   var canvas = new Canvas2D.Canvas("myTextDiagram");
+  // we're using low-level functions and don't want to be cleared
+  canvas.freeze();
 
   var font = "sans";
   var fontsize = 16;

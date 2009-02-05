@@ -81,6 +81,7 @@ Canvas2D.Canvas = Class.create( {
 		// add textfunctions
 		CanvasTextFunctions.enable(this.canvas);
 	    }
+	    this.render();
 	}
     },
 
@@ -435,10 +436,11 @@ Canvas2D.Canvas = Class.create( {
     render: function() {
 	if( this.wait || !this.canvas ) { return; }
 
+	this.canvas.clearRect( 0, 0, 
+			       this.htmlcanvas.width, 
+			       this.htmlcanvas.height );
+
 	if( this.getCurrentSheet() ) {
-	    this.canvas.clearRect( 0, 0, 
-				   this.htmlcanvas.width, 
-				   this.htmlcanvas.height );
 	    this.getCurrentSheet().render();
 	    this.updateSource();
 	}
