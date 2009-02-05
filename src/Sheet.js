@@ -1,6 +1,6 @@
 Canvas2D.Sheet = Class.create( {
     style         : "static",                // selected style
-    allowedStyles : [ "static", "dynamic" ], // allowed styls
+    allowedStyles : [ "static", "dynamic" ], // allowed styles
 
     canvas    : null, // reference to the canvas this sheet needs to render on
 
