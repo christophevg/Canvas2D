@@ -115,7 +115,7 @@ Canvas2D.Canvas = Class.create( {
 	if( this.plugins.length > 0 ) {
 	    this.plugins.each(function(plugin) {
 		plugins += "\n<hr>\n";
-		plugins += "<b>" + plugin.name + "</b><br>" + 
+		plugins += "<b>Plugin: " + plugin.name + "</b> " + 
 		    "by " + plugin.author + "<br>" +
 		    plugin.info;
 	    });
