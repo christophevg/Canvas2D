@@ -26,7 +26,7 @@ CSSSRCS=lib/tabber/example.css src/${APP}.css
 VERSION=$(shell git describe --tags | cut -d'-' -f1,2)
 LIBS=lib/${PROTOTYPE-DIST} \
      lib/excanvas.js lib/canvastext.js \
-     lib/ADL/build/adl.shared.js \
+     lib/ADL/build/ADL.shared.js \
      lib/tabber/tabber.js
 
 PROTOTYPE-URL=http://www.prototypejs.org/assets/2008/9/29/${PROTOTYPE-DIST}
@@ -88,7 +88,7 @@ lib/canvastext.js:
 	@(cd lib; ${FETCH} ${CANVASTEXT-URL}; \
                   ${PATCH} <../patches/canvastext.diff )
 
-lib/ADL/build/adl.shared.js:
+lib/ADL/build/ADL.shared.js:
 	@echo "*** importing $@"
 	@(cd lib; ${GIT-CLONE} ${ADL-URL})
 	@(cd lib/ADL; make)
