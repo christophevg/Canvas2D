@@ -24,6 +24,8 @@ Canvas2D.Canvas = Class.create( {
 
     eventHandlers : {}, // map of registered eventHandlers
 
+    plugins : [],   // list of registered plugins
+
     mouseOver : false,   // indicator if the mouse is currently over the canvas
     mousePos  : { x:0, y:0 }, // current mouse position
 
@@ -42,7 +44,9 @@ Canvas2D.Canvas = Class.create( {
 	this.sheets = new Array();
 	this.currentSheet = 0;
 
-	this.eventHandlers = {},
+	this.eventHandlers = {};
+
+	this.plugins = [];
 
 	this.currentX    = 0;
 	this.currentY    = 0;
@@ -97,11 +101,26 @@ Canvas2D.Canvas = Class.create( {
 	return tab;
     },
 
+    registerPlugin: function( plugin ) {
+	this.plugins.push( plugin );
+    },
+
     getAboutTab: function(width,height) {
 	var about = document.createElement("div");
 	about.className = "Canvas2D-about";
 	about.style.height = height + "px";
 	about.style.width = (parseInt(width)-4)  + "px";
+
+	var plugins = "";
+	if( this.plugins.length > 0 ) {
+	    this.plugins.each(function(plugin) {
+		plugins += "\n<hr>\n";
+		plugins += "<b>" + plugin.name + "</b><br>" + 
+		    "by " + plugin.author + "<br>" +
+		    plugin.info;
+	    });
+	}
+
 	about.innerHTML = '<span class="Canvas2D-about-text">' +
 	    '<b>Canvas2D</b><br>Copyright &copy 2009, ' +
 	    '<a href="http://christophe.vg" target="_blank">Christophe VG</a>'+ 
@@ -111,7 +130,7 @@ Canvas2D.Canvas = Class.create( {
 	    'target="_blank">http://thesoftwarefactory.be/wiki/Canvas2D</a> ' +
 	    'for more info. Licensed under the ' +
 	    '<a href="http://thesoftwarefactory.be/wiki/BSD_License" ' + 
-	    'target="_blank">BSD License</a>.</span>';
+	    'target="_blank">BSD License</a>.' + plugins + '</span>';
 	return this.makeTab("About", height, about );
     },
 

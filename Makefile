@@ -1,7 +1,14 @@
 PROTOTYPE-DIST=prototype-1.6.0.3.js
+PROTOTYPE-URL=http://www.prototypejs.org/assets/2008/9/29/${PROTOTYPE-DIST}
+EXCANVAS-URL=http://excanvas.svn.sourceforge.net/viewvc/excanvas/excanvas.js
+CANVASTEXT-URL=http://www.federated.com/~jim/canvastext/canvastext.js
+ADL-URL=http://git.thesoftwarefactory.be/pub/ADL.git
 TABBER-DIST=tabber.zip
+TABBER-URL=http://www.barelyfitz.com/projects/tabber/${TABBER-DIST}
+
 COMPRESSOR-VERSION=2.4.2
 COMPRESSOR-DIST=yuicompressor-${COMPRESSOR-VERSION}.zip
+COMPRESSOR-URL=http://www.julienlecomte.net/yuicompressor/${COMPRESSOR-DIST}
 COMPRESS-JAR=lib/yuicompressor-${COMPRESSOR-VERSION}/build/yuicompressor-${COMPRESSOR-VERSION}.jar
 
 FETCH=wget -q
@@ -14,7 +21,8 @@ COMPRESS=java -jar ${COMPRESS-JAR} --type js
 PATCH=patch -N -s
 
 APP=Canvas2D
-TARGETS=build/${APP}.shared.min.js build/${APP}.standalone.min.js \
+TARGETS=build/${APP}.shared.min.js \
+        build/${APP}.standalone.min.js \
         build/${APP}.css 
 SRCS=src/SanityChecks.js \
      src/Canvas.js \
@@ -28,14 +36,6 @@ LIBS=lib/${PROTOTYPE-DIST} \
      lib/excanvas.js lib/canvastext.js \
      lib/ADL/build/ADL.shared.js \
      lib/tabber/tabber.js
-
-PROTOTYPE-URL=http://www.prototypejs.org/assets/2008/9/29/${PROTOTYPE-DIST}
-EXCANVAS-URL=http://excanvas.svn.sourceforge.net/viewvc/excanvas/excanvas.js
-CANVASTEXT-URL=http://www.federated.com/~jim/canvastext/canvastext.js
-ADL-URL=http://git.thesoftwarefactory.be/pub/ADL.git
-TABBER-URL=http://www.barelyfitz.com/projects/tabber/${TABBER-DIST}
-
-COMPRESSOR-URL=http://www.julienlecomte.net/yuicompressor/${COMPRESSOR-DIST}
 
 DIST=${APP}-${VERSION}.zip
 DISTSRCS=${TARGETS} examples/*.html LICENSE README
@@ -130,10 +130,6 @@ build/${APP}.css: ${CSSSRCS}
 	@echo "*** building $@"
 	@mkdir -p build
 	@cat ${CSSSRCS} > $@
-
-publish: dist/${DIST} dist/${DIST-SRC} dist/${DIST-EXT}
-	@echo "*** publishing distributions to ${PUB}"
-	@scp dist/${DIST} dist/${DIST-SRC} dist/${DIST-EXT} ${PUB}
 
 dist/${DIST}: ${DISTSRCS}
 	@echo "*** packaging ${APP} distribution"
