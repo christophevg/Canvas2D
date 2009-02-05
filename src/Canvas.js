@@ -441,8 +441,10 @@ Canvas2D.Canvas = Class.create( {
 	this.canvas.save();
 	this.strokeStyle = "rgba(0,0,0,0.50)";
 	this.rotate(Math.PI/2);
+	var plugins = "";
+	this.plugins.each(function(plugin) { plugins += " + " + plugin.name });
 	this.drawText( "Sans", 6, 3, (this.htmlcanvas.width * -1) + 7, 
-		       "Canvas2D / Christophe VG" ); 
+		       "Canvas2D" + plugins + " / Christophe VG" ); 
 	this.canvas.restore();
     },
 
