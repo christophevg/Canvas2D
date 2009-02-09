@@ -24,6 +24,8 @@ Canvas2D.Canvas = Class.create( {
 
     eventHandlers : {}, // map of registered eventHandlers
 
+    plugins : [],   // list of registered plugins
+
     mouseOver : false,   // indicator if the mouse is currently over the canvas
     mousePos  : { x:0, y:0 }, // current mouse position
 
@@ -42,7 +44,9 @@ Canvas2D.Canvas = Class.create( {
 	this.sheets = new Array();
 	this.currentSheet = 0;
 
-	this.eventHandlers = {},
+	this.eventHandlers = {};
+
+	this.plugins = [];
 
 	this.currentX    = 0;
 	this.currentY    = 0;
@@ -81,6 +85,7 @@ Canvas2D.Canvas = Class.create( {
 		// add textfunctions
 		CanvasTextFunctions.enable(this.canvas);
 	    }
+	    this.render();
 	}
     },
 
@@ -96,11 +101,26 @@ Canvas2D.Canvas = Class.create( {
 	return tab;
     },
 
+    registerPlugin: function( plugin ) {
+	this.plugins.push( plugin );
+    },
+
     getAboutTab: function(width,height) {
 	var about = document.createElement("div");
 	about.className = "Canvas2D-about";
 	about.style.height = height + "px";
 	about.style.width = (parseInt(width)-4)  + "px";
+
+	var plugins = "";
+	if( this.plugins.length > 0 ) {
+	    this.plugins.each(function(plugin) {
+		plugins += "\n<hr>\n";
+		plugins += "<b>Plugin: " + plugin.name + "</b> " + 
+		    "by " + plugin.author + "<br>" +
+		    plugin.info;
+	    });
+	}
+
 	about.innerHTML = '<span class="Canvas2D-about-text">' +
 	    '<b>Canvas2D</b><br>Copyright &copy 2009, ' +
 	    '<a href="http://christophe.vg" target="_blank">Christophe VG</a>'+ 
@@ -110,7 +130,7 @@ Canvas2D.Canvas = Class.create( {
 	    'target="_blank">http://thesoftwarefactory.be/wiki/Canvas2D</a> ' +
 	    'for more info. Licensed under the ' +
 	    '<a href="http://thesoftwarefactory.be/wiki/BSD_License" ' + 
-	    'target="_blank">BSD License</a>.</span>';
+	    'target="_blank">BSD License</a>.' + plugins + '</span>';
 	return this.makeTab("About", height, about );
     },
 
@@ -344,6 +364,11 @@ Canvas2D.Canvas = Class.create( {
 	this.canvas.drawText(font, size, left, top, text);
     },
 
+    drawImage: function(img, left, top) {
+	if( !img.complete ) { return; }
+	this.canvas.drawImage(img, left, top);
+    },
+
     rotate: function(ang) {
 	this.canvas.rotate(ang);
     },
@@ -421,8 +446,10 @@ Canvas2D.Canvas = Class.create( {
 	this.canvas.save();
 	this.strokeStyle = "rgba(0,0,0,0.50)";
 	this.rotate(Math.PI/2);
+	var plugins = "";
+	this.plugins.each(function(plugin) { plugins += " + " + plugin.name });
 	this.drawText( "Sans", 6, 3, (this.htmlcanvas.width * -1) + 7, 
-		       "Canvas2D / Christophe VG" ); 
+		       "Canvas2D" + plugins + " / Christophe VG" ); 
 	this.canvas.restore();
     },
 
@@ -435,10 +462,11 @@ Canvas2D.Canvas = Class.create( {
     render: function() {
 	if( this.wait || !this.canvas ) { return; }
 
+	this.canvas.clearRect( 0, 0, 
+			       this.htmlcanvas.width, 
+			       this.htmlcanvas.height );
+
 	if( this.getCurrentSheet() ) {
-	    this.canvas.clearRect( 0, 0, 
-				   this.htmlcanvas.width, 
-				   this.htmlcanvas.height );
 	    this.getCurrentSheet().render();
 	    this.updateSource();
 	}

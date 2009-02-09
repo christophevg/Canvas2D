@@ -1,11 +1,19 @@
 PROTOTYPE-DIST=prototype-1.6.0.3.js
+PROTOTYPE-URL=http://www.prototypejs.org/assets/2008/9/29/${PROTOTYPE-DIST}
+EXCANVAS-URL=http://excanvas.svn.sourceforge.net/viewvc/excanvas/excanvas.js
+CANVASTEXT-URL=http://www.federated.com/~jim/canvastext/canvastext.js
+ADL-URL=http://git.thesoftwarefactory.be/pub/ADL.git
 TABBER-DIST=tabber.zip
+TABBER-URL=http://www.barelyfitz.com/projects/tabber/${TABBER-DIST}
+
 COMPRESSOR-VERSION=2.4.2
 COMPRESSOR-DIST=yuicompressor-${COMPRESSOR-VERSION}.zip
+COMPRESSOR-URL=http://www.julienlecomte.net/yuicompressor/${COMPRESSOR-DIST}
 COMPRESS-JAR=lib/yuicompressor-${COMPRESSOR-VERSION}/build/yuicompressor-${COMPRESSOR-VERSION}.jar
 
 FETCH=wget -q
-GIT-FETCH=git clone -q
+GIT-PULL=git pull -q
+GIT-CLONE=git clone -q
 ZIP=zip -qr
 UNZIP=unzip -q
 UNTAR=tar -zxf
@@ -13,28 +21,22 @@ COMPRESS=java -jar ${COMPRESS-JAR} --type js
 PATCH=patch -N -s
 
 APP=Canvas2D
-TARGETS=build/${APP}.shared.min.js build/${APP}.standalone.min.js \
+TARGETS=build/${APP}.shared.min.js \
+        build/${APP}.standalone.min.js \
         build/${APP}.css 
 SRCS=src/SanityChecks.js \
      src/Canvas.js \
      src/ADLVisitor.js \
      src/Sheet.js \
      src/Shape.js src/Rectangle.js src/Connector.js \
+     src/Image.js \
      src/KickStart.js
 CSSSRCS=lib/tabber/example.css src/${APP}.css
 VERSION=$(shell git describe --tags | cut -d'-' -f1,2)
 LIBS=lib/${PROTOTYPE-DIST} \
      lib/excanvas.js lib/canvastext.js \
-     lib/adl/build/adl.js \
+     lib/ADL/build/ADL.shared.js \
      lib/tabber/tabber.js
-
-PROTOTYPE-URL=http://www.prototypejs.org/assets/2008/9/29/${PROTOTYPE-DIST}
-EXCANVAS-URL=http://excanvas.svn.sourceforge.net/viewvc/excanvas/excanvas.js
-CANVASTEXT-URL=http://www.federated.com/~jim/canvastext/canvastext.js
-ADL-URL=http://git.thesoftwarefactory.be/pub/ADL.git
-TABBER-URL=http://www.barelyfitz.com/projects/tabber/${TABBER-DIST}
-
-COMPRESSOR-URL=http://www.julienlecomte.net/yuicompressor/${COMPRESSOR-DIST}
 
 DIST=${APP}-${VERSION}.zip
 DISTSRCS=${TARGETS} examples/*.html LICENSE README
@@ -68,6 +70,9 @@ build: .check-deps ${TARGETS}
 
 dist: dist/${DIST} dist/${DIST-SRC} dist/${DIST-EXT}
 
+update-libs:
+	@(cd lib/ADL; ${GIT-PULL}; make clean; make)
+
 lib/${PROTOTYPE-DIST}:
 	@echo "*** importing $@"
 	@mkdir -p lib
@@ -84,10 +89,10 @@ lib/canvastext.js:
 	@(cd lib; ${FETCH} ${CANVASTEXT-URL}; \
                   ${PATCH} <../patches/canvastext.diff )
 
-lib/adl/build/adl.js:
+lib/ADL/build/ADL.shared.js:
 	@echo "*** importing $@"
-	@${GIT-FETCH} ${ADL-URL} lib/adl
-	@(cd lib/adl; make)
+	@(cd lib; ${GIT-CLONE} ${ADL-URL})
+	@(cd lib/ADL; make)
 
 lib/tabber/tabber.js: lib/tabber
 lib/tabber/tabber.css: lib/tabber
@@ -126,10 +131,6 @@ build/${APP}.css: ${CSSSRCS}
 	@echo "*** building $@"
 	@mkdir -p build
 	@cat ${CSSSRCS} > $@
-
-publish: dist/${DIST} dist/${DIST-SRC} dist/${DIST-EXT}
-	@echo "*** publishing distributions to ${PUB}"
-	@scp dist/${DIST} dist/${DIST-SRC} dist/${DIST-EXT} ${PUB}
 
 dist/${DIST}: ${DISTSRCS}
 	@echo "*** packaging ${APP} distribution"
