@@ -1,5 +1,5 @@
 Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
-    render: function() {
+    draw: function() {
 	this.canvas.beginPath(); 
 	this.canvas.strokeStyle = this.props.color;
 	this.canvas.strokeRect( this.props.left,  this.props.top, 
@@ -70,33 +70,24 @@ Canvas2D.Rectangle.getNames = function() {
 }
 
 Canvas2D.Rectangle.from = function( construct, sheet ) {
-    var w, h, c;
-    var widthModifier = construct.modifiers.get( "width"  );
-    if( widthModifier ) {
-	w = parseInt(widthModifier.value.value);
-    }
-    var heightModifier = construct.modifiers.get( "height" );
-    if( heightModifier ) {
-	h = parseInt(heightModifier.value.value);
-    }   
-    var colorModifier = construct.modifiers.get( "color"  );
-    if( colorModifier ) {
-	c = colorModifier.value.value;
-    }
-    var geoModifier = construct.modifiers.get( "geo" );
-    if( geoModifier ) {
-	var parts = geoModifier.value.value.split("x");
-	w = parseInt(parts[0]);
-	h = parseInt(parts[1]);
-    }
+    var props = { name: construct.name };
     construct.modifiers.each(function(pair) {
-	if(pair.value.value == null) {
-	    c = pair.key;
+	var key   = pair.key;
+	var value = pair.value.value.value;
+
+	if( key == "width" || key == "height" ) {
+	    value = parseInt(value);
 	}
-    });
-    
-   var shape = new Canvas2D.Rectangle({ name: construct.name,
-	                                 width: w, height: h, color: c });
+
+	if( value == "" ) {
+	    value = key.value;
+	    key = "color";
+	}
+
+	props[key] = value;
+    } );
+
+    var shape = new Canvas2D.Rectangle(props);
     var left, top;
     if( construct.annotation ) {    
 	var pos = construct.annotation.data.split(",");

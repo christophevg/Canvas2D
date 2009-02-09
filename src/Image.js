@@ -19,7 +19,7 @@ Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
 	$super(props);
     },
 
-    render: function() {
+    draw: function() {
 	this.canvas.drawImage(this.image, this.props.left, this.props.top );
     },
 

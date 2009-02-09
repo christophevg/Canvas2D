@@ -15,7 +15,7 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
 	this.to   = to;
     },
 
-    render: function() {
+    draw: function() {
 	this.canvas.strokeStyle = this.props.color || this.defaults.color;
 	this.canvas.lineWidth   = this.props.width || this.defaults.width;
 	this.canvas.lineStyle   = this.props.lineStyle 

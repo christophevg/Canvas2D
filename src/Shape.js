@@ -59,10 +59,30 @@ Canvas2D.Shape = Class.create( {
 	return false;
     },
 
+    drawLabel: function() {
+	if( this.props.label ) {
+	    this.canvas.strokeStyle = this.props.labelColor || "black";
+	    var left = this.getCenter().left;
+	    var top  = this.getCenter().top + 2.5;
+
+	    switch( this.props.labelPos ) {
+	    case "top":	    top  = this.getBox().top - 5;      break;
+	    case "bottom":  top  = this.getBox().bottom + 11;  break;
+	    case "center": default: top  = this.getCenter().top + 2.5;
+	    }
+	    this.canvas.drawTextCenter("Sans", 10, left, top, this.props.label);
+	}
+    },
+
+    render: function() {
+	this.draw();
+	this.drawLabel();
+    },
+
     // the remaining methods are not applicable for abstract shapes
     getNames  : function() { return []; },
     getBox    : function() { return null; },
-    render    : function() { },
+    draw      : function() { },
     hit       : function(x,y) { return false; },
     hitArea   : function(left, top, width, height) { return false; },
     getCenter : function() { return null; },
