@@ -13,7 +13,7 @@ Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
 	    this.image.onload = function() { 
 		me.props.width = me.image.width;
 		me.props.height = me.image.height;
-		me.canvas.render();  
+		me.canvas.render();
 	    }
 	}
 	$super(props);
@@ -44,6 +44,7 @@ Canvas2D.Image.from = function(construct, canvas) {
 	props[key] = value;
     } );
     
+    var left, top;
     var image = new Canvas2D.Image(props);
     if( construct.annotation ) {    
 	var pos = construct.annotation.data.split(",");
