@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <style>
+      .box {
+        border: 2px solid #000;
+        float:left;
+        margin:10px; 
+        height: 385px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    </style>
+    <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
+    <script src="../build/Canvas2D.standalone.js"></script>
+  </head>
+  <body>
+    <h1>Images</h1>
+    <div class="box">
+      <h2>Bitmaps</h2>
+      <canvas class="Canvas2D  withSource withConsole withAbout" 
+	      id="myDiagram" width="300" height="250"></canvas>
+    </div>
+    <pre id="myDiagramSource" style="display:none;">  
+sheet mySheet +style="dynamic" {
+  [@5,5]   box myBox +geo="132x132";  
+  [@10,10] image myImage +src="test.png";  
+}
+    </pre>  
+  </body>
+</html>

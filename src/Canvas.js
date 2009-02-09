@@ -364,6 +364,11 @@ Canvas2D.Canvas = Class.create( {
 	this.canvas.drawText(font, size, left, top, text);
     },
 
+    drawImage: function(img, left, top) {
+	if( !img.complete ) { return; }
+	this.canvas.drawImage(img, left, top);
+    },
+
     rotate: function(ang) {
 	this.canvas.rotate(ang);
     },
