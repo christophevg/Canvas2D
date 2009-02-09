@@ -25,8 +25,8 @@ Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
 
     toADL: function(prefix) {
 	var s = this.positionToString(prefix);
-	s += "Image "  + this.name;
-	s += " +src=\"" + this.style + "\";";
+	s += prefix + "Image "  + this.props.name;
+	s += " +src=\"" + this.src + "\";";
 	return s;
     }
 
@@ -37,13 +37,14 @@ Canvas2D.Image.getNames = function() {
 }
 
 Canvas2D.Image.from = function(construct, canvas) {
-    var src = null;
-    var srcModifier = construct.modifiers.get( "src" );
-    if( srcModifier ) {
-	src = srcModifier.value.value.toLowerCase();
-    }
-
-    var image = new Canvas2D.Image({ name: construct.name, src: src } );
+    var props = { name: construct.name };
+    construct.modifiers.each(function(pair) {
+	var key   = pair.key;
+	var value = pair.value.value.value;
+	props[key] = value;
+    } );
+    
+    var image = new Canvas2D.Image(props);
     if( construct.annotation ) {    
 	var pos = construct.annotation.data.split(",");
 	left = parseInt(pos[0]);

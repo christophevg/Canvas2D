@@ -73,14 +73,19 @@ Canvas2D.Rectangle.from = function( construct, sheet ) {
     var props = { name: construct.name };
     construct.modifiers.each(function(pair) {
 	var key   = pair.key;
-	var value = pair.value.value.value;
+	var value = ( pair.value.value ? pair.value.value.value : "" );
 
 	if( key == "width" || key == "height" ) {
 	    value = parseInt(value);
 	}
 
+	if( key == "geo" ) {
+	    props["width"]   = parseInt(value.split("x")[0]);
+	    props["height"]  = parseInt(value.split("x")[1]);
+	}
+
 	if( value == "" ) {
-	    value = key.value;
+	    value = key;
 	    key = "color";
 	}
 

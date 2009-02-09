@@ -30,6 +30,7 @@ SRCS=src/SanityChecks.js \
      src/Sheet.js \
      src/Shape.js src/Rectangle.js src/Connector.js \
      src/Image.js \
+     src/Alias.js \
      src/KickStart.js
 CSSSRCS=lib/tabber/example.css src/${APP}.css
 VERSION=$(shell git describe --tags | cut -d'-' -f1,2)

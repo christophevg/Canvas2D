@@ -219,8 +219,8 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
 	return false;
     },
 
-    toADL: function($super, prefix) {
-	var s = $super(prefix);
+    toADL: function(prefix) {
+	var s = this.positionToString(prefix);
 	s += prefix + "Connector " + this.props.name;
 	s += "+" + this.from.props.name + "-" + this.to.props.name;
 	s += " +" + this.props.style + ";";
