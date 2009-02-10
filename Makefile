@@ -1,6 +1,6 @@
 PROTOTYPE-DIST=prototype-1.6.0.3.js
 PROTOTYPE-URL=http://www.prototypejs.org/assets/2008/9/29/${PROTOTYPE-DIST}
-EXCANVAS-URL=http://excanvas.svn.sourceforge.net/viewvc/excanvas/excanvas.js
+EXCANVAS-URL=http://excanvas.svn.sourceforge.net/viewvc/excanvas/silverlight/excanvas.js
 CANVASTEXT-URL=http://www.federated.com/~jim/canvastext/canvastext.js
 ADL-URL=http://git.thesoftwarefactory.be/pub/ADL.git
 TABBER-DIST=tabber.zip
@@ -82,7 +82,8 @@ lib/${PROTOTYPE-DIST}:
 lib/excanvas.js: 
 	@echo "*** importing $@"
 	@mkdir -p lib
-	@(cd lib; ${FETCH} ${EXCANVAS-URL})
+	@(cd lib; ${FETCH} ${EXCANVAS-URL}; \
+                  ${PATCH} <../patches/excanvas.diff )
 
 lib/canvastext.js:
 	@echo "*** importing $@"
