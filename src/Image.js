@@ -1,33 +1,40 @@
 Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
-    src: null,       // the src location
-    image : null,    // the actual (HTML) image
+    allProperties: function($super) {
+	var props = $super();
+	props.push( "src"  );
+	return props;
+    },
+
+    getType   : function() { return "image"; },
+
+    getSource : function() { return this.src;   },
+    getImage  : function() { return this.image; },
 
     initialize: function($super, props) {
-	props = props || {};
+	$super(props);
 	
-	this.src = props['src'];
-	if( this.src ) {
+	if( this.getSource() ) {
 	    this.image = new Image();
-	    this.image.src = this.src;
+	    this.image.src = this.getSource();
 	    var me = this;
 	    this.image.onload = function() { 
-		me.props.width = me.image.width;
-		me.props.height = me.image.height;
-		me.canvas.render();
+		me.width  = me.image.width;
+		me.height = me.image.height;
+		me.forceRedraw();
 	    }
 	}
-	$super(props);
     },
 
     draw: function() {
-	this.canvas.drawImage(this.image, this.props.left, this.props.top );
+	this.canvas.drawImage(this.getImage(), this.getLeft(), this.getTop());
     },
 
-    toADL: function(prefix) {
-	var s = this.positionToString(prefix);
-	s += prefix + "Image "  + this.props.name;
-	s += " +src=\"" + this.src + "\";";
-	return s;
+    asConstruct: function($super) {
+	var construct = $super();
+	if( this.getSource() ) {
+	    construct.modifiers.src = "\"" + this.getSource() + "\"";	    
+	}
+	return construct;
     }
 
 } );

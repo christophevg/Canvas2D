@@ -1,67 +1,81 @@
 Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
+    allProperties: function($super) {
+	var props = $super();
+	props.push( "color"  );
+	props.push( "width"  );
+	props.push( "height" );
+	return props;
+    },
+
+    getType  : function() { return "rectangle"; },
+
+    getColor : function() { return this.color;  },
+    getWidth : function() { return this.width;  },
+    getHeight: function() { return this.height; },
+
     draw: function() {
 	this.canvas.beginPath(); 
-	this.canvas.strokeStyle = this.props.color;
-	this.canvas.strokeRect( this.props.left,  this.props.top, 
-			        this.props.width, this.props.height );
+	this.canvas.strokeStyle = this.getColor();
+	this.canvas.strokeRect( this.getLeft(),  this.getTop(), 
+			        this.getWidth(), this.getHeight() );
     },
 
     hit: function(x,y) {
-	return ( this.props.left <= x &&
-		 this.props.left + this.props.width >= x && 
-		 this.props.top  <= y &&
-		 this.props.top + this.props.height >= y ); 
-    },
-
-    hitArea: function(left, top, width, height) {
-	alert( "Canvas2D.Rectangle::hitArea: not implemented yet" );
+	return ( this.getLeft() <= x &&
+		 this.getLeft() + this.getWidth() >= x && 
+		 this.getTop()  <= y &&
+		 this.getTop() + this.getHeight() >= y ); 
     },
 
     getCenter: function() {
-	return { top:  this.props.top  + (this.props.height/2),
-		 left: this.props.left + (this.props.width/2) };
+	return { top:  this.getTop()  + (this.getHeight()/2),
+		 left: this.getLeft() + (this.getWidth()/2) };
     },
 
     getBox: function() {
-	return { top: this.props.top,
-		 left: this.props.left,
-		 bottom: this.props.top + this.props.height,
-		 right: this.props.left + this.props.width,
-	         height: this.props.height,
-		 width: this.props.width };
+	return { top   : this.getTop(),
+		 left  : this.getLeft(),
+		 bottom: this.getTop()  + this.getHeight(),
+		 right : this.getLeft() + this.getWidth(),
+	         height: this.getHeight(),
+		 width : this.getWidth() };
     },
 
     getPort: function(side) {
 	switch(side) {
 	case "n":
 	case "north":
-	    return { top: this.props.top, 
-		     left: this.props.left + (this.props.width/2) };
+	    return { top : this.getTop(), 
+		     left: this.getLeft() + (this.getWidth()/2) };
 	    break;
 	case "s":
 	case "south":
-	    return { top: this.props.top + this.props.height, 
-		     left: this.props.left + (this.props.width/2) };
+	    return { top : this.getTop()  + this.getHeight(), 
+		     left: this.getLeft() + (this.getWidth()/2) };
 	    break;
 	case "e":
 	case "east":
-	    return { top: this.props.top + (this.props.height/2), 
-		     left: this.props.left + this.props.width };
+	    return { top : this.getTop()  + (this.getHeight()/2), 
+		     left: this.getLeft() + this.getWidth() };
 	    break;
 	case "w":
 	case "west":
-	    return { top: this.props.top + (this.props.height/2), 
-		     left: this.props.left };
+	    return { top : this.getTop()  + (this.getHeight()/2), 
+		     left: this.getLeft() };
 	    break;
 	}
     },
 
-    toADL: function(prefix) {
-	var s = this.positionToString(prefix);
-	s += prefix + "Rectangle " + this.props.name;
-	s += "+geo=\"" + this.props.width + "x" + this.props.height + "\"";
-	s += "+" + this.props.color + ";";
-	return s;
+    asConstruct: function($super) {
+	var construct = $super();
+	if( this.getWidth() && this.getHeight() ) {
+	    construct.modifiers.geo = 
+		"\"" + this.getWidth() + "x" + this.getHeight() + "\"";
+	}
+	if( this.getColor() ) {
+	    construct.modifiers[this.getColor()] = null;
+	}
+	return construct;
     }
 } );
 

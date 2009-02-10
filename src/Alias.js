@@ -8,33 +8,18 @@ Canvas2D.Alias.mapper = {
     sheet : function(shape) { 
 	return function(construct, parent) { 
 	    var alias = Canvas2D.Sheet.from(construct,parent);
-	    alias.toADL = function() {
-		var s = "";
-		s += shape.name + " "  + this.name;
-		s += " +" + this.style + " {\n";
-		this.shapes.each(function(shape) { 
-		    var t = shape.toADL("  ");
-		    if( t ) { s += t + "\n"; }
-		} );
-		s += "}";
-		return s;
-	    }
+	    alias.getType = function() { return shape.name; }
 	    return alias;
 	}
     },
 
     connector : function(shape) {
 	return function(construct, parent) { 
-	    var modifier = new ADL.Modifier( "style", 
+	    var modifier = new ADL.Modifier( "routing", 
 		new ADL.String("vertical" ) );
 	    construct.modifiers.set( modifier.key, modifier );
 	    var alias = Canvas2D.Connector.from(construct,parent);
-	    alias.toADL = function(prefix) {
-		var s = this.positionToString(prefix);
-		s += prefix + shape.name + " " + this.props.name;
-		s += "+" + this.from.props.name + "-" + this.to.props.name +";";
-		return s;
-	    }
+	    alias.getType = function() { return shape.name; }
 	    return alias;
 	}
     },
@@ -46,11 +31,7 @@ Canvas2D.Alias.mapper = {
 		construct.modifiers.set(pair.key, pair.value); 
 	    } );
 	    var alias = Canvas2D.Image.from(construct,parent);
-	    alias.toADL = function(prefix) {
-		var s = this.positionToString(prefix);
-		s += prefix + shape.name + " "  + this.props.name + ";";
-		return s;
-	    }
+	    alias.getType = function() { return shape.name; }
 	    return alias;
 	}
     }

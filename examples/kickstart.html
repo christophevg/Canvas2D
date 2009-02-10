@@ -30,10 +30,10 @@ sheet mySheet +style="dynamic" {
   [@125,175] rectangle rect5 +width=50 +height=50 +color="red";  
 
   /* connect them  */
-  connector conn1 +from="rect1" +to="rect2" +style="vertical";  
-  connector conn2 +from="rect1" +to="rect3" +style="horizontal";  
-  connector conn3 +from="rect1" +to="rect4" +style="horizontal";  
-  connector conn4 +from="rect1" +to="rect5" +style="vertical";  
+  connector conn1 +from="rect1" +to="rect2" +routing="vertical";  
+  connector conn2 +from="rect1" +to="rect3" +routing="horizontal";  
+  connector conn3 +from="rect1" +to="rect4" +routing="horizontal";  
+  connector conn4 +from="rect1" +to="rect5" +routing="vertical";  
 }
     </pre>  
   </body>

@@ -3,60 +3,31 @@ var Canvas2D = {};
 
 Canvas2D.canvases = {};
 
-Canvas2D.getCanvas = function(id) {
-    return Canvas2D.canvases[id];
-};
+Canvas2D.getCanvas = function(id) { return Canvas2D.canvases[id]; };
 
 // technical wrapper class for the HTML5 Canvas element
 Canvas2D.Canvas = Class.create( {
-    tabbed     : false, // tabbed interface
-
-    wait       : false, // indicator not to draw
-
-    htmlcanvas : null,  // the Canvas Element 
-    canvas     : null,  // the Canvas Element 2D context
-
-    console    : null,  // the HTML element to use as Console
-    source     : null,  // the HTML element to use as SourceViewer
-
-    sheets       : [], // list of sheets on this Canvas
-    currentSheet : 0,  // index of the current show sheet
-
-    eventHandlers : {}, // map of registered eventHandlers
-
-    plugins : [],   // list of registered plugins
-
-    mouseOver : false,   // indicator if the mouse is currently over the canvas
-    mousePos  : { x:0, y:0 }, // current mouse position
-
-    currentX    : 0,       // current drawing position on X-axis
-    currentY    : 0,       // current drawing position on Y-axis
-    lineWidth   : 1,       // current drawing lineWidth
-    lineStyle   : "solid", // current drawing lineStyle [solid|dashed]
-    strokeStyle : "black", // current drawing strokeStyle
-    fillStyle   : "black", // current drawing fillStyle
-    
     initialize: function(id) {
-	this.tabbed  = false;
+	this.tabbed  = false;       // tabbed interface
 
-	this.wait = false;
+	this.wait = false;          // indicator not to draw
 
-	this.sheets = new Array();
-	this.currentSheet = 0;
+	this.sheets = [];           // list of sheets on this Canvas
+	this.currentSheet = 0;      // index of the current show sheet
 
-	this.eventHandlers = {};
+	this.eventHandlers = {};    // map of registered eventHandlers
 
-	this.plugins = [];
+	this.plugins = [];          // list of registered plugins
 
-	this.currentX    = 0;
-	this.currentY    = 0;
-	this.lineWidth   = 1;
-	this.lineStyle   = "solid";
-	this.strokeStyle = "black";
-	this.fillStyle   = "black";
+	this.currentX    = 0;       // current drawing position on X-axis
+	this.currentY    = 0;       // current drawing position on Y-axis
+	this.lineWidth   = 1;       // current drawing lineWidth
+	this.lineStyle   = "solid"; // current drawing lineStyle [solid|dashed]
+	this.strokeStyle = "black"; // current drawing strokeStyle
+	this.fillStyle   = "black"; // current drawing fillStyle
 
 	// setup HTML5 canvas
-	this.htmlcanvas = document.getElementById(id);
+	this.htmlcanvas = document.getElementById(id); // the Canvas Element 
 	this.wireCanvas();
 
 	// look for a console and sources for this canvas
@@ -65,6 +36,9 @@ Canvas2D.Canvas = Class.create( {
 
 	// register a global reference
 	Canvas2D.canvases[id] = this;
+	
+	this.mouseOver = false;        // indicator if mouse is over the canvas
+	this.mousePos  = { x:0, y:0 }; // current mouse position
     },
 
     clear: function() {

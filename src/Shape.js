@@ -1,18 +1,35 @@
 Canvas2D.Shape = Class.create( {
-    initialize: function( props ) {
-	this.props = props;
+    allProperties: function() {
+	return new Array( "name", 
+			  "label", "labelPos", "labelColor",
+			  "left", "top" );
     },
 
-    getName: function() {
-	return this.props.name;
+    getType : function() { return "shape"; },
+
+    initialize: function( props ) {
+	var me = this;
+	this.allProperties().each(function(prop) {
+	    me[prop] = props[prop] || null;
+	} );
     },
+    
+    getName  : function() { return this.name;   },
+
+    getLabel      : function() { return this.label;      },
+    getLabelPos   : function() { return this.labelPos;   },
+    getLabelColor : function() { return this.labelColor; },
+
+    getLeft  : function() { return this.left;   },
+    getTop   : function() { return this.top;    },
 
     getProperties: function() {
-	return { type: "Shape",
-		 left: this.props.left,
-		 top: this.props.top,
-		 width: this.props.width,
-		 height: this.props.height };
+	var props = {};
+	var me = this;
+	this.allProperties().each(function(prop) {
+	    props[prop] = me[prop];
+	} );
+	return props;
     },
 
     setCanvas: function( canvas2d ) {
@@ -20,8 +37,8 @@ Canvas2D.Shape = Class.create( {
     },
 
     setPosition: function( left, top ) {
-	this.props.left = left;
-	this.props.top  = top;
+	this.left = left;
+	this.top  = top;
 	this.forceRedraw();
 	return this;
     },
@@ -32,27 +49,66 @@ Canvas2D.Shape = Class.create( {
     },
 
     getPosition: function() {
-	return { left: this.props.left, 
-		 top : this.props.top };
+	return { left: this.left, top : this.top };
     },
 
     move: function( dleft, dtop ) {
-	this.props.left += dleft;
-	this.props.top  += dtop;
-	this.canvas.fireEvent( "selectShape", this.getProperties() );
+	this.left += dleft;
+	this.top  += dtop;
+	this.canvas.fireEvent( "moveShape", this.getProperties() );
 	this.forceRedraw();
     },
 
-    positionToString: function(prefix) {
-	prefix = prefix || "";
-	if( this.props.left == null || this.props.top == null ) { 
-	    return ""; 
+    asConstruct: function() {
+	var construct =  
+	    { annotations : [],
+	      type        : this.getType(),
+	      name        : this.getName(),
+	      supers      : [],
+	      modifiers   : {},
+	      children    : []
+	    };
+	if( this.getLeft() != null && this.getTop() != null ) {
+	    construct.annotations.push( this.getLeft() + "," + this.getTop() );
 	}
-	return prefix + "[@" + this.props.left + "," + this.props.top + "]\n";
+	if( this.getLabel() ) {
+	    construct.modifiers.label = "\"" + this.getLabel() + "\"";
+	}
+	if( this.getLabelPos() ) {
+	    construct.modifiers.labelPos = "\"" + this.getLabelPos() + "\"";
+	}
+	if( this.getLabelColor() ) {
+	    construct.modifiers.labelColor = "\"" + this.getLabelColor() + "\"";
+	}
+	return construct;
+    },
+
+    constructToString: function(construct, prefix) {
+	var string = "";
+	construct.annotations.each(function(annotation) {
+	    string += prefix + "[@" + annotation + "]\n";
+	} );
+	string += construct.type + " " + construct.name;
+	construct.supers.each( function(zuper) { string += " : " + zuper; } );
+	$H(construct.modifiers).each( function( modifier ) {
+	    string += " +" + modifier.key;
+	    if( modifier.value ) { string += "=" + modifier.value; }
+	} );
+	if( construct.children.length > 0 ) {
+	    string += " {\n";
+	    var me = this;
+	    construct.children.each(function(child) {
+		string += me.constructToString(child, prefix + "  " ) + "\n";
+	    } );
+	    string += prefix + "}";
+	} else {
+	    string += ";";
+	}
+	return string;
     },
 
     toADL: function(prefix) {
-	return this.positionToString(prefix);
+	return this.constructToString(this.asConstruct(), prefix);
     },
 
     delayRender: function() {
@@ -60,17 +116,17 @@ Canvas2D.Shape = Class.create( {
     },
 
     drawLabel: function() {
-	if( this.props.label ) {
-	    this.canvas.strokeStyle = this.props.labelColor || "black";
+	if( this.getLabel() && this.getBox() ) {
+	    this.canvas.strokeStyle = this.getLabelColor() || "black";
 	    var left = this.getCenter().left;
 	    var top  = this.getCenter().top + 2.5;
 
-	    switch( this.props.labelPos ) {
-	    case "top":	    top  = this.getBox().top - 5;      break;
-	    case "bottom":  top  = this.getBox().bottom + 11;  break;
+	    switch( this.getLabelPos() ) {
+	    case "top":	            top  = this.getBox().top - 5;      break;
+	    case "bottom":          top  = this.getBox().bottom + 11;  break;
 	    case "center": default: top  = this.getCenter().top + 2.5;
 	    }
-	    this.canvas.drawTextCenter("Sans", 10, left, top, this.props.label);
+	    this.canvas.drawTextCenter("Sans", 10, left, top, this.getLabel());
 	}
     },
 
@@ -80,11 +136,11 @@ Canvas2D.Shape = Class.create( {
     },
 
     // the remaining methods are not applicable for abstract shapes
-    getNames  : function() { return []; },
-    getBox    : function() { return null; },
-    draw      : function() { },
-    hit       : function(x,y) { return false; },
-    hitArea   : function(left, top, width, height) { return false; },
-    getCenter : function() { return null; },
-    getPort   : function(side) { }
+    getNames    : function() { return []; },
+    getBox      : function() { return null; },
+    draw        : function() { },
+    hit         : function(x,y) { return false; },
+    hitArea     : function(left, top, width, height) { return false; },
+    getCenter   : function() { return null; },
+    getPort     : function(side) { }
 } );

@@ -94,8 +94,8 @@ Canvas2D.Sheet = Class.create( {
 	this.canvas.render();
 
 	this.log( "Added new shape" + 
-		  ( shape.props.left != null ? "@" + shape.props.left + "," 
-		    + shape.props.top : "" ) );
+		  ( shape.getLeft() != null ? "@" + shape.getLeft() + "," 
+		    + shape.getTop() : "" ) );
 	return shape;
     },
 
