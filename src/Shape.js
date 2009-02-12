@@ -1,8 +1,8 @@
+Canvas2D.ShapeCounter = 0;
+
 Canvas2D.Shape = Class.create( {
     allProperties: function() {
-	return new Array( "name", 
-			  "label", "labelPos", "labelColor",
-			  "left", "top" );
+	return [ "name", "label", "labelPos", "labelColor" ];
     },
 
     getType : function() { return "shape"; },
@@ -12,6 +12,7 @@ Canvas2D.Shape = Class.create( {
 	this.allProperties().each(function(prop) {
 	    me[prop] = props[prop] || null;
 	} );
+	if( !this.name ) { this.name = "__shape__" + Canvas2D.ShapeCounter++; }
     },
     
     getName  : function() { return this.name;   },
@@ -20,9 +21,6 @@ Canvas2D.Shape = Class.create( {
     getLabelPos   : function() { return this.labelPos;   },
     getLabelColor : function() { return this.labelColor; },
 
-    getLeft  : function() { return this.left;   },
-    getTop   : function() { return this.top;    },
-
     getProperties: function() {
 	var props = {};
 	var me = this;
@@ -30,33 +28,6 @@ Canvas2D.Shape = Class.create( {
 	    props[prop] = me[prop];
 	} );
 	return props;
-    },
-
-    setCanvas: function( canvas2d ) {
-	this.canvas = canvas2d;
-    },
-
-    setPosition: function( left, top ) {
-	this.left = left;
-	this.top  = top;
-	this.forceRedraw();
-	return this;
-    },
-
-    forceRedraw: function() {
-	if(!this.canvas) { return; };
-	this.canvas.render();
-    },
-
-    getPosition: function() {
-	return { left: this.left, top : this.top };
-    },
-
-    move: function( dleft, dtop ) {
-	this.left += dleft;
-	this.top  += dtop;
-	this.canvas.fireEvent( "moveShape", this.getProperties() );
-	this.forceRedraw();
     },
 
     asConstruct: function() {
@@ -68,9 +39,6 @@ Canvas2D.Shape = Class.create( {
 	      modifiers   : {},
 	      children    : []
 	    };
-	if( this.getLeft() != null && this.getTop() != null ) {
-	    construct.annotations.push( this.getLeft() + "," + this.getTop() );
-	}
 	if( this.getLabel() ) {
 	    construct.modifiers.label = "\"" + this.getLabel() + "\"";
 	}
@@ -88,7 +56,7 @@ Canvas2D.Shape = Class.create( {
 	construct.annotations.each(function(annotation) {
 	    string += prefix + "[@" + annotation + "]\n";
 	} );
-	string += construct.type + " " + construct.name;
+	string += prefix + construct.type + " " + construct.name;
 	construct.supers.each( function(zuper) { string += " : " + zuper; } );
 	$H(construct.modifiers).each( function( modifier ) {
 	    string += " +" + modifier.key;
@@ -115,32 +83,32 @@ Canvas2D.Shape = Class.create( {
 	return false;
     },
 
-    drawLabel: function() {
-	if( this.getLabel() && this.getBox() ) {
-	    this.canvas.strokeStyle = this.getLabelColor() || "black";
-	    var left = this.getCenter().left;
-	    var top  = this.getCenter().top + 2.5;
+    drawLabel: function(canvas, left, top) {
+	if( this.getLabel() && this.getHeight() && this.getCenter() ) {
+	    canvas.strokeStyle = this.getLabelColor() || "black";
+	    left += this.getCenter().left;
 
 	    switch( this.getLabelPos() ) {
-	    case "top":	            top  = this.getBox().top - 5;      break;
-	    case "bottom":          top  = this.getBox().bottom + 11;  break;
-	    case "center": default: top  = this.getCenter().top + 2.5;
+	    case "top":	            top  += - 5;   break;
+	    case "bottom":          top  += this.getHeight() + 11;  break;
+	    case "center": default: top  += this.getCenter().top + 2.5;
 	    }
-	    this.canvas.drawTextCenter("Sans", 10, left, top, this.getLabel());
+	    canvas.drawTextCenter("Sans", 10, left, top, this.getLabel());
 	}
     },
 
-    render: function() {
-	this.draw();
-	this.drawLabel();
+    render: function(sheet, left, top) {
+	this.draw     (sheet, left, top);
+	this.drawLabel(sheet, left, top);
     },
 
     // the remaining methods are not applicable for abstract shapes
-    getNames    : function() { return []; },
-    getBox      : function() { return null; },
-    draw        : function() { },
-    hit         : function(x,y) { return false; },
+    getWidth    : function()                         { return 0;     },
+    getHeight   : function()                         { return 0;     },
+    getNames    : function()                         { return [];    },
+    draw        : function(sheet, left, top)         { },
+    hit         : function(x, y)                     { return false; },
     hitArea     : function(left, top, width, height) { return false; },
-    getCenter   : function() { return null; },
-    getPort     : function(side) { }
+    getCenter   : function()                         { return null;  },
+    getPort     : function(side)                     { }
 } );

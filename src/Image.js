@@ -20,13 +20,12 @@ Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
 	    this.image.onload = function() { 
 		me.width  = me.image.width;
 		me.height = me.image.height;
-		me.forceRedraw();
 	    }
 	}
     },
 
-    draw: function() {
-	this.canvas.drawImage(this.getImage(), this.getLeft(), this.getTop());
+    draw: function(sheet,left,top) {
+	sheet.drawImage(this.getImage(), left, top);
     },
 
     asConstruct: function($super) {

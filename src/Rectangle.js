@@ -13,56 +13,30 @@ Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
     getWidth : function() { return this.width;  },
     getHeight: function() { return this.height; },
 
-    draw: function() {
-	this.canvas.beginPath(); 
-	this.canvas.strokeStyle = this.getColor();
-	this.canvas.strokeRect( this.getLeft(),  this.getTop(), 
-			        this.getWidth(), this.getHeight() );
+    draw: function(sheet, left, top) {
+	sheet.beginPath(); 
+	sheet.strokeStyle = this.getColor();
+	sheet.strokeRect( left, top, this.getWidth(), this.getHeight() );
     },
 
-    hit: function(x,y) {
-	return ( this.getLeft() <= x &&
-		 this.getLeft() + this.getWidth() >= x && 
-		 this.getTop()  <= y &&
-		 this.getTop() + this.getHeight() >= y ); 
+    hit: function(x,y) { 
+	return ( this.getWidth() >= x && this.getHeight() >= y ); 
     },
 
     getCenter: function() {
-	return { top:  this.getTop()  + (this.getHeight()/2),
-		 left: this.getLeft() + (this.getWidth()/2) };
-    },
-
-    getBox: function() {
-	return { top   : this.getTop(),
-		 left  : this.getLeft(),
-		 bottom: this.getTop()  + this.getHeight(),
-		 right : this.getLeft() + this.getWidth(),
-	         height: this.getHeight(),
-		 width : this.getWidth() };
+	return { left: this.getWidth()  / 2, top:  this.getHeight() / 2 };
     },
 
     getPort: function(side) {
 	switch(side) {
-	case "n":
-	case "north":
-	    return { top : this.getTop(), 
-		     left: this.getLeft() + (this.getWidth()/2) };
-	    break;
-	case "s":
-	case "south":
-	    return { top : this.getTop()  + this.getHeight(), 
-		     left: this.getLeft() + (this.getWidth()/2) };
-	    break;
-	case "e":
-	case "east":
-	    return { top : this.getTop()  + (this.getHeight()/2), 
-		     left: this.getLeft() + this.getWidth() };
-	    break;
-	case "w":
-	case "west":
-	    return { top : this.getTop()  + (this.getHeight()/2), 
-		     left: this.getLeft() };
-	    break;
+	case "n": case "north":  
+	    return { top : 0,                left: this.getWidth() / 2 }; break;
+	case "s": case "south":  
+	    return { top : this.getHeight(), left: this.getWidth() / 2 }; break;
+	case "e": case "east":
+	    return { top : this.getHeight() / 2, left: this.getWidth() }; break;
+	case "w": case "west":
+	    return { top : this.getHeight() / 2, left: 0               }; break;
 	}
     },
 

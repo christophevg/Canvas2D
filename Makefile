@@ -28,6 +28,7 @@ SRCS=src/SanityChecks.js \
      src/Canvas.js \
      src/ADLVisitor.js \
      src/Sheet.js \
+     src/Position.js \
      src/Shape.js src/Rectangle.js src/Connector.js \
      src/Image.js \
      src/Alias.js \
