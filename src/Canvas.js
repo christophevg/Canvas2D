@@ -468,21 +468,14 @@ Canvas2D.Canvas = Class.create( {
     },
 
 	enableTextRendering: function() {
-		if (!this.canvas.fillText && this.canvas.mozDrawText) {
-			this.canvas.fillText = function(text, x, y) {
-				this.drawText(text, x, y);
-			}
-		}
-		if (!this.canvas.strokeText && this.canvas.mozDrawText) {
-			this.canvas.strokeText = function(text, x, y) {
-				this.drawText(text, x, y);
-			}
-		}
 		if (!this.canvas.drawText && this.canvas.mozDrawText) {
 			this.canvas.drawText = function(font,size,x,y,text) {
 				this.save();
 				this.translate(x, y);
-				this.font = size + "pt" + " " + font;
+				this.font = size + "pt " + font;
+				if ( font.toLowerCase().indexOf("italic") > -1 ) {
+					this.font = "italic " + size + "pt " + font.replace("italic", "");
+				}
 				this.mozDrawText(text);
 				this.restore();
 			}
