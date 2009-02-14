@@ -83,7 +83,7 @@ Canvas2D.Canvas = Class.create( {
 		Event.observe(document, 'mousemove', 
 			      this.handleMouseMove.bindAsEventListener(this));
 		// add textfunctions
-		CanvasTextFunctions.enable(this.canvas);
+		this.enableTextRendering();
 	    }
 	    this.render();
 	}
@@ -493,9 +493,39 @@ Canvas2D.Canvas = Class.create( {
 	return this.addSheet(sheet);
     },
 
+	enableTextRendering: function() {
+		if (!this.canvas.fillText && this.canvas.mozDrawText) {
+			this.canvas.fillText = function(text, x, y) {
+				this.drawText(text, x, y);
+			}
+		}
+		if (!this.canvas.strokeText && this.canvas.mozDrawText) {
+			this.canvas.strokeText = function(text, x, y) {
+				this.drawText(text, x, y);
+			}
+		}
+		if (!this.canvas.drawText && this.canvas.mozDrawText) {
+			this.canvas.drawText = function(font,size,x,y,text) {
+				this.save();
+				this.translate(x, y);
+				this.font = size + "pt" + " " + font;
+				this.mozDrawText(text);
+				this.restore();
+			}
+		}
+			
+		if (!this.canvas.measureText && this.canvas.mozMeasureText) {
+			this.canvas.measureText = function(text) {
+				return this.mozMeasureText(text);
+			}
+		}
+		
+		CanvasTextFunctions.enable(this.canvas);
+	},
+
     load: function(source) {    
 	this.clear();
-
+		
 	var parser = new ADL.Parser();
 	var tree;
 	if( ( tree = parser.parse( source ) ) ) {

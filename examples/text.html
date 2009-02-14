@@ -11,7 +11,7 @@
       }
     </style>
     <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
-    <script src="../build/Canvas2D.standalone.min.js"></script>
+    <script src="../build/Canvas2D.standalone.js"></script>
   </head>
   <body onload="drawdemo()">
     <h1>Diagram Text Example</h1>
@@ -38,6 +38,7 @@ function drawdemo() {
   canvas.strokeRect( 250-(canvas.measureText(font, fontsize, "Normal Centered Text") / 2), 90, canvas.measureText(font, fontsize, "Normal Centered Text"), fontsize );
   canvas.drawTextCenter( font + "italic", fontsize, 250, 130+fontsize, "Italic Centered Text" );
   canvas.strokeRect( 250-(canvas.measureText(font, fontsize, "Italic Centered Text") / 2), 130, canvas.measureText(font, fontsize, "Italic Centered Text"), fontsize );
+  canvas.strokeText("Stroked text", 10, 150);
 }
     </script>
   </body>
