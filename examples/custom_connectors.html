@@ -43,13 +43,15 @@
           var rect3 = at(150,150)
               .put(new Canvas2D.Rectangle({width:50,height:50,color:"red"  } ));
 
-          var conn1 = put(new Canvas2D.Connector( rect1, rect2, 
-                                                  {style: "horizontal",
-                                                   end: custom_connector } ));
-          var conn2 = put(new Canvas2D.Connector( rect1, rect3, 
-                                                  {style: "vertical",
-                                                   lineStyle: "dashed",
-                                                   begin: custom_connector } ));
+          var conn1 = put(new Canvas2D.Connector( { from: rect1, 
+                                                    to:   rect2, 
+                                                    routing: "horizontal",
+                                                    end: custom_connector } ));
+          var conn2 = put(new Canvas2D.Connector( { from: rect1, 
+                                                    to:   rect3, 
+                                                    routing: "vertical",
+                                                    lineStyle: "dashed",
+                                                    begin: custom_connector } ));
           thaw();
         }
       }

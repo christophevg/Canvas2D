@@ -1,33 +1,39 @@
 Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
-    src: null,       // the src location
-    image : null,    // the actual (HTML) image
+    allProperties: function($super) {
+	var props = $super();
+	props.push( "src"  );
+	return props;
+    },
+
+    getType   : function() { return "image"; },
+
+    getSource : function() { return this.src;   },
+    getImage  : function() { return this.image; },
 
     initialize: function($super, props) {
-	props = props || {};
+	$super(props);
 	
-	this.src = props['src'];
-	if( this.src ) {
+	if( this.getSource() ) {
 	    this.image = new Image();
-	    this.image.src = this.src;
+	    this.image.src = this.getSource();
 	    var me = this;
 	    this.image.onload = function() { 
-		me.props.width = me.image.width;
-		me.props.height = me.image.height;
-		me.canvas.render();  
+		me.width  = me.image.width;
+		me.height = me.image.height;
 	    }
 	}
-	$super(props);
     },
 
-    render: function() {
-	this.canvas.drawImage(this.image, this.props.left, this.props.top );
+    draw: function(sheet,left,top) {
+	sheet.drawImage(this.getImage(), left, top);
     },
 
-    toADL: function(prefix) {
-	var s = this.positionToString(prefix);
-	s += "Image "  + this.name;
-	s += " +src=\"" + this.style + "\";";
-	return s;
+    asConstruct: function($super) {
+	var construct = $super();
+	if( this.getSource() ) {
+	    construct.modifiers.src = "\"" + this.getSource() + "\"";	    
+	}
+	return construct;
     }
 
 } );
@@ -37,13 +43,15 @@ Canvas2D.Image.getNames = function() {
 }
 
 Canvas2D.Image.from = function(construct, canvas) {
-    var src = null;
-    var srcModifier = construct.modifiers.get( "src" );
-    if( srcModifier ) {
-	src = srcModifier.value.value.toLowerCase();
-    }
-
-    var image = new Canvas2D.Image({ name: construct.name, src: src } );
+    var props = { name: construct.name };
+    construct.modifiers.each(function(pair) {
+	var key   = pair.key;
+	var value = pair.value.value.value;
+	props[key] = value;
+    } );
+    
+    var left, top;
+    var image = new Canvas2D.Image(props);
     if( construct.annotation ) {    
 	var pos = construct.annotation.data.split(",");
 	left = parseInt(pos[0]);

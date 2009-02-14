@@ -11,7 +11,7 @@
       }
     </style>
     <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
-    <script src="../build/Canvas2D.standalone.min.js"></script>
+    <script src="../build/Canvas2D.standalone.js"></script>
   </head>
   <body onload="drawIt();">
     <h1>Diagram Styles Example</h1>
@@ -43,14 +43,14 @@
           var rect5 = at(125, 175)
               .put(new Canvas2D.Rectangle({width:50,height:50,color:"red"   }));
 
-          var conn1 = put(new Canvas2D.Connector( rect1, rect2, 
-                                                  {style: "vertical"} ));
-          var conn2 = put(new Canvas2D.Connector( rect1, rect3, 
-                                                  {style: "horizontal"} ));
-          var conn3 = put(new Canvas2D.Connector( rect1, rect4, 
-                                                  {style: "horizontal"}));
-          var conn4 = put(new Canvas2D.Connector( rect1, rect5, 
-                                                  {style: "vertical"} ));
+          var conn1 = put(new Canvas2D.Connector( { from: rect1, to: rect2, 
+                                                    routing: "vertical" } ));
+          var conn2 = put(new Canvas2D.Connector( { from: rect1, to: rect3, 
+                                                    routing: "horizontal"} ));
+          var conn3 = put(new Canvas2D.Connector( { from: rect1, to: rect4, 
+                                                    routing: "horizontal"}));
+          var conn4 = put(new Canvas2D.Connector( { from: rect1, to: rect5, 
+                                                    routing: "vertical"} ));
           if( dyna ) { makeDynamic(); }
           thaw();
         }

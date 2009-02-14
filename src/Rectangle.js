@@ -1,67 +1,55 @@
 Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
-    render: function() {
-	this.canvas.beginPath(); 
-	this.canvas.strokeStyle = this.props.color;
-	this.canvas.strokeRect( this.props.left,  this.props.top, 
-			        this.props.width, this.props.height );
+    allProperties: function($super) {
+	var props = $super();
+	props.push( "color"  );
+	props.push( "width"  );
+	props.push( "height" );
+	return props;
     },
 
-    hit: function(x,y) {
-	return ( this.props.left <= x &&
-		 this.props.left + this.props.width >= x && 
-		 this.props.top  <= y &&
-		 this.props.top + this.props.height >= y ); 
+    getType  : function() { return "rectangle"; },
+
+    getColor : function() { return this.color;  },
+    getWidth : function() { return this.width;  },
+    getHeight: function() { return this.height; },
+
+    draw: function(sheet, left, top) {
+	sheet.beginPath(); 
+	sheet.strokeStyle = this.getColor();
+	sheet.strokeRect( left, top, this.getWidth(), this.getHeight() );
     },
 
-    hitArea: function(left, top, width, height) {
-	alert( "Canvas2D.Rectangle::hitArea: not implemented yet" );
+    hit: function(x,y) { 
+	return ( this.getWidth() >= x && this.getHeight() >= y ); 
     },
 
     getCenter: function() {
-	return { top:  this.props.top  + (this.props.height/2),
-		 left: this.props.left + (this.props.width/2) };
-    },
-
-    getBox: function() {
-	return { top: this.props.top,
-		 left: this.props.left,
-		 bottom: this.props.top + this.props.height,
-		 right: this.props.left + this.props.width,
-	         height: this.props.height,
-		 width: this.props.width };
+	return { left: this.getWidth()  / 2, top:  this.getHeight() / 2 };
     },
 
     getPort: function(side) {
 	switch(side) {
-	case "n":
-	case "north":
-	    return { top: this.props.top, 
-		     left: this.props.left + (this.props.width/2) };
-	    break;
-	case "s":
-	case "south":
-	    return { top: this.props.top + this.props.height, 
-		     left: this.props.left + (this.props.width/2) };
-	    break;
-	case "e":
-	case "east":
-	    return { top: this.props.top + (this.props.height/2), 
-		     left: this.props.left + this.props.width };
-	    break;
-	case "w":
-	case "west":
-	    return { top: this.props.top + (this.props.height/2), 
-		     left: this.props.left };
-	    break;
+	case "n": case "north":  
+	    return { top : 0,                left: this.getWidth() / 2 }; break;
+	case "s": case "south":  
+	    return { top : this.getHeight(), left: this.getWidth() / 2 }; break;
+	case "e": case "east":
+	    return { top : this.getHeight() / 2, left: this.getWidth() }; break;
+	case "w": case "west":
+	    return { top : this.getHeight() / 2, left: 0               }; break;
 	}
     },
 
-    toADL: function(prefix) {
-	var s = this.positionToString(prefix);
-	s += prefix + "Rectangle " + this.props.name;
-	s += "+geo=\"" + this.props.width + "x" + this.props.height + "\"";
-	s += "+" + this.props.color + ";";
-	return s;
+    asConstruct: function($super) {
+	var construct = $super();
+	if( this.getWidth() && this.getHeight() ) {
+	    construct.modifiers.geo = 
+		"\"" + this.getWidth() + "x" + this.getHeight() + "\"";
+	}
+	if( this.getColor() ) {
+	    construct.modifiers[this.getColor()] = null;
+	}
+	return construct;
     }
 } );
 
@@ -70,33 +58,29 @@ Canvas2D.Rectangle.getNames = function() {
 }
 
 Canvas2D.Rectangle.from = function( construct, sheet ) {
-    var w, h, c;
-    var widthModifier = construct.modifiers.get( "width"  );
-    if( widthModifier ) {
-	w = parseInt(widthModifier.value.value);
-    }
-    var heightModifier = construct.modifiers.get( "height" );
-    if( heightModifier ) {
-	h = parseInt(heightModifier.value.value);
-    }   
-    var colorModifier = construct.modifiers.get( "color"  );
-    if( colorModifier ) {
-	c = colorModifier.value.value;
-    }
-    var geoModifier = construct.modifiers.get( "geo" );
-    if( geoModifier ) {
-	var parts = geoModifier.value.value.split("x");
-	w = parseInt(parts[0]);
-	h = parseInt(parts[1]);
-    }
+    var props = { name: construct.name };
     construct.modifiers.each(function(pair) {
-	if(pair.value.value == null) {
-	    c = pair.key;
+	var key   = pair.key;
+	var value = ( pair.value.value ? pair.value.value.value : "" );
+
+	if( key == "width" || key == "height" ) {
+	    value = parseInt(value);
 	}
-    });
-    
-   var shape = new Canvas2D.Rectangle({ name: construct.name,
-	                                 width: w, height: h, color: c });
+
+	if( key == "geo" ) {
+	    props["width"]   = parseInt(value.split("x")[0]);
+	    props["height"]  = parseInt(value.split("x")[1]);
+	}
+
+	if( value == "" ) {
+	    value = key;
+	    key = "color";
+	}
+
+	props[key] = value;
+    } );
+
+    var shape = new Canvas2D.Rectangle(props);
     var left, top;
     if( construct.annotation ) {    
 	var pos = construct.annotation.data.split(",");

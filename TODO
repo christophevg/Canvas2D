@@ -1,4 +1,7 @@
 0.1.0
+- move connector.routing to position
+- mixin: logging
+- mixin: eventSource
 - add some shapes, to make nicer demo (think visio ;-))
 - use props.validation
 - split off and use tsf.commons
