@@ -17,25 +17,25 @@
     <h1>Custom Connectors and Console</h1>
     <div class="box">
       <h2>Canvas</h2>
-      <canvas id="mydiagram"  width="300" height="250"></canvas>
+      <canvas id="myDiagram"  width="300" height="250"></canvas>
     </div>
     <div class="box">
       <h2>Console</h2>
-      <textarea id="mydiagramConsole" style="height:250" cols="50"></textarea>
+      <textarea id="myDiagramConsole" style="height:250" cols="50"></textarea>
     </div>
   
     <script>
       var custom_connector = 
-      {n:{lines:[[ -5, -10],[ +5,-10],[  0,  0]],end:[ 0,-10]},
-       e:{lines:[[+10,  +5],[+10, -5],[  0,  0]],end:[10,  0]},
-       s:{lines:[[ +5, +10],[ -5,+10],[  0,  0]],end:[ 0, 10]},
-       w:{lines:[[-10,  -5],[-10, +5],[  0,  0]],end:[-10, 0]}};
+        {n:{lines:[[ -5, -10],[ +5,-10],[  0,  0]],end:[ 0,-10]},
+         e:{lines:[[+10,  +5],[+10, -5],[  0,  0]],end:[10,  0]},
+         s:{lines:[[ +5, +10],[ -5,+10],[  0,  0]],end:[ 0, 10]},
+         w:{lines:[[-10,  -5],[-10, +5],[  0,  0]],end:[-10, 0]}};
 
       function drawIt() {
-        var canvas = new Canvas2D.Canvas("mydiagram");
-        with( canvas.addSheet( new Canvas2D.Sheet() ) ) {
+        var manager = new Canvas2D.Manager();
+        var book = manager.setupBook("myDiagram")
+        with( book.addSheet() ) {
           freeze();
-          makeDynamic();
           var rect1 = at(100, 10)
               .put(new Canvas2D.Rectangle({width:75,height:75,color:"green"} ));
           var rect2 = at( 25,150)
@@ -51,9 +51,11 @@
                                                     to:   rect3, 
                                                     routing: "vertical",
                                                     lineStyle: "dashed",
-                                                    begin: custom_connector } ));
+                                                    begin: custom_connector }));
+          makeDynamic();
           thaw();
         }
+        manager.startAll();
       }
     </script>
 

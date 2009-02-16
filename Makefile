@@ -25,13 +25,19 @@ TARGETS=build/${APP}.shared.min.js \
         build/${APP}.standalone.min.js \
         build/${APP}.css 
 SRCS=src/SanityChecks.js \
-     src/Canvas.js \
+     src/Common.js \
+     src/Canvas2D.js \
+     src/Factory.js src/ICanvas.js src/WebKitCanvas.js src/GeckoCanvas.js \
+     src/ImageManager.js \
+     src/Manager.js \
      src/ADLVisitor.js \
+     src/Book.js \
      src/Sheet.js \
      src/Position.js \
      src/Shape.js src/Rectangle.js src/Connector.js \
      src/Image.js \
      src/Alias.js \
+     src/plugins/TabbedCanvas.js \
      src/KickStart.js
 CSSSRCS=lib/tabber/example.css src/${APP}.css
 VERSION=$(shell git describe --tags | cut -d'-' -f1,2)

@@ -11,7 +11,7 @@
       }
     </style>
     <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
-    <script src="../build/Canvas2D.standalone.js"></script>
+    <script src="../build/Canvas2D.standalone.min.js"></script>
   </head>
   <body onload="drawIt();">
     <h1>Diagram Styles Example</h1>
@@ -28,9 +28,9 @@
       <canvas id="myTabbedDiagram"  width="300" height="250"></canvas>
     </div>
     <script>
-      function drawRect(canvas, dyna, tabs) {
-        if( tabs ) { canvas.makeTabbed( [ "about" ] ); }
-        with( canvas.addSheet( new Canvas2D.Sheet() ) ) {
+      function drawRect(book, dyna, withTabs) {
+        if( withTabs ) { book.makeTabbed( [ "about", "console", "source" ] ); }
+        with( book.addSheet() ) {
           freeze();
           var rect1 = at(75, 55)
               .put(new Canvas2D.Rectangle({width:75,height:75,color:"green"}));
@@ -57,9 +57,13 @@
       }
 
       function drawIt() {
-        drawRect(new Canvas2D.Canvas("myStaticDiagram"),  false, false );
-        drawRect(new Canvas2D.Canvas("myDynamicDiagram"), true,  false );
-        drawRect(new Canvas2D.Canvas("myTabbedDiagram"),  true,  true  );
+        var manager = new Canvas2D.Manager();
+
+        drawRect(manager.setupBook("myStaticDiagram"),  false, false );
+        drawRect(manager.setupBook("myDynamicDiagram"), true,  false );
+        drawRect(manager.setupBook("myTabbedDiagram"),  true,  true  );
+
+        manager.startAll();
       }
     </script>
   </body>

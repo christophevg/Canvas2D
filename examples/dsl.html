@@ -44,16 +44,19 @@ Sheet mySheet +style="dynamic" {
     </div>
   
     <script>  
-      var canvas;
+      var manager = new Canvas2D.Manager();
+      var book;
 
       function drawIt() {
-          canvas.load(document.getElementById("src").value);
+          book.load(document.getElementById("src").value);
       }
 
       function startIt() {
-        canvas = new Canvas2D.Canvas("myTabbedDiagram");
-        canvas.makeTabbed( [ "source", "console", "about" ]);
+        book = manager.setupBook("myTabbedDiagram");
+        book.makeTabbed( [ "source", "console", "about" ]);
         drawIt();
+
+        manager.startAll();
       }
     </script>  
 

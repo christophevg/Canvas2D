@@ -1,12 +1,16 @@
 Canvas2D.KickStart = {};
 
 Canvas2D.KickStart.Starter = Class.create( {
+    initialize: function() {
+	this.manager = new Canvas2D.Manager();
+    },
+    
     getTag: function() {
 	return "Canvas2D";
     },
 
     makeInstance: function( name ) {
-	return new Canvas2D.Canvas(name);
+	return this.manager.setupBook(name);
     },   
 
     start: function() {
@@ -16,13 +20,13 @@ Canvas2D.KickStart.Starter = Class.create( {
 	    var classes = htmlCanvas.className;
 	    if( classes.include(this.getTag()) ) {
 		var name = htmlCanvas.id;
-		var canvas = this.makeInstance(name); 
+		var book = this.makeInstance(name); 
 		if( classes.include("Tabbed") ) {
 		    var tabs = [];
 		    if(classes.include("withSource" )) { tabs.push("source" ); }
 		    if(classes.include("withConsole")) { tabs.push("console"); }
 		    if(classes.include("withAbout"  )) { tabs.push("about"  ); }
-		    canvas.makeTabbed(tabs); 
+		    book.makeTabbed(tabs); 
 		}
 		var sourceElement = document.getElementById(name+"Source")
 		if( sourceElement ) {
@@ -34,10 +38,11 @@ Canvas2D.KickStart.Starter = Class.create( {
 			// TEXTAREA
 			source = sourceElement.value;
 		    }
-		    canvas.load(source);
+		    book.load(source);
 		}
 	    }
 	}
+	this.manager.startAll();
     }
 } );
 

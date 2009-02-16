@@ -22,16 +22,15 @@
 
     <script>
 function drawdemo() {
-  var canvas = new Canvas2D.Canvas("myTextDiagram");
-  // we're using low-level functions and don't want to be cleared
-  canvas.freeze();
+  var manager = new Canvas2D.Manager();
+  var book    = manager.setupBook("myTextDiagram");
+  var sheet   = book.addSheet();
 
-  var font = "sans";
-  var fontsize = 16;
-
-  canvas.strokeStyle = "rgba(0,0,0,0.75)";
-  canvas.drawText( font,            fontsize, 10, 10+fontsize, "Normal Text" );
-  canvas.drawText( font + "italic", fontsize, 10, 50+fontsize, "Italic Text" );
+  sheet.freeze(); // hold interactive changes, we're not redrawing this sheet
+  sheet.font = "20px Sans-Serif";
+  sheet.strokeText( "Normal Text", 10, 20 );
+  sheet.font = "20px Sans-Serif Italic";
+  sheet.strokeText( "Italic Text", 10, 60 );
 }
     </script>
   </body>
