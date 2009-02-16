@@ -472,9 +472,10 @@ Canvas2D.Canvas = Class.create( {
 			this.canvas.drawText = function(font,size,x,y,text) {
 				this.save();
 				this.translate(x, y);
-				this.font = size + "pt " + font;
 				if ( font.toLowerCase().indexOf("italic") > -1 ) {
 					this.font = "italic " + size + "pt " + font.replace("italic", "");
+				} else {
+					this.font = size + "pt " + font;
 				}
 				this.mozDrawText(text);
 				this.restore();
