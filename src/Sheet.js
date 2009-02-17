@@ -52,6 +52,8 @@ Canvas2D.Sheet = Class.create( {
 	this.book.on( "mousedown", this.handleMouseDown.bind(this) );
 	this.book.on( "mouseup",   this.handleMouseUp  .bind(this) );
 	this.book.on( "mousedrag", this.handleMouseDrag.bind(this) );
+
+	this.book.on( "keydown",   this.handleKeyDown  .bind(this) );
     },
 
     freeze: function() { if( this.book ) { this.book.freeze(); } },
@@ -89,29 +91,47 @@ Canvas2D.Sheet = Class.create( {
     },
 
     hit: function(x,y) {
-	var newSelection = [];
 	for( var s = this.positions.length-1; s>=0; s-- ) {
-	    if( this.positions[s].hit(x,y) ) {
-		newSelection.push( this.positions[s] );
-		this.fireEvent( "shapeSelected", this.positions[s] );
-		if( !this.selectedShapes.contains( this.positions[s] ) ) {
-		    this.selectedShapes = newSelection;
+	    var position = this.positions[s];
+	    if( position.hit(x,y) ) {
+		if( this.book.currentKeysDown.contains(91) ||    // cmd
+		    this.book.currentKeysDown.contains(17) )     // ctrl
+		{
+		    // adding and removing
+		    if( this.selectedShapes.contains(position) ) {
+			this.selectedShapes = 
+			    this.selectedShapes.without(position);
+		    } else {
+			this.selectedShapes.push(position);
+		    }
+		} else {
+		    if( !this.selectedShapes.contains(position) ) {
+			this.selectedShapes = [ position ];
+		    } else {
+			// just clicked on already selected shape
+			return;
+		    }
 		}
+		this.fireEvent( "shapeSelected", position );
 		return;
 	    }
 	}
-	this.selectedShapes = newSelection;
+	// no position was hit, so clearing the selection list
+	this.selectedShapes = [];
     },
 
     hitArea: function( left, top, right, bottom ) {
-	var newSelection = [];
+	var newSelection =  
+	    ( this.book.currentKeysDown.contains(91) || // cmd
+	      this.book.currentKeysDown.contains(17) ) // ctrl
+	    ? this.selectedShapes : [];
 	for( var s = this.positions.length-1; s>=0; s-- ) {
 	    if( this.positions[s].hitArea(left, top, right, bottom) ) {
 		newSelection.push( this.positions[s] );
 		this.fireEvent( "shapeSelected", this.positions[s] );
 	    }
 	}
-	this.selectedShapes = newSelection;
+	this.selectedShapes = newSelection.uniq();
     },
 
     handleMouseDown: function(pos) {
@@ -134,11 +154,7 @@ Canvas2D.Sheet = Class.create( {
     handleMouseDrag: function(pos) {
 	if( !this.isDynamic() ) { return; }
 	if( !this.showSelection && this.selectedShapes.length > 0 ) {
-	    var me = this;
-	    this.selectedShapes.each(function(position) {	
-		position.move( pos.dx, pos.dy );
-		me.fireEvent( "shapeChanged", position );
-	    } );
+	    this.moveCurrentSelection(pos.dx, pos.dy);
 	} else {
 	    this.showSelection = true;
 	    this.hitArea( this.currentPos.x, this.currentPos.y,
@@ -146,6 +162,39 @@ Canvas2D.Sheet = Class.create( {
 	    this.selectionPos  = pos;
 	}
 	this.book.rePublish();
+    },
+
+    selectAllShapes: function() {
+	// FIXME: only selectable shapes (so no connectors)
+	this.selectedShapes = this.positions.clone();
+	this.book.rePublish();
+    },
+
+    moveCurrentSelection: function(dx, dy) {
+	var me = this;
+	this.selectedShapes.each(function(position) {	
+	    position.move(dx, dy);
+	    me.fireEvent( "shapeChanged", position );
+	} );
+	this.book.rePublish();
+    },
+
+    handleKeyDown: function(key) {
+	if( this.book.currentKeysDown.contains(16) ) { // shift + 
+	    switch(key) {
+	    case 37: this.moveCurrentSelection( -5,  0 ); break; // left
+	    case 38: this.moveCurrentSelection(  0, -5 ); break; // up
+	    case 39: this.moveCurrentSelection(  5,  0 ); break; // right
+	    case 40: this.moveCurrentSelection(  0,  5 ); break; // down
+	    }
+	}
+	if( ( this.book.currentKeysDown.contains(91) ||    // cmd 
+	      this.book.currentKeysDown.contains(17) ) &&  // ctrl +
+	    key == 65 &&                                   // a
+	    this.book.canvas.mouseOver )
+	{
+	    this.selectAllShapes();
+	}
     },
 
     addSelectionOverlay: function() {

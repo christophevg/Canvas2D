@@ -1,12 +1,11 @@
 0.1.0
+- add keyboard short cuts to align/distribute shapes
 - FIX BUG: apparantly alphatransparant stroking of rectanlge during first draw
 - introduce library layer as virtual container of shapes
 - introduce svg-path-shape
 - add multi-connectorhead support
 - add role names
 - introduce #copy directive to allow referencing of previously defined shapes
-- introduce multi-select through ctrl-click
-- introduce move by arrow keys
 - move connector.routing to position
 - add some shapes, to make nicer demo (think visio ;-))
 - use props.validation
