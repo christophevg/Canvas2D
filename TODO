@@ -1,11 +1,12 @@
 0.1.0
 - FIX BUG: apparantly alphatransparant stroking of rectanlge during first draw
-- introduce library layer
+- introduce library layer as virtual container of shapes
 - introduce svg-path-shape
 - add multi-connectorhead support
-- introduce #copy derictive to allow referencing of previously defined shapes
-- introduce multi-select-by-region
+- add role names
+- introduce #copy directive to allow referencing of previously defined shapes
 - introduce multi-select through ctrl-click
+- introduce move by arrow keys
 - move connector.routing to position
 - add some shapes, to make nicer demo (think visio ;-))
 - use props.validation
@@ -33,5 +34,9 @@ LATER
        - align methods
 - start using JSDoc-toolkit
 - use Maven to manage project
-- add options for showing grid with custom size and align to grid
 - add full svg support
+
+IDEAS FOR PLUGINS
+- Navigator Toolbar
+- Layout Toolbar
+- add options for showing grid with custom size and align to grid

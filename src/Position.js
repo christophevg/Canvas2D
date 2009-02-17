@@ -54,7 +54,19 @@ Canvas2D.Position = Class.create( {
 	var rx = x - this.left;
 	var ry = y - this.top;
 	if( rx < 0 || ry < 0 ) { return false; }
-	return this.shape.hit(rx, y - this.top);
+	return this.shape.hit(rx, ry);
+    },
+
+    hitArea: function(left, top, right, bottom) {
+	var rleft   = left   - this.left;
+	var rtop    = top    - this.top;
+	var rright  = right  - this.left;
+	var rbottom = bottom - this.top;
+	return this.shape.hitArea(min(rleft,rright), 
+				  min(rtop,rbottom), 
+				  max(rleft,rright), 
+				  max(rtop,rbottom));
+
     },
 
     delayRender: function() {

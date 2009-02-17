@@ -89,14 +89,29 @@ Canvas2D.Sheet = Class.create( {
     },
 
     hit: function(x,y) {
-	this.selectedShapes = [];
+	var newSelection = [];
 	for( var s = this.positions.length-1; s>=0; s-- ) {
 	    if( this.positions[s].hit(x,y) ) {
-		this.selectedShapes.push( this.positions[s] );
-		this.fireEvent( "shapeSelected", this.positions[0] );
+		newSelection.push( this.positions[s] );
+		this.fireEvent( "shapeSelected", this.positions[s] );
+		if( !this.selectedShapes.contains( this.positions[s] ) ) {
+		    this.selectedShapes = newSelection;
+		}
 		return;
 	    }
 	}
+	this.selectedShapes = newSelection;
+    },
+
+    hitArea: function( left, top, right, bottom ) {
+	var newSelection = [];
+	for( var s = this.positions.length-1; s>=0; s-- ) {
+	    if( this.positions[s].hitArea(left, top, right, bottom) ) {
+		newSelection.push( this.positions[s] );
+		this.fireEvent( "shapeSelected", this.positions[s] );
+	    }
+	}
+	this.selectedShapes = newSelection;
     },
 
     handleMouseDown: function(pos) {
@@ -118,7 +133,7 @@ Canvas2D.Sheet = Class.create( {
 
     handleMouseDrag: function(pos) {
 	if( !this.isDynamic() ) { return; }
-	if( this.selectedShapes.length > 0 ) {
+	if( !this.showSelection && this.selectedShapes.length > 0 ) {
 	    var me = this;
 	    this.selectedShapes.each(function(position) {	
 		position.move( pos.dx, pos.dy );
@@ -126,6 +141,8 @@ Canvas2D.Sheet = Class.create( {
 	    } );
 	} else {
 	    this.showSelection = true;
+	    this.hitArea( this.currentPos.x, this.currentPos.y,
+			  pos.x,             pos.y );
 	    this.selectionPos  = pos;
 	}
 	this.book.rePublish();
@@ -139,10 +156,10 @@ Canvas2D.Sheet = Class.create( {
 	    
 	    this.fillStyle = "rgba( 0, 0, 255, 0.1 )";
 	    this.fillRect( pos.x <= this.currentPos.x ? 
-				  pos.x : this.currentPos.x, 
-				  pos.y <= this.currentPos.y ?
-				  pos.y : this.currentPos.y,
-				  Math.abs(dx), Math.abs(dy) );
+			   pos.x : this.currentPos.x, 
+			   pos.y <= this.currentPos.y ?
+			   pos.y : this.currentPos.y,
+			   Math.abs(dx), Math.abs(dy) );
 	}
     },
 
