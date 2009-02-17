@@ -7,7 +7,7 @@ Canvas2D.Sheet = Class.create( {
 
 	this.allowedStyles = [ "static", "dynamic" ]; // allowed styles
 
-	this.canvas  = props.canvas || null;   // reference to the canvas
+	this.setBook(props.book);  // reference to the book
 	this.clear();
 
 	this.eventHandlers = {};   // map of registered eventHandlers
@@ -29,6 +29,7 @@ Canvas2D.Sheet = Class.create( {
     on: function( event, handler ) {
 	this.eventHandlers[event] = handler;
     },
+
     // TODO: move to eventSource mixin
     fireEvent: function( event, data ) {
 	if( this.eventHandlers[event] ) {
@@ -36,8 +37,10 @@ Canvas2D.Sheet = Class.create( {
 	}
     },
 
-    setCanvas: function( canvas ) {
-	this.canvas = canvas;
+    setBook: function( book ) {
+	if( !book ) { return; }
+	this.book = book;
+	this.canvas = this.book.canvas;
 
 	// TODO: move to initilialize when style is set
 	if( this.allowedStyles.indexOf(this.style) < 0 ) {
@@ -46,18 +49,16 @@ Canvas2D.Sheet = Class.create( {
     	    this.style = "static";
 	}
 
-	this.canvas.on( "mousedown", this.handleMouseDown.bind(this) );
-	this.canvas.on( "mouseup",   this.handleMouseUp  .bind(this) );
-	this.canvas.on( "mousedrag", this.handleMouseDrag.bind(this) );
+	this.book.on( "mousedown", this.handleMouseDown.bind(this) );
+	this.book.on( "mouseup",   this.handleMouseUp  .bind(this) );
+	this.book.on( "mousedrag", this.handleMouseDrag.bind(this) );
     },
 
-    freeze: function() { if( this.canvas ) { this.canvas.freeze(); } },
-    thaw:   function() { if( this.canvas ) { this.canvas.thaw();   } },
+    freeze: function() { if( this.book ) { this.book.freeze(); } },
+    thaw:   function() { if( this.book ) { this.book.thaw();   } },
 
-    log: function(msg) {
-	if( this.canvas ) {
-	    this.canvas.log( "Canvas2D.Sheet: " + msg );
-	}
+    log: function(msg) { 
+	if( this.book ) { this.book.log( "Canvas2D.Sheet: " + msg ); }
     },
 
     at: function(left, top) {
@@ -82,26 +83,42 @@ Canvas2D.Sheet = Class.create( {
 	this.log( "Added new shape" + 
 		  ( position.getLeft() != null ? "@" + position.getLeft() + "," 
 		    + position.getTop() : "" ) );
+	this.book.rePublish();
 
-	this.canvas.render();
 	return shape;
     },
 
     hit: function(x,y) {
-	this.selectedShapes = [];
+	var newSelection = [];
 	for( var s = this.positions.length-1; s>=0; s-- ) {
 	    if( this.positions[s].hit(x,y) ) {
-		this.selectedShapes.push( this.positions[s] );
-		this.fireEvent( "shapeSelected", this.positions[0] );
+		newSelection.push( this.positions[s] );
+		this.fireEvent( "shapeSelected", this.positions[s] );
+		if( !this.selectedShapes.contains( this.positions[s] ) ) {
+		    this.selectedShapes = newSelection;
+		}
 		return;
 	    }
 	}
+	this.selectedShapes = newSelection;
+    },
+
+    hitArea: function( left, top, right, bottom ) {
+	var newSelection = [];
+	for( var s = this.positions.length-1; s>=0; s-- ) {
+	    if( this.positions[s].hitArea(left, top, right, bottom) ) {
+		newSelection.push( this.positions[s] );
+		this.fireEvent( "shapeSelected", this.positions[s] );
+	    }
+	}
+	this.selectedShapes = newSelection;
     },
 
     handleMouseDown: function(pos) {
 	if( !this.isDynamic() ) { return; }
 	this.hit( pos.x, pos.y );
 	this.currentPos = pos;
+	this.book.rePublish();
     },
 
     handleMouseUp: function(pos) {
@@ -111,11 +128,12 @@ Canvas2D.Sheet = Class.create( {
 	    me.log( "Shape moved to " + position.left + ", " + position.top );
 	} );
 	this.showSelection   = false;
+	this.book.rePublish();
     },
 
     handleMouseDrag: function(pos) {
 	if( !this.isDynamic() ) { return; }
-	if( this.selectedShapes.length > 0 ) {
+	if( !this.showSelection && this.selectedShapes.length > 0 ) {
 	    var me = this;
 	    this.selectedShapes.each(function(position) {	
 		position.move( pos.dx, pos.dy );
@@ -123,8 +141,11 @@ Canvas2D.Sheet = Class.create( {
 	    } );
 	} else {
 	    this.showSelection = true;
+	    this.hitArea( this.currentPos.x, this.currentPos.y,
+			  pos.x,             pos.y );
 	    this.selectionPos  = pos;
 	}
+	this.book.rePublish();
     },
 
     addSelectionOverlay: function() {
@@ -133,12 +154,12 @@ Canvas2D.Sheet = Class.create( {
 	    var dx = pos.x - this.currentPos.x;
 	    var dy = pos.y - this.currentPos.y;
 	    
-	    this.canvas.fillStyle = "rgba( 0, 0, 255, 0.10 )";
-	    this.canvas.fillRect( pos.x <= this.currentPos.x ? 
-				  pos.x : this.currentPos.x, 
-				  pos.y <= this.currentPos.y ?
-				  pos.y : this.currentPos.y,
-				  Math.abs(dx), Math.abs(dy) );
+	    this.fillStyle = "rgba( 0, 0, 255, 0.1 )";
+	    this.fillRect( pos.x <= this.currentPos.x ? 
+			   pos.x : this.currentPos.x, 
+			   pos.y <= this.currentPos.y ?
+			   pos.y : this.currentPos.y,
+			   Math.abs(dx), Math.abs(dy) );
 	}
     },
 
@@ -187,6 +208,15 @@ Canvas2D.Sheet = Class.create( {
 	return s;
     },
 
+    // passthrough gfx functions
+    save: function() {
+	this.canvas.save();
+    },
+
+    restore: function() {
+	this.canvas.restore();
+    },
+
     clearRect: function(x, y, w, h ) {
 	this.canvas.clearRect( x, y, w, h );
     },
@@ -233,14 +263,12 @@ Canvas2D.Sheet = Class.create( {
 	return this.canvas.measureText( font, size, text );
     },
 
-    drawTextCenter: function(font, size, left, top, text) {
+    strokeText: function(text, left, top, maxWidth) {
 	this.canvas.strokeStyle = this.strokeStyle;
-	this.canvas.drawTextCenter(font, size, left, top, text);
-    },
-
-    drawText: function(font, size, left, top, text) {
-	this.canvas.strokeStyle = this.strokeStyle;
-	this.canvas.drawText(font, size, left, top, text);
+	this.canvas.lineWidth   = this.lineWidth;
+	this.canvas.textAlign   = this.textAlign;
+	this.canvas.font        = this.font;
+	this.canvas.strokeText(text, left, top, maxWidth);
     },
 
     drawImage: function(img, left, top) {
@@ -255,14 +283,13 @@ Canvas2D.Sheet = Class.create( {
 	this.canvas.arc(left, top, radius, 
 			startAngle, endAngle, anticlockwise );
     }
-
 } );
 
 Canvas2D.Sheet.getNames = function() {
     return [ "sheet" ];
 }
 
-Canvas2D.Sheet.from = function(construct, canvas) {
+Canvas2D.Sheet.from = function(construct, book) {
     var style = "static";
     var styleModifier = construct.modifiers.get( "style" );
     if( styleModifier ) {
@@ -277,7 +304,7 @@ Canvas2D.Sheet.from = function(construct, canvas) {
     });
 
     var sheet = new Canvas2D.Sheet({ name: construct.name, style: style } );
-    canvas.add(sheet);
+    book.addSheet(sheet);
     return sheet;
 };
 

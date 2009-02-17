@@ -14,14 +14,15 @@ Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
 	$super(props);
 	
 	if( this.getSource() ) {
-	    this.image = new Image();
-	    this.image.src = this.getSource();
-	    var me = this;
-	    this.image.onload = function() { 
-		me.width  = me.image.width;
-		me.height = me.image.height;
-	    }
+	    this.image = 
+		Canvas2D.ImageManager.load( this.getSource(), 
+					    this.updateSize.bind(this) );
 	}
+    },
+
+    updateSize: function() {
+	this.width  = this.image.width;
+	this.height = this.image.height;
     },
 
     draw: function(sheet,left,top) {

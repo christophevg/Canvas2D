@@ -23,6 +23,13 @@ Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
 	return ( this.getWidth() >= x && this.getHeight() >= y ); 
     },
 
+    hitArea: function(left, top, right, bottom) { 
+	return ! ( 0 > right 
+		   || this.getWidth() < left
+		   || 0 > bottom
+		   || this.getHeight() < top );
+    },
+
     getCenter: function() {
 	return { left: this.getWidth()  / 2, top:  this.getHeight() / 2 };
     },

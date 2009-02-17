@@ -1,24 +1,21 @@
 0.1.0
+- FIX BUG: apparantly alphatransparant stroking of rectanlge during first draw
+- introduce library layer as virtual container of shapes
+- introduce svg-path-shape
+- add multi-connectorhead support
+- add role names
+- introduce #copy directive to allow referencing of previously defined shapes
+- introduce multi-select through ctrl-click
+- introduce move by arrow keys
 - move connector.routing to position
-- mixin: logging
-- mixin: eventSource
 - add some shapes, to make nicer demo (think visio ;-))
 - use props.validation
-- split off and use tsf.commons
-- implement better font rendering for IE (vml-based, textcanvas-based)
-- extend support for events
 - make UmlCanvas diagram with class model of Canvas2D
 
 LATER
-- introduce Book construct and move more stuff from Canvas to Book
-- shape/path definition language (svg?)
-- Visio export tool
-- add lirary concept
-- build custom prototype.js from repository including only what we need
+- build custom prototype.js including only what we need
 - introduce global logging framework with fallbacks (print, console, alert)
   - http://www.depressedpress.com/Content/Development/JavaScript/Extensions/DP%5FDeBug/
-- group selection
-  - move of
 - getmouseXY should take in account possible viewports ?! (e.g. for uWe)
   - this should be done with a registerable modifier function from outside
 - toolbar: appear on mouse over
@@ -37,6 +34,9 @@ LATER
        - align methods
 - start using JSDoc-toolkit
 - use Maven to manage project
-- look into using other existing toolkits to build this on (or replace with)
-  - http://code.google.com/p/cakejs/
+- add full svg support
+
+IDEAS FOR PLUGINS
+- Navigator Toolbar
+- Layout Toolbar
 - add options for showing grid with custom size and align to grid

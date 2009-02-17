@@ -83,9 +83,8 @@ Canvas2D.Shape = Class.create( {
 	return false;
     },
 
-    drawLabel: function(canvas, left, top) {
+    drawLabel: function(sheet, left, top) {
 	if( this.getLabel() && this.getHeight() && this.getCenter() ) {
-	    canvas.strokeStyle = this.getLabelColor() || "black";
 	    left += this.getCenter().left;
 
 	    switch( this.getLabelPos() ) {
@@ -93,7 +92,14 @@ Canvas2D.Shape = Class.create( {
 	    case "bottom":          top  += this.getHeight() + 11;  break;
 	    case "center": default: top  += this.getCenter().top + 2.5;
 	    }
-	    canvas.drawTextCenter("Sans", 10, left, top, this.getLabel());
+	    with( sheet ) {
+		save();
+		strokeStyle = this.getLabelColor() || "black";
+		textAlign = "center";
+		font      = "10px Sans-Serif";
+		strokeText(this.getLabel, left, top);
+		restore();
+	    }
 	}
     },
 

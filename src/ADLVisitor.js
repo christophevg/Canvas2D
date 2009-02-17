@@ -1,8 +1,5 @@
 Canvas2D.ADLVisitor = Class.create( {
     visit: function( construct, parent ) {
-	var parentConstruct = parent;
-	var left, top;
-
 	var constructType = construct.type.toLowerCase();
 	if( constructType == "root" ) {
 	    // just move on to the children
