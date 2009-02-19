@@ -1,7 +1,7 @@
 Canvas2D.GeckoCanvas = Class.create( Canvas2D.ICanvas, {
     initialize: function(element) {
 	unless( element instanceof HTMLElement, function() {
-	    throw( "WebKitCanvas:initialize: element should be HTMLElement" );
+	    throw( "GeckoCanvas:initialize: element should be HTMLElement" );
 	} );
 	this.htmlcanvas = element;
 	this.canvas = this.htmlcanvas.getContext("2d");
