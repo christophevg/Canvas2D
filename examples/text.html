@@ -17,7 +17,7 @@
     <h1>Diagram Text Example</h1>
     <div class="box">
       <h2>Text</h2>
-      <canvas id="myTextDiagram" width="300" height="250"></canvas>
+      <canvas id="myTextDiagram" width="250" height="250"></canvas>
     </div>
 
     <script>
@@ -26,6 +26,7 @@ function drawdemo() {
   var book    = manager.setupBook("myTextDiagram");
   var sheet   = book.addSheet();
 
+  manager.startAll();
   sheet.freeze(); // hold interactive changes, we're not redrawing this sheet
   sheet.font = "20px Sans-Serif";
   sheet.strokeText( "Normal Text", 10, 20 );

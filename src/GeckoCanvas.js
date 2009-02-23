@@ -1,7 +1,7 @@
 Canvas2D.GeckoCanvas = Class.create( Canvas2D.ICanvas, {
     initialize: function(element) {
 	unless( element instanceof HTMLElement, function() {
-	    throw( "WebKitCanvas:initialize: element should be HTMLElement" );
+	    throw( "GeckoCanvas:initialize: element should be HTMLElement" );
 	} );
 	this.htmlcanvas = element;
 	this.canvas = this.htmlcanvas.getContext("2d");
@@ -85,16 +85,31 @@ Canvas2D.GeckoCanvas = Class.create( Canvas2D.ICanvas, {
 	this.fill();
     },
     strokeText   : function(text, x, y, maxWidth) {
-	var size = parseInt(this.font);
-	this.save();
-	this.lineStyle = "solid";
-	this.lineWidth = 1;
-	CanvasTextFunctions.draw(this, this.font, size, x, y, text);
-	this.restore();
+    	if (!this.canvas.strokeText) {
+    		// fallback to pre Gecko 1.9.1 text rendering
+    		this.save();
+
+        	this.translate(x, y);
+        	this.canvas.mozTextStyle = this.font;
+        	this.canvas.mozDrawText(text);
+        	
+        	this.restore();
+    	} else {
+    		this.canvas.font = this.font;
+    		this.canvas.strokeText(text, x, y, maxWidth);
+    	}
     },
     measureText  : function(text) {
-	var size = parseInt(this.font);
-	return CanvasTextFunctions.measure(this.font, size, text);
+    	this.save();
+    	if (!this.canvas.measureText) {
+    		// fallback to pre Gecko 1.9.1 text measuring
+    		this.canvas.mozTextStyle = this.font;
+    		return this.canvas.mozMeasureText(text);
+    	} else {
+    		this.canvas.font = this.font;
+    		return this.canvas.measureText(text);
+    	}
+    	this.restore();
     },
 
     drawImage : function(image, x, y ) { 
