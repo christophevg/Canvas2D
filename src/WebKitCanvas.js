@@ -102,16 +102,14 @@ Canvas2D.WebKitCanvas = Class.create( Canvas2D.ICanvas, {
 	this.fill();
     },
     strokeText   : function(text, x, y, maxWidth) {
-	var size = parseInt(this.font);
 	this.save();
 	this.lineStyle = "solid";
 	this.lineWidth = 1;
-	CanvasTextFunctions.draw(this, this.font, size, x, y, text);
+	CanvasTextFunctions.draw(this, this.font, getFontSize(this.font), x, y, text);
 	this.restore();
     },
     measureText  : function(text) {
-	var size = parseInt(this.font);
-	return CanvasTextFunctions.measure(this.font, size, text);
+	return CanvasTextFunctions.measure(this.font, getFontSize(this.font), text);
     },
 
     drawImage : function(image, x, y ) {
