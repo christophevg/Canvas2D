@@ -81,19 +81,18 @@ Canvas2D.GeckoCanvas = Class.create( Canvas2D.ICanvas, {
     },
 
     fillText     : function(text, x, y, maxWidth) {
-	this.strokeText(text, x, y, maxWidth);
-	this.fill();
+    	if (!this.canvas.fillText) {
+    		// fallback to pre Gecko 1.9.1 text rendering
+    		this.drawText(text, x, y, true);
+    	} else {
+    		this.canvas.font = this.font;
+    		this.canvas.fillText(text, x, y, maxWidth);
+    	}
     },
     strokeText   : function(text, x, y, maxWidth) {
     	if (!this.canvas.strokeText) {
     		// fallback to pre Gecko 1.9.1 text rendering
-    		this.save();
-
-        	this.translate(x, y);
-        	this.canvas.mozTextStyle = this.font;
-        	this.canvas.mozDrawText(text);
-        	
-        	this.restore();
+    		this.drawText(text, x, y, false);
     	} else {
     		this.canvas.font = this.font;
     		this.canvas.strokeText(text, x, y, maxWidth);
@@ -109,6 +108,26 @@ Canvas2D.GeckoCanvas = Class.create( Canvas2D.ICanvas, {
     		this.canvas.font = this.font;
     		return this.canvas.measureText(text);
     	}
+    	this.restore();
+    },
+    /**
+     * Helper function to stroke text.
+     * @param {DOMString} text The text to draw into the context
+     * @param {float} x The X coordinate at which to begin drawing
+     * @param {float} y The Y coordinate at which to begin drawing
+     * @param {boolean} fill If true, then the text is filled  
+     */
+    drawText : function(text, x, y, fill) {
+    	this.save();
+    	
+    	this.translate(x, y);
+    	this.canvas.mozTextStyle = this.font;
+    	this.canvas.mozPathText(text);
+    	this.stroke();    	
+    	if (fill) {
+    		this.fill();
+    	}
+    	
     	this.restore();
     },
 
