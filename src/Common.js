@@ -20,19 +20,15 @@ Array.prototype.contains = function(substring) {
  * @return the size of the font, in pixels
  */
 function getFontSize(font) {
-	try {
-		var size = null;
-		size = toPx(font, "px");
+	var size = null;
+	size = toPx(font, "px");
+	if (size == null) {
+		size = toPx(font, "pt");
 		if (size == null) {
-			size = toPx(font, "pt");
+			size = toPx(font, "em");
 			if (size == null) {
-				size = toPx(font, "em");
-				if (size == null) {
-					size = toPx(font, "pct");
-					if (size != null) {
-						return size;
-					}
-				} else {
+				size = toPx(font, "pct");
+				if (size != null) {
 					return size;
 				}
 			} else {
@@ -41,11 +37,11 @@ function getFontSize(font) {
 		} else {
 			return size;
 		}
-		
-		throw("cannot get size from font specifier: " + font);
-	} catch(exception) {
-		alert(exception);
+	} else {
+		return size;
 	}
+	
+	throw("cannot get size from font specifier: " + font);
 }
 
 function toPx(font, src) {
