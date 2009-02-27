@@ -121,15 +121,16 @@ Canvas2D.GeckoCanvas = Class.create( Canvas2D.ICanvas, {
     drawText : function(text, x, y, fill) {
     	this.save();
     	
+    	this.beginPath();
     	this.translate(x, y);
     	this.canvas.mozTextStyle = this.font;
     	this.canvas.mozPathText(text);
-    	    	
     	if (fill) {
     		this.fill();
     	} else {
     		this.stroke();
     	}
+    	this.closePath();
     	
     	this.restore();
     },

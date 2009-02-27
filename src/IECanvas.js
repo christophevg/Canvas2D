@@ -6,12 +6,18 @@ Canvas2D.IECanvas = Class.create( Canvas2D.CanvasBase, {
     },
     
     strokeText   : function(text, x, y, maxWidth) {
-		this.save();
+    	this.beginPath();
+    	
+    	this.save();
+		
 		this.lineStyle = "solid";
 		this.lineWidth = 1;
 		CanvasTextFunctions.draw(
 				this, this.font, getFontSize(this.font), x, y, text);
+		
 		this.restore();
+		
+		this.closePath();
     },
     
     measureText  : function(text) {
