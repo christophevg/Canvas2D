@@ -1,19 +1,37 @@
-Canvas2D.GeckoCanvas = Class.create( Canvas2D.ICanvas, {
+Canvas2D.CanvasBase = Class.create( Canvas2D.ICanvas, {
     initialize: function(element) {
 	unless( element instanceof HTMLElement, function() {
-	    throw( "GeckoCanvas:initialize: element should be HTMLElement" );
+	    throw( "CanvasBase:initialize: element should be HTMLElement" );
 	} );
 	this.htmlcanvas = element;
 	this.canvas = this.htmlcanvas.getContext("2d");
-	
+
 	this.lineWidth   = 1;
 	this.strokeStyle = "black";
 	this.fillStyle   = "black";
+	this.font        = "10pt Sans-Serif";
     },
     
-    save         : function() { this.canvas.save(); },
-    restore      : function() { this.canvas.restore(); },
-    
+    save         : function() { 
+	var oldValues = {};
+	var currentValues = this;
+	[ "lineWidth", "lineStyle", "strokeStyle", 
+	  "fillStyle", "font", "textAlign" ].each(function(prop) {
+	      oldValues[prop] = currentValues[prop];
+	  } );
+	this.oldValues = oldValues;
+	this.canvas.save(); 
+    },
+    restore      : function() { 
+	var oldValues = this.oldValues;
+	var currentValues = this;
+	[ "lineWidth", "lineStyle", "strokeStyle", 
+	  "fillStyle", "font", "textAlign" ].each(function(prop) {
+	      currentValues[prop] = oldValues[prop];
+	  } );
+	this.canvas.restore();
+    },
+
     scale        : function(x,y) { this.canvas.scale(x,y); },
     rotate       : function(angle) { this.canvas.rotate(angle); },
     translate    : function(x, y) { this.canvas.translate(x,y); },
@@ -80,63 +98,7 @@ Canvas2D.GeckoCanvas = Class.create( Canvas2D.ICanvas, {
 	return this.canvas.isPointInPath(x, y);
     },
 
-    fillText     : function(text, x, y, maxWidth) {
-    	if (!this.canvas.fillText) {
-    		// fallback to pre Gecko 1.9.1 text rendering
-    		this.drawText(text, x, y, true);
-    	} else {
-    		this.canvas.font = this.font;
-    		this.canvas.fillText(text, x, y, maxWidth);
-    	}
-    },
-    strokeText   : function(text, x, y, maxWidth) {
-    	if (!this.canvas.strokeText) {
-    		// fallback to pre Gecko 1.9.1 text rendering
-    		this.drawText(text, x, y, false);
-    	} else {
-    		this.canvas.font = this.font;
-    		this.canvas.strokeText(text, x, y, maxWidth);
-    	}
-    },
-    measureText  : function(text) {
-    	this.save();
-    	if (!this.canvas.measureText) {
-    		// fallback to pre Gecko 1.9.1 text measuring
-    		this.canvas.mozTextStyle = this.font;
-    		return this.canvas.mozMeasureText(text);
-    	} else {
-    		this.canvas.font = this.font;
-    		return this.canvas.measureText(text);
-    	}
-    	this.restore();
-    },
-
-    /**
-     * Helper function to stroke text.
-     * @param {DOMString} text The text to draw into the context
-     * @param {float} x The X coordinate at which to begin drawing
-     * @param {float} y The Y coordinate at which to begin drawing
-     * @param {boolean} fill If true, then text is filled, 
-     * 			otherwise it is stroked  
-     */
-    drawText : function(text, x, y, fill) {
-    	this.save();
-    	
-    	this.beginPath();
-    	this.translate(x, y);
-    	this.canvas.mozTextStyle = this.font;
-    	this.canvas.mozPathText(text);
-    	if (fill) {
-    	    this.fill();
-    	} else {
-    	    this.stroke();
-    	}
-    	this.closePath();
-    	
-    	this.restore();
-    },
-
-    drawImage : function(image, x, y ) { 
+    drawImage : function(image, x, y ) {
 	this.canvas.drawImage( image, x, y );
     },
 

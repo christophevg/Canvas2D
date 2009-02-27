@@ -207,10 +207,7 @@ Canvas2D.Factory.setup = function(element) {
 
     if( Prototype.Browser.WebKit ) { canvas = Canvas2D.WebKitCanvas; }
     if( Prototype.Browser.Gecko )  { canvas = Canvas2D.GeckoCanvas;  }
-
-    if( Prototype.Browser.IE ) {
-	throw( "Factory::setup: IE support is currently disabled." );
-    }
+    if( Prototype.Browser.IE )     { canvas = Canvas2D.IECanvas;     }
     if( Prototype.Browser.Opera ) {
 	throw( "Factory::setup: Opera support is currently disabled." );
     }

@@ -103,8 +103,8 @@ Canvas2D.Book = Class.create( {
 	this.libraries.each(function(library) { 
 	    libraries += " + " + library.name 
 	});
-	this.canvas.font = "6px Sans";
-	this.canvas.strokeText( "Canvas2D" + libraries + " / Christophe VG",
+	this.canvas.font = "6pt Sans";
+	this.canvas.fillText( "Canvas2D" + libraries + " / Christophe VG",
 				3, (this.canvas.htmlcanvas.width * -1) + 7 ); 
 	this.canvas.restore();
     },

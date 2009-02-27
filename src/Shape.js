@@ -86,20 +86,19 @@ Canvas2D.Shape = Class.create( {
     drawLabel: function(sheet, left, top) {
 	if( this.getLabel() && this.getHeight() && this.getCenter() ) {
 	    left += this.getCenter().left;
-
+	    
 	    switch( this.getLabelPos() ) {
 	    case "top":	            top  += - 5;   break;
 	    case "bottom":          top  += this.getHeight() + 11;  break;
 	    case "center": default: top  += this.getCenter().top + 2.5;
 	    }
-	    with( sheet ) {
-		save();
-		strokeStyle = this.getLabelColor() || "black";
-		textAlign = "center";
-		font      = "10px Sans-Serif";
-		strokeText(this.getLabel, left, top);
-		restore();
-	    }
+	    // NOTE: don't use with() here, because with() doesn't do getters
+	    sheet.save();
+	    sheet.strokeStyle = this.getLabelColor() || "black";
+	    sheet.textAlign   = "center";
+	    sheet.font        = "7pt Sans-Serif";
+	    sheet.strokeText(this.getLabel(), left, top);
+	    sheet.restore();
 	}
     },
 

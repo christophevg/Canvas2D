@@ -50,6 +50,7 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
 	case "horizontal":          this._horizontal(sheet); break;
 	case "direct":     default: this._direct    (sheet);
 	}
+	sheet.closePath();
 	sheet.stroke();
     },
 
