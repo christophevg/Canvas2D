@@ -104,6 +104,7 @@ Canvas2D.Book = Class.create( {
 	    libraries += " + " + library.name 
 	});
 	this.canvas.font = "6pt Sans";
+	this.canvas.textAlign = "left";
 	this.canvas.fillText( "Canvas2D" + libraries + " / Christophe VG",
 				3, (this.canvas.htmlcanvas.width * -1) + 7 ); 
 	this.canvas.restore();
