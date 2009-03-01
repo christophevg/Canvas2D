@@ -27,23 +27,28 @@ Canvas2D.Book = Class.create( {
 
 	this.name = element.id;
 
-	this.libraries = [];
-
+	this.setupExtensions();
 	this.setupPlugins();
+    },
+
+    setupExtensions: function() {
+	this.extensions = new Hash();
+	$H(Canvas2D.extensions).each(function(extension) {
+	    this.extensions[extension.name] = extension;
+	}.bind(this) );
     },
 
     setupPlugins: function() {
 	this.plugins = {};
-	var book = this;
 	$H(Canvas2D.Book.plugins).each(function(pair) {
-	    var plugin = new (pair.value)(book);
-	    book.plugins[pair.key] = plugin;
+	    var plugin = new (pair.value)(this);
+	    this.plugins[pair.key] = plugin;
 	    pair.value.exposes.each(function(func) {
-		book[func] = function(arg1, arg2, arg3) { 
+		this[func] = function(arg1, arg2, arg3) { 
 		    this.plugins[pair.key][func](arg1, arg2, arg3);
 		};
-	    } );
-	} );
+	    }.bind(this) );
+	}.bind(this) );
     },
 
     passEvent: function( event, data ) { this.fireEvent( event, data ); },
@@ -101,13 +106,13 @@ Canvas2D.Book = Class.create( {
 	this.canvas.save();
 	this.canvas.strokeStyle = "rgba(0,0,0,0.5)";
 	this.canvas.rotate(Math.PI/2);
-	var libraries = "";
-	this.libraries.each(function(library) { 
-	    libraries += " + " + library.name 
+	var extensions = "";
+	this.extensions.each(function(library) { 
+	    extensions += " + " + library.key; 
 	});
 	this.canvas.font = "6pt Sans";
 	this.canvas.textAlign = "left";
-	this.canvas.fillText( "Canvas2D" + libraries + " / Christophe VG",
+	this.canvas.fillText( "Canvas2D" + extensions + " / Christophe VG",
 				3, (this.canvas.htmlcanvas.width * -1) + 7 ); 
 	this.canvas.restore();
     },
