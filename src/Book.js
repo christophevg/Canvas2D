@@ -1,9 +1,11 @@
 Canvas2D.Book = Class.create( {
     initialize: function(element) {
 	// overloaded constructor implementation allows the passing of an id
-	unless( element instanceof HTMLElement, function(){
-	    element = document.getElementById(element);
-	} );
+	unless( element && element.nodeType && 
+		element.nodeType == Node.ELEMENT_NODE, 
+		function(){
+		    element = document.getElementById(element);
+		} );
 
 	this.canvas = Canvas2D.Factory.setup(element);
 	this.canvas.on( "mousedown", this.passEvent.bind(this, "mousedown") );

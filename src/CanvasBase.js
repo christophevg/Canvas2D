@@ -1,8 +1,10 @@
 Canvas2D.CanvasBase = Class.create( Canvas2D.ICanvas, {
     initialize: function(element) {
-	unless( element instanceof HTMLElement, function() {
-	    throw( "CanvasBase:initialize: element should be HTMLElement" );
-	} );
+	unless( element && element.nodeType && 
+		element.nodeType == Node.ELEMENT_NODE, 
+		function() {
+		    alert( "CanvasBase:initialize: expected HTMLElement" );
+		} );
 	this.htmlcanvas = element;
 	this.canvas = this.htmlcanvas.getContext("2d");
 
