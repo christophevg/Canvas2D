@@ -1,0 +1,55 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
+    <script src="../build/Canvas2D.standalone.min.js"></script>
+    <script>
+function setBrowser() {
+  document.getElementById("001").src = 
+    "001." + document.getElementById("browserSelection").value + ".png";
+}
+    </script>
+</head>
+<body>
+
+<table>
+<tr>
+  <th>#</th>
+  <th>Canvas2D (Live)</th>
+  <th>
+<select id="browserSelection" onchange="setBrowser();">
+<option value="webkit.525.27">WebKit</option>
+<option value="gecko.1.9">Gecko</option>
+<option value="ie.silverlight">IE</option>
+</select>
+</th>
+</tr>
+<tr>
+  <td>001</td>
+  <td>
+    <canvas class="Canvas2D" id="myDiagram" width="300" height="250"></canvas>
+    <pre id="myDiagramSource" style="display:none;">  
+Sheet mySheet {
+  /* define some shapes */
+  [@ 75, 55] Rectangle rect1 +width=75 +height=75 +color="green" 
+                             +label="green" +labelPos="top";
+  [@ 50,175] Rectangle rect2 +width=50 +height=50 +color="red"   +label="red";
+  [@200,100] Rectangle rect3 +width=50 +height=50 +color="blue"  +label="blue";
+  [@200, 25] Rectangle rect4 +width=50 +height=50 +color="yellow";  
+  [@125,175] Rectangle rect5 +width=50 +height=50 +color="red"
+                             +label="red" +labelColor="red" +labelPos="bottom";
+
+  /* connect them  */
+  Connector conn1 +from="rect1" +to="rect2" +routing="vertical";  
+  Connector conn2 +from="rect1" +to="rect3" +routing="horizontal";  
+  Connector conn3 +from="rect1" +to="rect4" +routing="horizontal";  
+  Connector conn4 +from="rect1" +to="rect5" +routing="vertical";  
+}
+    </pre>  
+  </td>
+<td><img id="001" src=""></td>
+</tr>
+</table>
+
+<script>setBrowser();</script>
+</body>
+</html>
