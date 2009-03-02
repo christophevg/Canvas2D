@@ -6,6 +6,8 @@
 function setBrowser() {
   document.getElementById("001").src = 
     "001." + document.getElementById("browserSelection").value + ".png";
+  document.getElementById("002").src = 
+    "002." + document.getElementById("browserSelection").value + ".png";
 }
     </script>
 </head>
@@ -47,6 +49,14 @@ Sheet mySheet {
     </pre>  
   </td>
 <td><img id="001" src=""></td>
+</tr>
+<tr>
+  <td>002</td>
+  <td>
+    <canvas class="Canvas2D Tabbed withSource withConsole withAbout" 
+	    id="myDiagram2" width="300" height="250"></canvas>
+  </td>
+  <td><img id="002" src=""></td>  
 </tr>
 </table>
 

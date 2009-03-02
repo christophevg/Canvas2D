@@ -24,7 +24,7 @@ Canvas2D.Book.plugins.TabbedCanvas = Class.create( {
 	about.style.width = (parseInt(width)-4)  + "px";
 
 	var libraries = "";
-	this.book.libraries.each(function(library) {
+	this.book.extensions.each(function(library) {
 	    libraries += "\n<hr>\n";
 	    libraries += "<b>Library: " + library.name + "</b> " + 
 		"by " + library.author + "<br>" +
