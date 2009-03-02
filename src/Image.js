@@ -1,8 +1,6 @@
 Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
-    allProperties: function($super) {
-	var props = $super();
-	props.push( "src"  );
-	return props;
+    myProperties: function($super) {
+	return [ "src" ];
     },
 
     getType   : function() { return "image"; },
@@ -10,9 +8,7 @@ Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
     getSource : function() { return this.src;   },
     getImage  : function() { return this.image; },
 
-    initialize: function($super, props) {
-	$super(props);
-	
+    setup: function() {
 	if( this.getSource() ) {
 	    this.image = 
 		Canvas2D.ImageManager.load( this.getSource(), 

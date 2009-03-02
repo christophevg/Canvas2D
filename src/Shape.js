@@ -2,7 +2,9 @@ Canvas2D.ShapeCounter = 0;
 
 Canvas2D.Shape = Class.create( {
     allProperties: function() {
-	return [ "name", "label", "labelPos", "labelColor" ];
+	var base = [ "name", "label", "labelPos", "labelColor" ];
+	var ext  = this.myProperties();
+	return base.concat(ext);
     },
 
     getType : function() { return "shape"; },
@@ -13,9 +15,13 @@ Canvas2D.Shape = Class.create( {
 	    me[prop] = props[prop] || null;
 	} );
 	if( !this.name ) { this.name = "__shape__" + Canvas2D.ShapeCounter++; }
+	// setup is used to allow Shapes to do initialization stuff,
+	// without the need to override this construtor and make sure
+	// it is called correctly
+	this.setup();
     },
     
-    getName  : function() { return this.name;   },
+    getName       : function() { return this.name;   },
 
     getLabel      : function() { return this.label;      },
     getLabelPos   : function() { return this.labelPos;   },
@@ -27,6 +33,7 @@ Canvas2D.Shape = Class.create( {
 	this.allProperties().each(function(prop) {
 	    props[prop] = me[prop];
 	} );
+	props.type = this.getType();
 	return props;
     },
 
@@ -108,6 +115,8 @@ Canvas2D.Shape = Class.create( {
     },
 
     // the remaining methods are not applicable for abstract shapes
+    setup       : function()                         { },
+    myProperties: function()                         { return [];    },
     getWidth    : function()                         { return 0;     },
     getHeight   : function()                         { return 0;     },
     getNames    : function()                         { return [];    },
@@ -117,3 +126,7 @@ Canvas2D.Shape = Class.create( {
     getCenter   : function()                         { return null;  },
     getPort     : function(side)                     { }
 } );
+
+// add-in some common functionality
+Canvas2D.Shape = Class.create( Canvas2D.Shape, 
+			       Canvas2D.Factory.extensions.EventHandling );

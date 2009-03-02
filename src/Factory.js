@@ -25,7 +25,12 @@ Canvas2D.Factory.extensions.ShortHands = {
     strokeTextRight : function(text, x, y, maxWidth) {
 	var dx = this.measureText(text);
 	this.strokeText(text, x-dx, y, maxWidth);
-    }
+    },
+
+    fillStrokeRect : function(left, top, width, height) {
+	this.fillRect( left, top, width, height );
+	this.strokeRect( left, top, width, height );
+    },
 };
 
 Canvas2D.Factory.extensions.EventHandling = {

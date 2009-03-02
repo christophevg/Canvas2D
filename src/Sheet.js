@@ -10,8 +10,17 @@ Canvas2D.Sheet = Class.create( {
 	this.setBook(props.book);  // reference to the book
 	this.clear();
 
-	this.eventHandlers = {};   // map of registered eventHandlers
 	this.selectedShapes = [];  // list of selected shapes
+
+	this.dirty = false;
+    },
+
+    makeDirty: function() {
+	this.dirty = true;
+    },
+
+    isDirty: function() {
+	return this.dirty;
     },
 
     clear: function() {
@@ -24,18 +33,6 @@ Canvas2D.Sheet = Class.create( {
     makeStatic : function() { this.style = "static";          },
     isDynamic  : function() { return this.style == "dynamic"; },
     isStatic   : function() { return !this.isDynamic();       },
-
-    // TODO: move to eventSource mixin
-    on: function( event, handler ) {
-	this.eventHandlers[event] = handler;
-    },
-
-    // TODO: move to eventSource mixin
-    fireEvent: function( event, data ) {
-	if( this.eventHandlers[event] ) {
-	    this.eventHandlers[event](data);
-	}
-    },
 
     setBook: function( book ) {
 	if( !book ) { return; }
@@ -74,6 +71,7 @@ Canvas2D.Sheet = Class.create( {
     },
 
     add: function(shape) {
+	shape.on( "changed", this.makeDirty.bind(this) );
 	var position = new Canvas2D.Position( shape, this.newLeft, this.newTop);
 	this.newLeft = null;
 	this.newTop = null;
@@ -333,6 +331,10 @@ Canvas2D.Sheet = Class.create( {
 			startAngle, endAngle, anticlockwise );
     }
 } );
+
+// add-in some common functionality
+Canvas2D.Sheet = Class.create( Canvas2D.Sheet, 
+			       Canvas2D.Factory.extensions.EventHandling );
 
 Canvas2D.Sheet.getNames = function() {
     return [ "sheet" ];

@@ -1,15 +1,7 @@
 Canvas2D.Connector = Class.create( Canvas2D.Shape, {
-    allProperties: function($super) {
-	var props = $super();
-	props.push( "routing"   );
-	props.push( "lineColor" );
-	props.push( "lineStyle" );
-	props.push( "lineWidth" );
-	props.push( "from"      );
-	props.push( "to"        );
-	props.push( "begin"     );
-	props.push( "end"       );
-	return props;
+    myProperties: function() {
+	return [ "routing", "lineColor", "lineStyle", "lineWidth",
+		 "from", "to", "begin", "end" ];
     },
 
     defaults: { lineColor : "black", 

@@ -1,10 +1,6 @@
 Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
-    allProperties: function($super) {
-	var props = $super();
-	props.push( "color"  );
-	props.push( "width"  );
-	props.push( "height" );
-	return props;
+    myProperties: function() {
+	return [ "color", "width", "height" ];
     },
 
     getType  : function() { return "rectangle"; },
