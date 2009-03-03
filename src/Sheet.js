@@ -281,7 +281,7 @@ Canvas2D.Sheet = Class.create( {
     fillStrokeRect: function(x, y, w, h) {
 	this.canvas.strokeStyle = this.strokeStyle;
 	this.canvas.fillStyle = this.fillStyle;
-	this.canvas.fillStrokeRect(x, y, h, w);
+	this.canvas.fillStrokeRect(x, y, w, h);
     },
 
     beginPath: function() {
