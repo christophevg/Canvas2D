@@ -312,8 +312,9 @@ Canvas2D.Sheet = Class.create( {
 	this.canvas.lineTo(x,y);
     },
 
-    measureText: function(font, size, text) {
-	return this.canvas.measureText( font, size, text );
+    measureText: function(text) {
+	this.canvas.font        = this.font;
+	return this.canvas.measureText( text );
     },
 
     strokeText: function(text, left, top, maxWidth) {
