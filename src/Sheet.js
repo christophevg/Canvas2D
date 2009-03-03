@@ -324,6 +324,14 @@ Canvas2D.Sheet = Class.create( {
 	this.canvas.strokeText(text, left, top, maxWidth);
     },
 
+    fillText: function(text, left, top, maxWidth) {
+	this.canvas.fillStyle = this.fillStyle;
+	this.canvas.lineWidth = this.lineWidth;
+	this.canvas.textAlign = this.textAlign;
+	this.canvas.font      = this.font;
+	this.canvas.fillText(text, left, top, maxWidth);
+    },
+
     drawImage: function(img, left, top) {
 	this.canvas.drawImage(img, left, top);
     },
