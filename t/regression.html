@@ -8,6 +8,8 @@ function setBrowser() {
     "001." + document.getElementById("browserSelection").value + ".png";
   document.getElementById("002").src = 
     "002." + document.getElementById("browserSelection").value + ".png";
+  document.getElementById("003").src = 
+    "003." + document.getElementById("browserSelection").value + ".png";
 }
     </script>
 </head>
@@ -25,6 +27,9 @@ function setBrowser() {
 </select>
 </th>
 </tr>
+
+<!-- basic shape drawing -->
+
 <tr>
   <td>001</td>
   <td>
@@ -50,6 +55,9 @@ Sheet mySheet {
   </td>
 <td><img id="001" src=""></td>
 </tr>
+
+<!-- TabbedCanvas Extension -->
+
 <tr>
   <td>002</td>
   <td>
@@ -58,6 +66,26 @@ Sheet mySheet {
   </td>
   <td><img id="002" src=""></td>  
 </tr>
+
+<!-- Text -->
+
+<tr>
+  <td>003</td>
+  <td>
+    <canvas class="Canvas2D" 
+	    id="myDiagram3" width="300" height="250"></canvas>
+    <pre id="myDiagram3Source" style="display:none;">  
+Sheet mySheet {
+  [@10, 30] Text text1 := "Default Font without Decoration";
+  [@10, 70] Text text2 +font="Italic 20pt Sans-Serif" := "Italic 20pt Text";
+  [@10,110] Text text3 +decoration="underline overline line-through"
+                       := "Default Font with all Decorations";
+}
+    </pre>
+  </td>
+  <td><img id="003" src=""></td>  
+</tr>
+
 </table>
 
 <script>setBrowser();</script>

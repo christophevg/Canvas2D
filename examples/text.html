@@ -11,33 +11,22 @@
       }
     </style>
     <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
-    <script src="../build/Canvas2D.standalone.js"></script>
+    <script src="../build/Canvas2D.standalone.min.js"></script>
   </head>
   <body onload="drawdemo()">
     <h1>Diagram Text Example</h1>
     <div class="box">
       <h2>Text</h2>
-      <canvas id="myTextDiagram" width="250" height="250"></canvas>
-    </div>
-
-    <script>
-function drawdemo() {
-  var manager = new Canvas2D.Manager();
-  var book    = manager.setupBook("myTextDiagram");
-  var sheet   = book.addSheet();
-
-  manager.startAll();
-  sheet.freeze(); // hold interactive changes, we're not redrawing this sheet
-  sheet.font = "12pt Sans-Serif";
-  sheet.strokeText( "Normal Text", 10, 30 );
-
-  sheet.font = "Italic 12pt Sans-Serif";
-  sheet.strokeText( "Italic Text", 10, 70 );
-
-  sheet.font = "12pt Sans-Serif";
-  sheet.textDecoration = "underline overline line-through";
-  sheet.strokeText( "Decorated Text", 10, 110 );
+      <canvas class="Canvas2D" 
+	      id="myTextDiagram" width="300" height="250"></canvas>
+      <pre id="myTextDiagramSource" style="display:none">
+Sheet mySheet +dynamic {
+  [@10, 30] Text text1 := "Default Font without Decoration";
+  [@10, 70] Text text2 +font="Italic 20pt Sans-Serif" := "Italic 20pt Text";
+  [@10,110] Text text3 +decoration="underline overline line-through"
+                       := "Default Font with all Decorations";
 }
-    </script>
+      </pre>
+    </div>
   </body>
 </html>

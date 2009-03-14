@@ -36,6 +36,7 @@ SRCS=src/SanityChecks.js \
      src/Sheet.js \
      src/Position.js \
      src/Shape.js src/Rectangle.js src/Connector.js \
+     src/Text.js \
      src/Image.js \
      src/Alias.js \
      src/plugins/TabbedCanvas.js \

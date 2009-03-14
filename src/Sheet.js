@@ -332,6 +332,10 @@ Canvas2D.Sheet = Class.create( {
 	return this.canvas.measureText( text );
     },
 
+    getFontSize: function() {
+	return getFontSize( this.font || this.properties.font );
+    },
+
     strokeText: function(text, left, top, maxWidth) {
 	this.transferProperties();
 	this.canvas.strokeText(text, left, top, maxWidth);

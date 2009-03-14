@@ -105,6 +105,7 @@ Canvas2D.Book = Class.create( {
     addWaterMark: function() {
 	this.canvas.save();
 	this.canvas.strokeStyle = "rgba(0,0,0,0.5)";
+	this.canvas.textDecoration = "none";
 	this.canvas.rotate(Math.PI/2);
 	var extensions = "";
 	this.extensions.each(function(library) { 
