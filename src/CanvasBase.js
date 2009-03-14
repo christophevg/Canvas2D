@@ -7,18 +7,21 @@ Canvas2D.CanvasBase = Class.create( Canvas2D.ICanvas, {
 		} );
 	this.htmlcanvas = element;
 	this.canvas = this.htmlcanvas.getContext("2d");
-
-	this.lineWidth   = 1;
-	this.strokeStyle = "black";
-	this.fillStyle   = "black";
-	this.font        = "10pt Sans-Serif";
     },
+
+    properties : { lineWidth      : 1,   
+		   lineStyle      : "black",
+		   strokeStyle    : "black", 
+		   fillStyle      : "black", 
+		   font           : "10pt Sans-Serif", 
+		   textAlign      : "left", 
+		   textBaseline   : "alphabetic",
+		   textDecoration : "none" },
     
     save         : function() { 
 	var oldValues = {};
 	var currentValues = this;
-	[ "lineWidth", "lineStyle", "strokeStyle", 
-	  "fillStyle", "font", "textAlign" ].each(function(prop) {
+	$H(this.properties).keys().each(function(prop) {
 	      oldValues[prop] = currentValues[prop];
 	  } );
 	this.oldValues = oldValues;
@@ -27,11 +30,18 @@ Canvas2D.CanvasBase = Class.create( Canvas2D.ICanvas, {
     restore      : function() { 
 	var oldValues = this.oldValues;
 	var currentValues = this;
-	[ "lineWidth", "lineStyle", "strokeStyle", 
-	  "fillStyle", "font", "textAlign" ].each(function(prop) {
+	$H(this.properties).keys().each(function(prop) {
 	      currentValues[prop] = oldValues[prop];
 	  } );
 	this.canvas.restore();
+    },
+
+    transferProperties : function() {
+	var canvas = this.canvas;
+	var currentValues = this;
+	$H(this.properties).each(function(prop) {
+	    canvas[prop.key] = currentValues[prop.key] || prop.value;
+	} );
     },
 
     scale        : function(x,y) { this.canvas.scale(x,y); },
@@ -56,12 +66,11 @@ Canvas2D.CanvasBase = Class.create( Canvas2D.ICanvas, {
    
     clearRect  : function(x, y, w, h) { this.canvas.clearRect(x, y, w, h); },
     fillRect   : function(x, y, w, h) { 
-	this.canvas.fillStyle = this.fillStyle;
+	this.transferProperties();
 	this.canvas.fillRect (x, y, w, h); 
     },
     strokeRect : function(x, y, w, h) { 
-	this.canvas.strokeStyle = this.strokeStyle;
-	this.canvas.lineWidth   = this.lineWidth || 1;
+	this.transferProperties();
 	this.canvas.strokeRect(x, y, w, h ); 
     },
     
@@ -85,12 +94,11 @@ Canvas2D.CanvasBase = Class.create( Canvas2D.ICanvas, {
 	this.canvas.arc(x, y, radius, startAng, endAng, anticlockwise);
     },
     fill             : function() {
-	this.canvas.fillStyle = this.fillStyle;
+	this.transferProperties();
 	this.canvas.fill();
     },
     stroke           : function() {
-	this.canvas.strokeStyle = this.strokeStyle;
-	this.canvas.lineWidth   = this.lineWidth || 1;
+	this.transferProperties();
 	this.canvas.stroke();
     },
     clip             : function() {

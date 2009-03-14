@@ -11,7 +11,7 @@
       }
     </style>
     <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
-    <script src="../build/Canvas2D.standalone.min.js"></script>
+    <script src="../build/Canvas2D.standalone.js"></script>
   </head>
   <body onload="drawdemo()">
     <h1>Diagram Text Example</h1>
@@ -28,10 +28,15 @@ function drawdemo() {
 
   manager.startAll();
   sheet.freeze(); // hold interactive changes, we're not redrawing this sheet
-  sheet.font = "20pt Sans-Serif";
+  sheet.font = "12pt Sans-Serif";
   sheet.strokeText( "Normal Text", 10, 30 );
-  sheet.font = "Italic 20pt Sans-Serif";
+
+  sheet.font = "Italic 12pt Sans-Serif";
   sheet.strokeText( "Italic Text", 10, 70 );
+
+  sheet.font = "12pt Sans-Serif";
+  sheet.textDecoration = "underline overline line-through";
+  sheet.strokeText( "Decorated Text", 10, 110 );
 }
     </script>
   </body>

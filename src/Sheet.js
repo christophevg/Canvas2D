@@ -264,23 +264,39 @@ Canvas2D.Sheet = Class.create( {
 	this.canvas.restore();
     },
 
+    properties : { lineWidth      : 1,   
+		   lineStyle      : "black",
+		   strokeStyle    : "black", 
+		   fillStyle      : "black", 
+		   font           : "10pt Sans-Serif", 
+		   textAlign      : "left", 
+		   textBaseline   : "alphabetic",
+		   textDecoration : "none" },
+
+    transferProperties : function() {
+	var canvas = this.canvas;
+	var currentValues = this;
+	$H(this.properties).each(function(prop) {
+	    canvas[prop.key] = currentValues[prop.key] || prop.value;
+	} );
+    },
+
     clearRect: function(x, y, w, h ) {
 	this.canvas.clearRect( x, y, w, h );
     },
 
     fillRect: function(x, y, w, h ) {
-	this.canvas.fillStyle = this.fillStyle;
+	this.transferProperties();
 	this.canvas.fillRect( x, y, w, h );
     },
 
     strokeRect: function(x, y, w, h ) {
-	this.canvas.strokeStyle = this.strokeStyle;
+	this.transferProperties();
 	this.canvas.strokeRect( x, y, w, h );
     },
 
     fillStrokeRect: function(x, y, w, h) {
-	this.canvas.strokeStyle = this.strokeStyle;
-	this.canvas.fillStyle = this.fillStyle;
+	this.transferProperties();
 	this.canvas.fillStrokeRect(x, y, w, h);
     },
 
@@ -293,13 +309,12 @@ Canvas2D.Sheet = Class.create( {
     },
 
     stroke: function() {
-	this.canvas.strokeStyle = this.strokeStyle;
-	this.canvas.lineWidth = this.lineWidth;
+	this.transferProperties();
 	this.canvas.stroke();
     },
 
     fill: function() {
-	this.canvas.fillStyle = this.fillStyle;
+	this.transferProperties();
 	this.canvas.fill();
     },
 
@@ -308,28 +323,22 @@ Canvas2D.Sheet = Class.create( {
     },
 
     lineTo: function(x,y) {
-	this.canvas.lineStyle = this.lineStyle;
+	this.transferProperties();
 	this.canvas.lineTo(x,y);
     },
 
     measureText: function(text) {
-	this.canvas.font        = this.font;
+	this.transferProperties();
 	return this.canvas.measureText( text );
     },
 
     strokeText: function(text, left, top, maxWidth) {
-	this.canvas.strokeStyle = this.strokeStyle;
-	this.canvas.lineWidth   = this.lineWidth;
-	this.canvas.textAlign   = this.textAlign;
-	this.canvas.font        = this.font;
+	this.transferProperties();
 	this.canvas.strokeText(text, left, top, maxWidth);
     },
 
     fillText: function(text, left, top, maxWidth) {
-	this.canvas.fillStyle = this.fillStyle;
-	this.canvas.lineWidth = this.lineWidth;
-	this.canvas.textAlign = this.textAlign;
-	this.canvas.font      = this.font;
+	this.transferProperties();
 	this.canvas.fillText(text, left, top, maxWidth);
     },
 

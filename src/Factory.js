@@ -127,6 +127,46 @@ Canvas2D.Factory.extensions.DashedLineSupport = {
 
 };
 
+Canvas2D.Factory.extensions.TextDecorationSupport = {
+    decorateText : function(text, x, y, maxWidth) {
+	if( !this.textDecoration ) { return; }
+
+	this.save();
+	this.textDecoration.toLowerCase().split(" ").each(function(decoration) {
+	    var decorator = null;
+	    switch(decoration) {
+	    case "underline"   : decorator = this.underlineText;   break;
+	    case "overline"    : decorator = this.overlineText;    break;
+	    case "line-through": decorator = this.linethroughText; break;
+	    }
+	    if( decorator ) { 
+		this.beginPath();
+		var length = this.measureText(text);
+		if( length > maxWidth ) { length = maxWidth; }
+		decorator.call(this, text, x, y, length); 
+		this.stroke();
+		this.closePath();
+	    }
+	}.bind(this) );
+	this.restore();
+    },
+
+    underlineText : function(text, x, y, length) {
+        this.moveTo(x, y + 3);
+        this.lineTo(length, y + 3);
+    },
+
+    overlineText : function(text, x, y, length) {
+        this.moveTo(x, y - getFontSize(this.font) );
+        this.lineTo(length, y - getFontSize(this.font) );
+    },
+
+    linethroughText : function(text, x, y, length) {
+        this.moveTo(x, y - (getFontSize(this.font) / 2) + 2);
+        this.lineTo(length, y - (getFontSize(this.font) / 2) + 2);
+    }
+};
+
 Canvas2D.Factory.extensions.MouseEvents = {
     initialize: function($super, element) {
 	$super(element);
@@ -207,12 +247,54 @@ Canvas2D.Factory.extensions.MouseEvents = {
     }
 };
     
+Canvas2D.Factory.CanvasText = {
+    fillText : function(text, x, y, maxWidth) {
+	this.strokeText(text, x, y, maxWidth);
+	this.fill();
+    },
+    
+    strokeText : function(text, x, y, maxWidth) {
+    	this.beginPath();
+	
+    	this.save();
+	
+	this.moveTo(x, y);
+	this.lineStyle = "solid";
+	this.lineWidth = 1;
+
+	if( this.textAlign == "center" ) { 
+	    x -= this.measureText(text) / 2; 
+	} else if( this.textAlign == "right" ) { 
+	    x -= this.measureText(text);     
+	}
+	
+	CanvasTextFunctions.draw(this, this.font, getFontSize(this.font), 
+				 x, y, text);
+	
+	this.closePath();
+	this.restore();
+	
+	this.decorateText(text, x, y, maxWidth);
+    },
+    
+    measureText  : function(text) {
+	return CanvasTextFunctions.measure( this.font, getFontSize(this.font), 
+					    text);
+    }
+};
+
 Canvas2D.Factory.setup = function(element) {
     var canvas = null;
 
-    if( Prototype.Browser.WebKit ) { canvas = Canvas2D.WebKitCanvas; }
-    if( Prototype.Browser.Gecko )  { canvas = Canvas2D.GeckoCanvas;  }
-    if( Prototype.Browser.IE )     { canvas = Canvas2D.IECanvas;     }
+    if( Prototype.Browser.WebKit ) { 
+	canvas = Class.create( Canvas2D.CanvasBase, 
+			       Canvas2D.Factory.CanvasText );
+    }
+    if( Prototype.Browser.Gecko )  { canvas = Canvas2D.GeckoCanvas; }
+    if( Prototype.Browser.IE )     { 
+	canvas = Class.create( Canvas2D.CanvasBase, 
+			       Canvas2D.Factory.CanvasText );
+    }
     if( Prototype.Browser.Opera ) {
 	throw( "Factory::setup: Opera support is currently disabled." );
     }

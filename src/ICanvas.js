@@ -59,6 +59,7 @@ Canvas2D.ICanvas = Class.create( {
     textAlign    : "start", // "start", "end", "left", "right", "center"
     textBaseline : "alphabetic",  // "top", "hanging", "middle", 
                                   // "alphabetic", "ideographic", "bottom"
+    textDecortation : "none", // "underline", "overline", "line-through"
     fillText     : function(text, x, y, maxWidth) {},
     strokeText   : function(text, x, y, maxWidth) {},
     measureText  : function(text) { return null; },
