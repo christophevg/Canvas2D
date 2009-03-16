@@ -40,7 +40,7 @@ Canvas2D.Alias.mapper = {
 Canvas2D.Alias.from = function( construct, parent ) {
     Canvas2D.ADLVisitor.registerConstruct( 
 	{ getNames : function() { return [ construct.name ] },
-	  from     : Canvas2D.Alias.mapper[construct.zuper](construct) } );
+	  from     : Canvas2D.Alias.mapper[construct.supers[0]](construct) } );
 }
 
 Canvas2D.ADLVisitor.registerConstruct(Canvas2D.Alias);
