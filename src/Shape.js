@@ -10,10 +10,13 @@ Canvas2D.Shape = Class.create( {
     getType : function() { return "shape"; },
 
     initialize: function( props ) {
-	var me = this;
+	props = props || {};
+	// preprocess is used to allow Shapes to preprocess the
+	// properties before they are automatically initialized
+	props = this.preprocess(props);
 	this.allProperties().each(function(prop) {
-	    me[prop] = props[prop] || null;
-	} );
+	    this[prop] = props[prop] || null;
+	}.bind(this) );
 	if( !this.name ) { this.name = "__shape__" + Canvas2D.ShapeCounter++; }
 	// setup is used to allow Shapes to do initialization stuff,
 	// without the need to override this construtor and make sure
@@ -115,6 +118,7 @@ Canvas2D.Shape = Class.create( {
     },
 
     // the remaining methods are not applicable for abstract shapes
+    preprocess  : function(props)                    { return props; },
     setup       : function()                         { },
     myProperties: function()                         { return [];    },
     getWidth    : function()                         { return 0;     },
