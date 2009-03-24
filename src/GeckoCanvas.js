@@ -88,6 +88,7 @@ Canvas2D.GeckoCanvas = Class.create( Canvas2D.ICanvas, {
     		this.canvas.font = this.font;
     		this.canvas.fillText(text, x, y, maxWidth);
     	}
+	this.decorateText(text, x, y, maxWidth);
     },
     strokeText   : function(text, x, y, maxWidth) {
     	if (!this.canvas.strokeText) {
@@ -97,6 +98,7 @@ Canvas2D.GeckoCanvas = Class.create( Canvas2D.ICanvas, {
     		this.canvas.font = this.font;
     		this.canvas.strokeText(text, x, y, maxWidth);
     	}
+	this.decorateText(text, x, y, maxWidth);
     },
     measureText  : function(text) {
     	this.save();
