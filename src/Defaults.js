@@ -2,7 +2,7 @@ Canvas2D.Defaults = {};
 
 Canvas2D.Defaults.Canvas = {
     lineWidth      : 1,   
-    lineStyle      : "black",
+    lineStyle      : "solid",
     strokeStyle    : "black", 
     fillStyle      : "black", 
     font           : "10pt Sans-Serif", 
@@ -13,7 +13,7 @@ Canvas2D.Defaults.Canvas = {
 
 Canvas2D.Defaults.Sheet = { 
     lineWidth      : 1,   
-    lineStyle      : "black",
+    lineStyle      : "solid",
     strokeStyle    : "black", 
     fillStyle      : "black", 
     font           : "10pt Sans-Serif", 
