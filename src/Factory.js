@@ -382,6 +382,7 @@ Canvas2D.Factory.setup = function(element) {
     if( Prototype.Browser.IE )     { 
 	canvas = Class.create( Canvas2D.CanvasBase, 
 			       Canvas2D.Factory.CanvasText );
+	Canvas2D.Book.prototype.addWaterMark = function() { };
     }
     if( Prototype.Browser.Opera ) {
 	throw( "Factory::setup: Opera support is currently disabled." );

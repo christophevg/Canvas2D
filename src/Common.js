@@ -106,3 +106,10 @@ function toPx(font, src) {
     
     return null;
 }
+
+function Timer() {
+    this.now = new Date().getTime();
+    this.stop = function() {
+	return new Date().getTime() - this.now;
+    }
+}

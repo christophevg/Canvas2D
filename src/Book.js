@@ -120,7 +120,7 @@ Canvas2D.Book = Class.create( {
     
     addToolbar: function() {
 	if( this.canvas.mouseOver ) {
-	    // TODO: future feature ;-)
+	    // TODO: future feature, which should go into an extension
 	}
     },
 
@@ -160,6 +160,7 @@ Canvas2D.Book = Class.create( {
 
     publish : function() {
 	if( this.rePublishNeeded && !this.wait ) {
+	    var timer = new Timer();
 	    this.canvas.clear();
 
 	    if( this.getCurrentSheet() ) {
@@ -170,6 +171,7 @@ Canvas2D.Book = Class.create( {
 	    this.addWaterMark();
 	    this.addToolbar();
 
+	    this.log( "Canvas2D::publish: Render Time: " + timer.stop() + "ms" );
 	    this.rePublishNeeded = false;
 	}
 	
