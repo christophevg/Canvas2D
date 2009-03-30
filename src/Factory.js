@@ -62,7 +62,6 @@ Canvas2D.Factory.extensions.DashedLineSupport = {
 
     lineTo: function(x,y) {
 	this.transferProperties();
-	if( !this.lineStyle ) { this.lineStyle = "solid"; }
 	if( this.lineStyle == "dashed" ) {
 	    this._drawLine( this.currentX, this.currentY, x, y );
 	} else {
@@ -352,6 +351,25 @@ Canvas2D.Factory.GeckoCanvasText = {
 
 Canvas2D.Factory.setup = function(element) {
     var canvas = null;
+
+    // dynamically add passthrough functions to CanvasBase, before we mixin
+    passThroughFunctions = [ "scale", "translate", "transform", "setTransform",
+			     "createLinearGradient",  "createRadialGradient",
+			     "createPattern",
+			     "clearRect", "fillRect", "strokeRect",
+			     "arc", "rotate", "drawImage",
+			     "lineTo", "moveTo",
+			     "quadraticCurveTo",  "bezierCurveTo", "arcTo", "rect",
+			     "fill", "stroke",
+			     "closePath", "beginPath",
+			     "clip", "isPointInPath",
+			     "createImageData", "getImageData", "putImageData" ];
+    passThroughFunctions.each(function(fnc) {
+	    Canvas2D.CanvasBase.prototype[fnc] = function() {
+		this.transferProperties();
+		this.canvas[fnc].apply(this.canvas, arguments);
+	    };
+    });
 
     if( Prototype.Browser.WebKit ) { 
 	canvas = Class.create( Canvas2D.CanvasBase, 

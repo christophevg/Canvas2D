@@ -13,6 +13,29 @@ Canvas2D.Sheet = Class.create( {
 	this.selectedShapes = [];  // list of selected shapes
 
 	this.dirty = false;
+
+	// dynamically add passthrough functions
+	passThroughFunctions = [ "scale", "translate", "transform", "setTransform",
+				 "createLinearGradient",  "createRadialGradient", 
+				 "createPattern",
+				 "save", "restore",
+				 "clearRect", "fillRect", "strokeRect", "fillStrokeRect",
+				 "arc", "rotate", "drawImage",
+				 "fillText", "strokeText", "measureText",
+				 "lineTo", "moveTo",
+				 "fill", "stroke",
+				 "closePath", "beginPath",
+				 "clip", "isPointInPath",
+				 "createImageData", "getImageData", "putImageData" ];
+	var me = this;
+	passThroughFunctions.each(function(fnc) {
+	    if( !me[fnc] ) {
+		me[fnc] = function() {
+		    this.transferProperties();
+		    this.canvas[fnc].apply(this.canvas, arguments);
+		};
+	    }
+	});
     },
 
     makeDirty: function() {
@@ -255,15 +278,6 @@ Canvas2D.Sheet = Class.create( {
 	return s;
     },
 
-    // passthrough gfx functions
-    save: function() {
-	this.canvas.save();
-    },
-
-    restore: function() {
-	this.canvas.restore();
-    },
-
     transferProperties : function() {
 	var canvas = this.canvas;
 	var currentValues = this;
@@ -272,83 +286,10 @@ Canvas2D.Sheet = Class.create( {
 	} );
     },
 
-    clearRect: function(x, y, w, h ) {
-	this.canvas.clearRect( x, y, w, h );
-    },
-
-    fillRect: function(x, y, w, h ) {
-	this.transferProperties();
-	this.canvas.fillRect( x, y, w, h );
-    },
-
-    strokeRect: function(x, y, w, h ) {
-	this.transferProperties();
-	this.canvas.strokeRect( x, y, w, h );
-    },
-
-    fillStrokeRect: function(x, y, w, h) {
-	this.transferProperties();
-	this.canvas.fillStrokeRect(x, y, w, h);
-    },
-
-    beginPath: function() {
-	this.canvas.beginPath();
-    },
-
-    closePath: function() {
-	this.canvas.closePath();
-    },
-
-    stroke: function() {
-	this.transferProperties();
-	this.canvas.stroke();
-    },
-
-    fill: function() {
-	this.transferProperties();
-	this.canvas.fill();
-    },
-
-    moveTo: function(x,y) {
-	this.canvas.moveTo( x, y );
-    },
-
-    lineTo: function(x,y) {
-	this.transferProperties();
-	this.canvas.lineTo(x,y);
-    },
-
-    measureText: function(text) {
-	this.transferProperties();
-	return this.canvas.measureText( text );
-    },
-
     getFontSize: function() {
 	return getFontSize( this.font || Canvas2D.Defaults.Sheet.font );
-    },
-
-    strokeText: function(text, left, top, maxWidth) {
-	this.transferProperties();
-	this.canvas.strokeText(text, left, top, maxWidth);
-    },
-
-    fillText: function(text, left, top, maxWidth) {
-	this.transferProperties();
-	this.canvas.fillText(text, left, top, maxWidth);
-    },
-
-    drawImage: function(img, left, top) {
-	this.canvas.drawImage(img, left, top);
-    },
-
-    rotate: function(ang) {
-	this.canvas.rotate(ang);
-    },
-
-    arc: function(left, top, radius, startAngle, endAngle, anticlockwise ) {
-	this.canvas.arc(left, top, radius, 
-			startAngle, endAngle, anticlockwise );
     }
+
 } );
 
 // add-in some common functionality
