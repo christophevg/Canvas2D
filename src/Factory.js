@@ -30,7 +30,7 @@ Canvas2D.Factory.extensions.ShortHands = {
     fillStrokeRect : function(left, top, width, height) {
 	this.fillRect( left, top, width, height );
 	this.strokeRect( left, top, width, height );
-    },
+    }
 };
 
 Canvas2D.Factory.extensions.EventHandling = {
@@ -287,6 +287,69 @@ Canvas2D.Factory.CanvasText = {
     }
 };
 
+Canvas2D.Factory.GeckoCanvasText = {
+    fillText     : function(text, x, y, maxWidth) {
+        if (!this.canvas.fillText) {
+            // fallback to pre Gecko 1.9.1 text rendering
+            this.drawText(text, x, y, true);
+        } 
+        else {
+            this.canvas.font = this.font;
+            this.canvas.fillText(text, x, y, maxWidth);
+        }
+        this.decorateText(text, x, y, maxWidth);
+    },
+
+    strokeText   : function(text, x, y, maxWidth) {
+        if (!this.canvas.strokeText) {
+            // fallback to pre Gecko 1.9.1 text rendering
+            this.drawText(text, x, y, false);
+        } else {
+            this.canvas.font = this.font;
+            this.canvas.strokeText(text, x, y, maxWidth);
+        }
+        this.decorateText(text, x, y, maxWidth);
+    },
+
+    measureText  : function(text) {
+        this.save();
+        if (!this.canvas.measureText) {
+            // fallback to pre Gecko 1.9.1 text measuring
+            this.canvas.mozTextStyle = this.font;
+            return this.canvas.mozMeasureText(text);
+        } else {
+            this.canvas.font = this.font;
+            return this.canvas.measureText(text);
+        }
+        this.restore();
+    },
+
+    /**
+     * Helper function to stroke text.
+     * @param {DOMString} text The text to draw into the context
+     * @param {float} x The X coordinate at which to begin drawing
+     * @param {float} y The Y coordinate at which to begin drawing
+     * @param {boolean} fill If true, then text is filled, 
+     * 			otherwise it is stroked  
+     */
+    drawText : function(text, x, y, fill) {
+        this.save();
+
+        this.beginPath();
+        this.translate(x, y);
+        this.canvas.mozTextStyle = this.font;
+        this.canvas.mozPathText(text);
+        if (fill) {
+            this.fill();
+        } else {
+            this.stroke();
+        }
+        this.closePath();
+
+        this.restore();
+    }
+};
+
 Canvas2D.Factory.setup = function(element) {
     var canvas = null;
 
@@ -294,7 +357,10 @@ Canvas2D.Factory.setup = function(element) {
 	canvas = Class.create( Canvas2D.CanvasBase, 
 			       Canvas2D.Factory.CanvasText );
     }
-    if( Prototype.Browser.Gecko )  { canvas = Canvas2D.GeckoCanvas; }
+    if( Prototype.Browser.Gecko )  {
+      canvas = Class.create( Canvas2D.CanvasBase,
+                             Canvas2D.Factory.GeckoCanvasText ); 
+    }
     if( Prototype.Browser.IE )     { 
 	canvas = Class.create( Canvas2D.CanvasBase, 
 			       Canvas2D.Factory.CanvasText );
