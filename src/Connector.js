@@ -59,8 +59,6 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
 	
 	sheet.moveTo(left, top);
 
-	return;
-
 	var connector = null;
 	if( shape == this.getFrom(sheet) && this.getBegin() ) {
 	    connector = this.getBegin()[port];
