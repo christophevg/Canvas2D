@@ -104,14 +104,14 @@ Canvas2D.Book = Class.create( {
 
     addWaterMark: function() {
 	this.canvas.save();
-	this.canvas.strokeStyle = "rgba(0,0,0,0.5)";
+	this.canvas.strokeStyle = "rgba(125,125,125,1)";
 	this.canvas.textDecoration = "none";
 	this.canvas.rotate(Math.PI/2);
 	var extensions = "";
 	this.extensions.each(function(library) { 
 	    extensions += " + " + library.key; 
 	});
-	this.canvas.font = "6pt Sans";
+	this.canvas.font = "6pt Sans-Serif";
 	this.canvas.textAlign = "left";
 	this.canvas.fillText( "Canvas2D" + extensions + " / Christophe VG",
 				3, (this.canvas.htmlcanvas.width * -1) + 7 ); 

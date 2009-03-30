@@ -107,7 +107,7 @@ Canvas2D.Shape = Class.create( {
 	    sheet.strokeStyle = this.getLabelColor() || "black";
 	    sheet.textAlign   = "center";
 	    sheet.font        = "7pt Sans-Serif";
-	    sheet.strokeText(this.getLabel(), left, top);
+	    sheet.fillText(this.getLabel(), left, top);
 	    sheet.restore();
 	}
     },
