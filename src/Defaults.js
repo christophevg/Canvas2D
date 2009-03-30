@@ -47,10 +47,10 @@ Canvas2D.Defaults.Text = {
 };
 
 Canvas2D.Defaults.Line = {
+    lineWidth      : 1,
+    lineStyle      : "solid",
     color          : "black",
     dx             : 50,
-    dy             : 50,
-    lineWidth      : 1,
-    lineStyle      : "solid"
+    dy             : 50
 };
 

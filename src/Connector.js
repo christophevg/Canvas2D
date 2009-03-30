@@ -11,9 +11,9 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
     getLineColor : function() { return this.lineColor 
 				|| Canvas2D.Defaults.Connector.lineColor; },
     getLineStyle : function() { return this.lineStyle
-				|| Canvas2D.Defaults.Connector.lineWidth; },
+				|| Canvas2D.Defaults.Connector.lineStyle; },
     getLineWidth : function() { return this.lineWidth
-			      || Canvas2D.Defaults.Connector.lineStyle; },
+			      || Canvas2D.Defaults.Connector.lineWidth; },
 
     getFrom  : function(sheet) { 
 	return sheet ? sheet.positionsMap[this.from.getName()] : this.from; 
