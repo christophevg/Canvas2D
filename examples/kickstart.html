@@ -23,11 +23,11 @@
     <pre id="myTabbedDiagramSource" style="display:none;">  
 sheet mySheet +style="dynamic" {
   /* define some shapes */
-  [@ 75, 55] rectangle rect1 +width=75 +height=75 +color="green";  
-  [@ 50,175] rectangle rect2 +width=50 +height=50 +color="red";  
-  [@200,100] rectangle rect3 +width=50 +height=50 +color="blue";  
-  [@200, 25] rectangle rect4 +width=50 +height=50 +color="yellow";  
-  [@125,175] rectangle rect5 +width=50 +height=50 +color="red";  
+  [@ 75, 55] rectangle rect1 +width=75 +height=75 +lineColor="green";  
+  [@ 50,175] rectangle rect2 +width=50 +height=50 +lineColor="red";  
+  [@200,100] rectangle rect3 +width=50 +height=50 +lineColor="blue";  
+  [@200, 25] rectangle rect4 +width=50 +height=50 +lineColor="yellow";  
+  [@125,175] rectangle rect5 +width=50 +height=50 +lineColor="red";  
 
   /* connect them  */
   connector conn1 +from="rect1" +to="rect2" +routing="vertical";  

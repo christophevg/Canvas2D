@@ -61,6 +61,7 @@ Canvas2D.Factory.extensions.DashedLineSupport = {
     },
 
     lineTo: function(x,y) {
+	this.transferProperties();
 	if( !this.lineStyle ) { this.lineStyle = "solid"; }
 	if( this.lineStyle == "dashed" ) {
 	    this._drawLine( this.currentX, this.currentY, x, y );
@@ -75,6 +76,9 @@ Canvas2D.Factory.extensions.DashedLineSupport = {
 	    var oldStyle = strokeStyle;
 	    beginPath();
 	    strokeStyle = c;
+	    fillStyle = c;
+	    //fillRect(x,y,1,1);
+	    // TODO: Why doesn't this produce crisp lines of width 1???
 	    moveTo(x,y);
 	    lineTo(x+1,y+1);
 	    stroke();

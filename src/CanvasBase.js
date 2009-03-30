@@ -9,19 +9,10 @@ Canvas2D.CanvasBase = Class.create( Canvas2D.ICanvas, {
 	this.canvas = this.htmlcanvas.getContext("2d");
     },
 
-    properties : { lineWidth      : 1,   
-		   lineStyle      : "black",
-		   strokeStyle    : "black", 
-		   fillStyle      : "black", 
-		   font           : "10pt Sans-Serif", 
-		   textAlign      : "left", 
-		   textBaseline   : "alphabetic",
-		   textDecoration : "none" },
-    
     save         : function() { 
 	var oldValues = {};
 	var currentValues = this;
-	$H(this.properties).keys().each(function(prop) {
+	$H(Canvas2D.Defaults.Canvas).keys().each(function(prop) {
 	      oldValues[prop] = currentValues[prop];
 	  } );
 	this.oldValues = oldValues;
@@ -30,7 +21,7 @@ Canvas2D.CanvasBase = Class.create( Canvas2D.ICanvas, {
     restore      : function() { 
 	var oldValues = this.oldValues;
 	var currentValues = this;
-	$H(this.properties).keys().each(function(prop) {
+	$H(Canvas2D.Defaults.Canvas).keys().each(function(prop) {
 	      currentValues[prop] = oldValues[prop];
 	  } );
 	this.canvas.restore();
@@ -39,7 +30,7 @@ Canvas2D.CanvasBase = Class.create( Canvas2D.ICanvas, {
     transferProperties : function() {
 	var canvas = this.canvas;
 	var currentValues = this;
-	$H(this.properties).each(function(prop) {
+	$H(Canvas2D.Defaults.Canvas).each(function(prop) {
 	    canvas[prop.key] = currentValues[prop.key] || prop.value;
 	} );
     },
@@ -77,20 +68,28 @@ Canvas2D.CanvasBase = Class.create( Canvas2D.ICanvas, {
     beginPath        : function() { this.canvas.beginPath(); },
     closePath        : function() { this.canvas.closePath(); },
     moveTo           : function(x, y) { this.canvas.moveTo(x,y); },
-    lineTo           : function(x, y) { this.canvas.lineTo(x, y); },
+    lineTo           : function(x, y) { 
+	this.transferProperties();
+	this.canvas.lineTo(x, y); 
+    },
     quadraticCurveTo : function(cpx, cpy, x, y) { 
+	this.transferProperties();
 	this.canvas.quadraticCurveTo( cpx, cpy, x, y );
     },
     bezierCurveTo    : function(cp1x, cp1y, cp2x, cp2y, x, y) {
+	this.transferProperties();
 	this.canvas.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
     },
     arcTo            : function(x1, y1, x2, y2, radius) {
+	this.transferProperties();
 	this.canvas.arcTo(x1, y1, x2, y2, radius);
     },
     rect             : function(x, y, w, h) {
+	this.transferProperties();
 	this.canvas.rect(x, y, w, h);
     },
     arc              : function(x, y, radius, startAng, endAng, anticlockwise) {
+	this.transferProperties();
 	this.canvas.arc(x, y, radius, startAng, endAng, anticlockwise);
     },
     fill             : function() {

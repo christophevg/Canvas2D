@@ -37,11 +37,11 @@
         with( book.addSheet() ) {
           freeze();
           var rect1 = at(100, 10)
-              .put(new Canvas2D.Rectangle({width:75,height:75,color:"green"} ));
+              .put(new Canvas2D.Rectangle({width:75,height:75,lineColor:"green"} ));
           var rect2 = at( 25,150)
-              .put(new Canvas2D.Rectangle({width:50,height:50,color:"red"  } ));
+              .put(new Canvas2D.Rectangle({width:50,height:50,lineColor:"red"  } ));
           var rect3 = at(150,150)
-              .put(new Canvas2D.Rectangle({width:50,height:50,color:"red"  } ));
+              .put(new Canvas2D.Rectangle({width:50,height:50,lineColor:"red"  } ));
 
           var conn1 = put(new Canvas2D.Connector( { from: rect1, 
                                                     to:   rect2, 

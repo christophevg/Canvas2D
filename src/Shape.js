@@ -15,7 +15,7 @@ Canvas2D.Shape = Class.create( {
 	// properties before they are automatically initialized
 	props = this.preprocess(props);
 	this.allProperties().each(function(prop) {
-	    this[prop] = props[prop] || null;
+	    this[prop] = props[prop] != null ? props[prop] : null;
 	}.bind(this) );
 	if( !this.name ) { this.name = "__shape__" + Canvas2D.ShapeCounter++; }
 	// setup is used to allow Shapes to do initialization stuff,
@@ -94,7 +94,7 @@ Canvas2D.Shape = Class.create( {
     },
 
     drawLabel: function(sheet, left, top) {
-	if( this.getLabel() && this.getHeight() && this.getCenter() ) {
+	if( this.getLabel() && this.getHeight() != null && this.getCenter() ) {
 	    left += this.getCenter().left;
 	    
 	    switch( this.getLabelPos() ) {

@@ -1,22 +1,25 @@
 Canvas2D.Text = Class.create( Canvas2D.Rectangle, {
     myProperties: function() {
-	return [ "text", "color", "font", "align", "decoration" ];
+	return [ "text", "color", "font", "textAlign", "textDecoration" ];
     },
 
     getType  : function() { return "text"; },
 
     getText       : function() { return this.text;  },
-    getColor      : function() { return this.color; },
-    getFont       : function() { return this.font;  },
-    getAlign      : function() { return this.align; },
-    getDecoration : function() { return this.decoration; },
+
+    getColor      : function() { return this.color || Canvas2D.Defaults.Text.color; },
+    getFont       : function() { return this.font  || Canvas2D.Defaults.Text.font;  },
+    getTextAlign  : function() { return this.textAlign 
+				 || Canvas2D.Defaults.Text.textAlign; },
+    getTextDecoration : function() { return this.textDecoration
+				 || Canvas2D.Defaults.Text.textDecoration; },
 
     draw: function(sheet, left, top) {
 	sheet.strokeStyle    = this.getColor();
 	sheet.fillStyle      = this.getColor();
 	sheet.font           = this.getFont();
-	sheet.textAlign      = this.getAlign();
-	sheet.textDecoration = this.getDecoration();
+	sheet.textAlign      = this.getTextAlign();
+	sheet.textDecoration = this.getTextDecoration();
 	sheet.fillText(this.getText(), left, top );
 	this.width  = sheet.measureText(this.getText());
 	this.height = sheet.getFontSize();

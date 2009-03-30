@@ -1,23 +1,34 @@
-Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
+Canvas2D.Line = Class.create( Canvas2D.Shape, {
     myProperties: function() {
-	return [ "lineColor", "width", "height", "lineWidth" ];
+	return [ "color", "dx", "dy", "lineWidth", "lineStyle" ];
     },
 
     getType  : function() { return "rectangle"; },
 
-    getLineColor : function() { return this.lineColor  
-				|| Canvas2D.Defaults.Rectangle.lineColor ; },
-    getWidth : function() { return this.width  || Canvas2D.Defaults.Rectangle.width ; },
-    getHeight: function() { return this.height || Canvas2D.Defaults.Rectangle.height; },
+    getColor    : function() { return this.color || Canvas2D.Defaults.Line.color; },
+    getDX       : function() { return this.dx    || Canvas2D.Defaults.Line.dx     },
+    getDY       : function() { return this.dy != null ? 
+			       this.dy : Canvas2D.Defaults.Line.dy     },
+    getLineWidth: function() { return this.lineWidth 
+			       || Canvas2D.Defaults.Line.lineWidth; },
+    getLineStyle: function() { return this.lineStyle 
+			       || Canvas2D.Defaults.Line.lineWidth; },
 
-    getLineWidth: function() { return this.lineWidth
-			       || Canvas2D.Defaults.Rectangle.lineWidth; },
+    getWidth : function() { return this.getDX() },
+    getHeight: function() { return this.getDY() },
 
     draw: function(sheet, left, top) {
-	sheet.beginPath(); 
-	sheet.strokeStyle = this.getLineColor();
+	sheet.beginPath();
+
+	sheet.strokeStyle = this.getColor();
 	sheet.lineWidth = this.getLineWidth();
-	sheet.strokeRect( left, top, this.getWidth(), this.getHeight() );
+	sheet.lineStyle = this.getLineStyle();
+
+	sheet.moveTo(left, top);
+	sheet.lineTo(left + this.getDX(), top + this.getDY());
+	sheet.stroke();
+
+	sheet.closePath();
     },
 
     hit: function(x,y) { 
@@ -54,41 +65,34 @@ Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
 	    construct.modifiers.geo = 
 		"\"" + this.getWidth() + "x" + this.getHeight() + "\"";
 	}
-	if( this.getLineColor() ) {
-	    construct.modifiers[this.getLineColor()] = null;
+	if( this.getColor() ) {
+	    construct.modifiers[this.getColor()] = null;
 	}
 	return construct;
     }
 } );
 
-Canvas2D.Rectangle.getNames = function() {
-    return [ "rectangle", "box" ];
+Canvas2D.Line.getNames = function() {
+    return [ "line" ];
 }
 
-Canvas2D.Rectangle.from = function( construct, sheet ) {
+Canvas2D.Line.from = function( construct, sheet ) {
     var props = { name: construct.name };
     construct.modifiers.each(function(pair) {
 	var key   = pair.key;
 	var value = ( pair.value.value ? pair.value.value.value : "" );
 
-	if( key == "width" || key == "height" ) {
+	if( key == "dx" || key == "dy" || key == "lineWidth" ) {
 	    value = parseInt(value);
-	}
-
-	if( key == "geo" ) {
-	    props["width"]   = parseInt(value.split("x")[0]);
-	    props["height"]  = parseInt(value.split("x")[1]);
-	}
-
-	if( value == "" ) {
+	} else if( value == "" ) {
 	    value = key;
-	    key = "lineColor";
+	    key = "color";
 	}
 
 	props[key] = value;
     } );
 
-    var shape = new Canvas2D.Rectangle(props);
+    var shape = new Canvas2D.Line(props);
     var left, top;
     if( construct.annotation ) {    
 	var pos = construct.annotation.data.split(",");
@@ -102,4 +106,4 @@ Canvas2D.Rectangle.from = function( construct, sheet ) {
     return shape;
 };
 
-Canvas2D.ADLVisitor.registerConstruct(Canvas2D.Rectangle);
+Canvas2D.ADLVisitor.registerConstruct(Canvas2D.Line);

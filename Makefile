@@ -27,6 +27,7 @@ TARGETS=build/${APP}.shared.min.js \
 SRCS=src/SanityChecks.js \
      src/Common.js \
      src/Canvas2D.js \
+     src/Defaults.js \
      src/Factory.js src/ICanvas.js src/CanvasBase.js \
      src/GeckoCanvas.js \
      src/ImageManager.js \
@@ -36,6 +37,7 @@ SRCS=src/SanityChecks.js \
      src/Sheet.js \
      src/Position.js \
      src/Shape.js src/Rectangle.js src/Connector.js \
+     src/Line.js \
      src/Text.js \
      src/Image.js \
      src/Alias.js \

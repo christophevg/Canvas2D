@@ -264,19 +264,10 @@ Canvas2D.Sheet = Class.create( {
 	this.canvas.restore();
     },
 
-    properties : { lineWidth      : 1,   
-		   lineStyle      : "black",
-		   strokeStyle    : "black", 
-		   fillStyle      : "black", 
-		   font           : "10pt Sans-Serif", 
-		   textAlign      : "left", 
-		   textBaseline   : "alphabetic",
-		   textDecoration : "none" },
-
     transferProperties : function() {
 	var canvas = this.canvas;
 	var currentValues = this;
-	$H(this.properties).each(function(prop) {
+	$H(Canvas2D.Defaults.Sheet).each(function(prop) {
 	    canvas[prop.key] = currentValues[prop.key] || prop.value;
 	} );
     },
@@ -333,7 +324,7 @@ Canvas2D.Sheet = Class.create( {
     },
 
     getFontSize: function() {
-	return getFontSize( this.font || this.properties.font );
+	return getFontSize( this.font || Canvas2D.Defaults.Sheet.font );
     },
 
     strokeText: function(text, left, top, maxWidth) {

@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <style>
+      .box {
+        border: 2px solid #000;
+        float:left;
+        margin:10px; 
+        height: 385px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    </style>
+    <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
+    <script src="../build/Canvas2D.standalone.js"></script>
+  </head>
+  <body>
+    <h1>Lines &amp; Things</h1>
+    <div class="box">
+      <h2>Lines</h2>
+      <canvas class="Canvas2D Tabbed withSource withConsole withAbout" 
+	      id="myTabbedDiagram" width="300" height="250"></canvas>
+    </div>
+    <pre id="myTabbedDiagramSource" style="display:none;">  
+sheet mySheet +style="dynamic" {
+  [@125,25] Line line1 +dx=50 +dy=0 +color="red" +lineWidth=3 +lineStyle="dashed";  
+  [@125,50] Line line2 +dx=50 +dy=0 +color="red" +lineWidth=1 +lineStyle="dashed";  
+  [@125,75] Line line3 +dx=50 +dy=0 +color="red" +lineWidth=1;
+  [@125,100] Line line4 +dx=50 +dy=0 +color="red" +lineWidth=3;
+
+  [@125,150] Line line5 +dx=49 +dy=0 +label="partially default line" +labelPos="top";
+  [@125,160] Line line6 +label="completely default line";
+}
+    </pre>  
+  </body>
+</html>

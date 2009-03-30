@@ -37,12 +37,12 @@ function setBrowser() {
     <pre id="myDiagramSource" style="display:none;">  
 Sheet mySheet {
   /* define some shapes */
-  [@ 75, 55] Rectangle rect1 +width=75 +height=75 +color="green" 
+  [@ 75, 55] Rectangle rect1 +width=75 +height=75 +lineColor="green" 
                              +label="green" +labelPos="top";
-  [@ 50,175] Rectangle rect2 +width=50 +height=50 +color="red"   +label="red";
-  [@200,100] Rectangle rect3 +width=50 +height=50 +color="blue"  +label="blue";
-  [@200, 25] Rectangle rect4 +width=50 +height=50 +color="yellow";  
-  [@125,175] Rectangle rect5 +width=50 +height=50 +color="red"
+  [@ 50,175] Rectangle rect2 +width=50 +height=50 +lineColor="red"   +label="red";
+  [@200,100] Rectangle rect3 +width=50 +height=50 +lineColor="blue"  +label="blue";
+  [@200, 25] Rectangle rect4 +width=50 +height=50 +lineColor="yellow";  
+  [@125,175] Rectangle rect5 +width=50 +height=50 +lineColor="red"
                              +label="red" +labelColor="red" +labelPos="bottom";
 
   /* connect them  */
@@ -78,7 +78,7 @@ Sheet mySheet {
 Sheet mySheet {
   [@10, 30] Text text1 := "Default Font without Decoration";
   [@10, 70] Text text2 +font="Italic 20pt Sans-Serif" := "Italic 20pt Text";
-  [@10,110] Text text3 +decoration="underline overline line-through"
+  [@10,110] Text text3 +textDecoration="underline overline line-through"
                        := "Default Font with all Decorations";
 }
     </pre>

@@ -4,19 +4,16 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
 		 "from", "to", "begin", "end" ];
     },
 
-    defaults: { lineColor : "black", 
-		lineStyle : "solid",
-		lineWidth : 2, 
-		begin     : null, 
-		end       : null },
-
     getType : function() { return "connector"; },
 
     getRouting: function() { return this.routing; },
 
-    getLineColor : function() { return this.lineColor; },
-    getLineStyle : function() { return this.lineStyle; },
-    getLineWidth : function() { return this.lineWidth; },
+    getLineColor : function() { return this.lineColor 
+				|| Canvas2D.Defaults.Connector.lineColor; },
+    getLineStyle : function() { return this.lineStyle
+				|| Canvas2D.Defaults.Connector.lineWidth; },
+    getLineWidth : function() { return this.lineWidth
+			      || Canvas2D.Defaults.Connector.lineStyle; },
 
     getFrom  : function(sheet) { 
 	return sheet ? sheet.positionsMap[this.from.getName()] : this.from; 
@@ -26,15 +23,15 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
 	return sheet ? sheet.positionsMap[this.to.getName()]   : this.to;   
     },
 
-    getBegin  : function() { return this.begin; },
-    getEnd    : function() { return this.end;   },
+    getBegin  : function() { return this.begin || Canvas2D.Defaults.Connector.begin; },
+    getEnd    : function() { return this.end   || Canvas2D.Defaults.Connector.end;   },
 
     delayRender: function() { return true;  },
     
     draw: function(sheet, left, top) {
-	sheet.strokeStyle = this.getLineColor() || this.defaults.lineColor;
-	sheet.lineWidth   = this.getLineWidth() || this.defaults.lineWidth;
-	sheet.lineStyle   = this.getLineStyle() || this.defaults.lineStyle; 
+	sheet.strokeStyle = this.getLineColor();
+	sheet.lineWidth   = this.getLineWidth();
+	sheet.lineStyle   = this.getLineStyle(); 
 	
 	sheet.beginPath();
 	switch( this.getRouting() ) {
@@ -61,6 +58,8 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
 	top  = top  || shape.getPort(port).top;
 	
 	sheet.moveTo(left, top);
+
+	return;
 
 	var connector = null;
 	if( shape == this.getFrom(sheet) && this.getBegin() ) {
@@ -91,9 +90,6 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
 	}
     },
 
-    minTreeDist: 30,
-    minCornerDist : 15,
-
     initialBranchLength: function(top, bottom) {
 	return ( bottom - top ) / 2;
     },
@@ -110,10 +106,13 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
 	    bottom = this.getFrom(sheet);
 	}
 
-	if( bottom.getBox().top - top.getBox().bottom >= this.minTreeDist ) {
+	if( bottom.getBox().top - top.getBox().bottom >= 
+	    Canvas2D.Defaults.Connector.minTreeDist ) 
+	{
 	    this._vertical_tree( sheet, top, bottom );
 	} else if( bottom.getCenter().top - top.getBox().bottom 
-		   >= this.minCornerDist) {  
+		   >= Canvas2D.Defaults.Connector.minCornerDist) 
+	{  
 	    this._vertical_corner( sheet, top, bottom );
 	} else {
 	    this._vertical_line( sheet, this.getFrom(sheet), this.getTo(sheet));
@@ -172,10 +171,13 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
 	    left  = this.getTo(sheet);   right = this.getFrom(sheet);
 	}
 
-	if( right.getBox().left - left.getBox().right >= this.minTreeDist ) {
+	if( right.getBox().left - left.getBox().right >= 
+	    Canvas2D.Defaults.Connector.minTreeDist ) 
+	{
 	    this._horizontal_tree( sheet, left, right );
 	} else if( right.getCenter().left - left.getBox().right 
-		   >= this.minCornerDist) {  
+		   >= Canvas2D.Defaults.Connector.minCornerDist) 
+	{  
 	    this._horizontal_corner( sheet, left, right );
 	} else {
 	    this._horizontal_line(sheet, this.getFrom(sheet), this.getTo(sheet));
