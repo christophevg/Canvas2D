@@ -28,7 +28,6 @@ SRCS=src/SanityChecks.js \
      src/Common.js \
      src/Canvas2D.js \
      src/Factory.js src/ICanvas.js src/CanvasBase.js \
-     src/GeckoCanvas.js \
      src/ImageManager.js \
      src/Manager.js \
      src/ADLVisitor.js \
