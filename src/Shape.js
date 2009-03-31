@@ -104,7 +104,7 @@ Canvas2D.Shape = Class.create( {
 	    }
 	    // NOTE: don't use with() here, because with() doesn't do getters
 	    sheet.save();
-	    sheet.strokeStyle = this.getLabelColor() || "black";
+	    sheet.fillStyle = this.getLabelColor() || "black";
 	    sheet.textAlign   = "center";
 	    sheet.font        = "7pt Sans-Serif";
 	    sheet.fillText(this.getLabel(), left, top);
