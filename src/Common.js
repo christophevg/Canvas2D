@@ -113,3 +113,11 @@ function Timer() {
 	return new Date().getTime() - this.now;
     }
 }
+
+function isGeckoVersionSmallerThan1_9_1() {
+    var version = navigator.userAgent.match(/rv:(\d\.\d.\d)/);
+    if (version != null) {
+        return parseInt(version[1].replace(/\./, '')) < 191;
+    }
+    throw "Common::isGeckoVersionSmallerThan1_9_1: no version found";
+}
