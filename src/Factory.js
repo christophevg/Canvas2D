@@ -269,6 +269,7 @@ Canvas2D.Factory.CanvasText = {
 	this.strokeStyle = this.fillStyle;
 
 	x = this.adjustToAlignment(x, text);
+
 	CanvasTextFunctions.draw(this, this.font, getFontSize(this.font), 
 				 x, y, text);
 	this.closePath();
@@ -283,40 +284,49 @@ Canvas2D.Factory.CanvasText = {
     }
 };
 
+Canvas2D.Factory.HTML5CanvasText = {
+    fillText     : function(text, x, y, maxWidth) {
+        x = this.adjustToAlignment(x, text);
+        this.canvas.fillText(text, x, y, maxWidth);
+        this.decorateText(text, x, y, maxWidth);
+    },
+
+    strokeText   : function(text, x, y, maxWidth) {
+        x = this.adjustToAlignment(x, text);
+        this.canvas.strokeText(text, x, y, maxWidth);
+        this.decorateText(text, x, y, maxWidth);
+    },
+
+    measureText  : function(text) {
+        return this.canvas.measureText(text);
+    }
+};
+
+/**
+ * Adds text rendering functions to Canvas.
+ * This implementation should be used for pre Gecko 1.9.1.
+ * Later versions of Gecko should use HTML5CanvasText, 
+ * which wraps the HTML5 text rendering functions.
+ */
 Canvas2D.Factory.GeckoCanvasText = {
     fillText     : function(text, x, y, maxWidth) {
 	x = this.adjustToAlignment(x, text);
-        if (!this.canvas.fillText) {
-            // fallback to pre Gecko 1.9.1 text rendering
-            this.drawText(text, x, y, true);
-        } else {
-            this.canvas.fillText(text, x, y, maxWidth);
-        }
+        this.drawText(text, x, y, true);
         this.decorateText(text, x, y, maxWidth);
     },
 
     strokeText   : function(text, x, y, maxWidth) {
 	x = this.adjustToAlignment(x, text);
-        if (!this.canvas.strokeText) {
-            // fallback to pre Gecko 1.9.1 text rendering
-            this.drawText(text, x, y, false);
-        } else {
-            this.canvas.strokeText(text, x, y, maxWidth);
-        }
+        this.drawText(text, x, y, false);
         this.decorateText(text, x, y, maxWidth);
     },
 
     measureText  : function(text) {
         this.save();
-        if (!this.canvas.measureText) {
-            // fallback to pre Gecko 1.9.1 text measuring
-            this.canvas.mozTextStyle = this.font;
-            return this.canvas.mozMeasureText(text);
-        } else {
-            this.canvas.font = this.font;
-            return this.canvas.measureText(text);
-        }
+        this.canvas.mozTextStyle = this.font;
+        var width = this.canvas.mozMeasureText(text);
         this.restore();
+        return width;
     },
 
     /**
@@ -372,8 +382,13 @@ Canvas2D.Factory.setup = function(element) {
 			       Canvas2D.Factory.CanvasText );
     }
     if( Prototype.Browser.Gecko )  {
-      canvas = Class.create( Canvas2D.CanvasBase,
-                             Canvas2D.Factory.GeckoCanvasText ); 
+        if (isGeckoVersionSmallerThan1_9_1()) {
+            canvas = Class.create( Canvas2D.CanvasBase,
+                                   Canvas2D.Factory.GeckoCanvasText ); 
+        } else {
+            canvas = Class.create( Canvas2D.CanvasBase,
+                                   Canvas2D.Factory.HTML5CanvasText );
+        }
     }
     if( Prototype.Browser.IE )     { 
 	canvas = Class.create( Canvas2D.CanvasBase, 
