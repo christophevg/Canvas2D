@@ -156,17 +156,17 @@ Canvas2D.Factory.extensions.TextDecorationSupport = {
 
     underlineText : function(text, x, y, length) {
         this.moveTo(x, y + 3);
-        this.lineTo(length, y + 3);
+        this.lineTo(x + length, y + 3);
     },
 
     overlineText : function(text, x, y, length) {
         this.moveTo(x, y - getFontSize(this.font) );
-        this.lineTo(length, y - getFontSize(this.font) );
+        this.lineTo(x + length, y - getFontSize(this.font) );
     },
 
     linethroughText : function(text, x, y, length) {
         this.moveTo(x, y - (getFontSize(this.font) / 2) + 2);
-        this.lineTo(length, y - (getFontSize(this.font) / 2) + 2);
+        this.lineTo(x + length, y - (getFontSize(this.font) / 2) + 2);
     }
 };
 
