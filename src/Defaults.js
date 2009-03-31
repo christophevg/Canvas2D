@@ -22,9 +22,16 @@ Canvas2D.Defaults.Sheet = {
     textDecoration : "none" 
 };
 
+Canvas2D.Defaults.Shape = {
+    labelPos       : "center",
+    labelColor     : "black"
+};
+
 Canvas2D.Defaults.Rectangle = {
     lineWidth      : 1,
     lineColor      : "black",
+    labelPos       : "center",
+    labelColor     : "black",
     width          : 50,
     height         : 50
 };
@@ -49,8 +56,9 @@ Canvas2D.Defaults.Text = {
 Canvas2D.Defaults.Line = {
     lineWidth      : 1,
     lineStyle      : "solid",
+    labelPos       : "center",
+    labelColor     : "black",
     color          : "black",
     dx             : 50,
     dy             : 50
 };
-

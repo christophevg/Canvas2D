@@ -7,6 +7,10 @@ Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
 
     getLineColor : function() { return this.lineColor  
 				|| Canvas2D.Defaults.Rectangle.lineColor ; },
+    getLabelPos   : function() { return this.labelPos 
+				 || Canvas2D.Defaults.Rectangle.labelPos; },
+    getLabelColor : function() { return this.labelColor
+				 || Canvas2D.Defaults.Rectangle.labelColor; },
     getWidth : function() { return this.width  || Canvas2D.Defaults.Rectangle.width ; },
     getHeight: function() { return this.height || Canvas2D.Defaults.Rectangle.height; },
 

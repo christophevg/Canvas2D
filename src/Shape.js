@@ -25,10 +25,11 @@ Canvas2D.Shape = Class.create( {
     },
     
     getName       : function() { return this.name;   },
-
-    getLabel      : function() { return this.label;      },
-    getLabelPos   : function() { return this.labelPos;   },
-    getLabelColor : function() { return this.labelColor; },
+    getLabel      : function() { return this.label;  },
+    getLabelPos   : function() { return this.labelPos 
+				 || Canvas2D.Defaults.Shape.labelPos; },
+    getLabelColor : function() { return this.labelColor
+				 || Canvas2D.Defaults.Shape.labelColor; },
 
     getProperties: function() {
 	var props = {};
@@ -104,7 +105,7 @@ Canvas2D.Shape = Class.create( {
 	    }
 	    // NOTE: don't use with() here, because with() doesn't do getters
 	    sheet.save();
-	    sheet.fillStyle = this.getLabelColor() || "black";
+	    sheet.fillStyle   = this.getLabelColor();
 	    sheet.textAlign   = "center";
 	    sheet.font        = "7pt Sans-Serif";
 	    sheet.fillText(this.getLabel(), left, top);
