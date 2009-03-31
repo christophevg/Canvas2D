@@ -6,9 +6,10 @@ Canvas2D.Line = Class.create( Canvas2D.Shape, {
     getType  : function() { return "rectangle"; },
 
     getColor    : function() { return this.color || Canvas2D.Defaults.Line.color; },
-    getDX       : function() { return this.dx    || Canvas2D.Defaults.Line.dx     },
+    getDX       : function() { return this.dx != null ?
+			       this.dx : Canvas2D.Defaults.Line.dx },
     getDY       : function() { return this.dy != null ? 
-			       this.dy : Canvas2D.Defaults.Line.dy     },
+			       this.dy : Canvas2D.Defaults.Line.dy  },
     getLineWidth: function() { return this.lineWidth 
 			       || Canvas2D.Defaults.Line.lineWidth; },
     getLineStyle: function() { return this.lineStyle 

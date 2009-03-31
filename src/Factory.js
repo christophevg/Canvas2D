@@ -252,8 +252,8 @@ Canvas2D.Factory.extensions.MouseEvents = {
     
 Canvas2D.Factory.CanvasText = {
     fillText : function(text, x, y, maxWidth) {
+	// CanvasText implementation is stroke-based, no filling, just stroking
 	this.strokeText(text, x, y, maxWidth);
-	this.fill();
     },
     
     strokeText : function(text, x, y, maxWidth) {
@@ -262,18 +262,15 @@ Canvas2D.Factory.CanvasText = {
     	this.save();
 	
 	this.moveTo(x, y);
+	// CanvasText implementation is stroke-based
+	// fix lineStyle, lineWidth
 	this.lineStyle = "solid";
 	this.lineWidth = 1;
+	this.strokeStyle = this.fillStyle;
 
-	if( this.textAlign == "center" ) { 
-	    x -= this.measureText(text) / 2; 
-	} else if( this.textAlign == "right" ) { 
-	    x -= this.measureText(text);     
-	}
-	
+	x = this.adjustToAlignment(x, text);
 	CanvasTextFunctions.draw(this, this.font, getFontSize(this.font), 
 				 x, y, text);
-	
 	this.closePath();
 	this.restore();
 	
@@ -288,23 +285,22 @@ Canvas2D.Factory.CanvasText = {
 
 Canvas2D.Factory.GeckoCanvasText = {
     fillText     : function(text, x, y, maxWidth) {
+	x = this.adjustToAlignment(x, text);
         if (!this.canvas.fillText) {
             // fallback to pre Gecko 1.9.1 text rendering
             this.drawText(text, x, y, true);
-        } 
-        else {
-            this.canvas.font = this.font;
+        } else {
             this.canvas.fillText(text, x, y, maxWidth);
         }
         this.decorateText(text, x, y, maxWidth);
     },
 
     strokeText   : function(text, x, y, maxWidth) {
+	x = this.adjustToAlignment(x, text);
         if (!this.canvas.strokeText) {
             // fallback to pre Gecko 1.9.1 text rendering
             this.drawText(text, x, y, false);
         } else {
-            this.canvas.font = this.font;
             this.canvas.strokeText(text, x, y, maxWidth);
         }
         this.decorateText(text, x, y, maxWidth);

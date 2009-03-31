@@ -33,5 +33,13 @@ Canvas2D.CanvasBase = Class.create( Canvas2D.ICanvas, {
 	$H(Canvas2D.Defaults.Canvas).each(function(prop) {
 	    canvas[prop.key] = currentValues[prop.key] || prop.value;
 	} );
+    },
+
+    adjustToAlignment : function(x, text) {
+	switch(this.textAlign) {
+	case "center": x -= this.measureText(text) / 2; break;
+	case "right":  x -= this.measureText(text);     break;
+	}
+	return x;
     }
 } );

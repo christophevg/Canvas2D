@@ -22,6 +22,8 @@ Canvas2D.Sheet = Class.create( {
 				 "clearRect", "fillRect", "strokeRect", "fillStrokeRect",
 				 "arc", "rotate", "drawImage",
 				 "fillText", "strokeText", "measureText",
+				 "fillTextCenter", "strokeTextCenter",
+				 "fillTextRight", "strokeTextRight",
 				 "lineTo", "moveTo",
 				 "fill", "stroke",
 				 "closePath", "beginPath",
