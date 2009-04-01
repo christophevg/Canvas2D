@@ -268,6 +268,7 @@ Canvas2D.Factory.CanvasText = {
 	this.lineWidth = 1;
 	this.strokeStyle = this.fillStyle;
 	x = this.adjustToAlignment(x, text);
+
 	CanvasTextFunctions.draw(this, this.font, getFontSize(this.font), 
 				 x, y, text);
 	this.closePath();
