@@ -402,11 +402,13 @@ Canvas2D.Factory.setup = function(element) {
     }
 
     if( Prototype.Browser.Opera ) {
-	throw( "Factory::setup: Opera support is currently disabled." );
+	canvas = Class.create( Canvas2D.CanvasBase, 
+			       Canvas2D.Factory.CanvasText );
     }
 
     if( Prototype.Browser.MobileSafari ) {
-	throw( "Factory::setup: MobileSaferi support is currently disabled." );
+	canvas = Class.create( Canvas2D.CanvasBase, 
+			       Canvas2D.Factory.CanvasText );
     }
 
     if( canvas == null ) { throw( "Factory::setup: unknown browser." ); }
