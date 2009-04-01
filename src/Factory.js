@@ -171,11 +171,6 @@ Canvas2D.Factory.extensions.TextDecorationSupport = {
 };
 
 Canvas2D.Factory.extensions.MouseEvents = {
-    initialize: function($super, element) {
-	$super(element);
-	this.setupMouseEventHandlers();
-    },
-
     setupMouseEventHandlers: function() {
 	Event.observe(this.htmlcanvas, 'mousedown', 
 		      this.handleMouseDown.bindAsEventListener(this));
@@ -267,8 +262,8 @@ Canvas2D.Factory.CanvasText = {
 	this.lineStyle = "solid";
 	this.lineWidth = 1;
 	this.strokeStyle = this.fillStyle;
-	x = this.adjustToAlignment(x, text);
 
+	x = this.adjustToAlignment(x, text);
 	CanvasTextFunctions.draw(this, this.font, getFontSize(this.font), 
 				 x, y, text);
 	this.closePath();
@@ -286,18 +281,20 @@ Canvas2D.Factory.CanvasText = {
 Canvas2D.Factory.HTML5CanvasText = {
     fillText     : function(text, x, y, maxWidth) {
         x = this.adjustToAlignment(x, text);
+	maxWidth = maxWidth  || this.measureText(text);
         this.canvas.fillText(text, x, y, maxWidth);
         this.decorateText(text, x, y, maxWidth);
     },
 
     strokeText   : function(text, x, y, maxWidth) {
         x = this.adjustToAlignment(x, text);
+	maxWidth = maxWidth  || this.measureText(text);
         this.canvas.strokeText(text, x, y, maxWidth);
         this.decorateText(text, x, y, maxWidth);
     },
 
     measureText  : function(text) {
-        return this.canvas.measureText(text);
+        return this.canvas.measureText(text).width;
     }
 };
 
@@ -305,7 +302,7 @@ Canvas2D.Factory.HTML5CanvasText = {
  * Adds text rendering functions to Canvas.
  * This implementation should be used for pre Gecko 1.9.1.
  * Later versions of Gecko should use HTML5CanvasText, 
- * which wraps the HTML5 text rendering functions.
+ * which wraps the native HTML5 text rendering functions.
  */
 Canvas2D.Factory.GeckoCanvasText = {
     fillText     : function(text, x, y, maxWidth) {
@@ -361,14 +358,14 @@ Canvas2D.Factory.setup = function(element) {
     passThroughFunctions = [ "scale", "translate", "transform", "setTransform",
 			     "createLinearGradient",  "createRadialGradient",
 			     "createPattern",
-			     "clearRect", "fillRect", "strokeRect",
+			     "clearRect", "fillRect", "strokeRect", "rect",
 			     "arc", "rotate", "drawImage",
 			     "lineTo", "moveTo",
-			     "quadraticCurveTo",  "bezierCurveTo", "arcTo", "rect",
+			     "quadraticCurveTo",  "bezierCurveTo", "arcTo", 
 			     "fill", "stroke",
 			     "closePath", "beginPath",
 			     "clip", "isPointInPath",
-			     "createImageData", "getImageData", "putImageData" ];
+			     "createImageData", "getImageData", "putImageData"];
     passThroughFunctions.each(function(fnc) {
 	    Canvas2D.CanvasBase.prototype[fnc] = function() {
 		this.transferProperties();
@@ -376,39 +373,50 @@ Canvas2D.Factory.setup = function(element) {
 	    };
     });
 
+    unless( element && element.nodeType &&
+	    element.nodeType == Node.ELEMENT_NODE,
+	    function() {
+		alert( "CanvasBase:initialize: expected HTMLElement" );
+	    } );
+
+    var ctx = element.getContext("2d");
+
     if( Prototype.Browser.WebKit ) { 
 	canvas = Class.create( Canvas2D.CanvasBase, 
 			       Canvas2D.Factory.CanvasText );
     }
+
     if( Prototype.Browser.Gecko )  {
-        if (isGeckoVersionSmallerThan1_9_1()) {
-            canvas = Class.create( Canvas2D.CanvasBase,
-                                   Canvas2D.Factory.GeckoCanvasText ); 
-        } else {
-            canvas = Class.create( Canvas2D.CanvasBase,
-                                   Canvas2D.Factory.HTML5CanvasText );
-        }
+        canvas = Class.create( Canvas2D.CanvasBase,
+                               ( ctx.strokeText &&
+				 ctx.fillText &&
+				 ctx.measureText ) ?
+			       Canvas2D.Factory.HTML5CanvasText :
+                               Canvas2D.Factory.GeckoCanvasText );
     }
+
     if( Prototype.Browser.IE )     { 
 	canvas = Class.create( Canvas2D.CanvasBase, 
 			       Canvas2D.Factory.CanvasText );
 	Canvas2D.Book.prototype.addWaterMark = function() { };
     }
+
     if( Prototype.Browser.Opera ) {
 	throw( "Factory::setup: Opera support is currently disabled." );
     }
+
     if( Prototype.Browser.MobileSafari ) {
 	throw( "Factory::setup: MobileSaferi support is currently disabled." );
     }
 
-    if( canvas == null ) {
-	throw( "Factory::setup: unknown browser." );
-    }
+    if( canvas == null ) { throw( "Factory::setup: unknown browser." ); }
 
     // mixin some functions that clearly are missing ;-)
     $H(Canvas2D.Factory.extensions).values().each(function(ext) {
 	canvas = Class.create( canvas, ext );
     } );
 
-    return new canvas(element);
+    var canvasObj = new canvas(ctx);
+    canvasObj.setupMouseEventHandlers();
+    return canvasObj;
 };
