@@ -1,27 +1,34 @@
 Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
     myProperties: function() {
-	return [ "lineColor", "width", "height", "lineWidth" ];
+	return [ "lineColor", "fillColor", "width", "height", "lineWidth" ];
     },
 
     getType  : function() { return "rectangle"; },
 
     getLineColor : function() { return this.lineColor  
 				|| Canvas2D.Defaults.Rectangle.lineColor ; },
+    getFillColor : function() { return this.fillColor  
+				|| Canvas2D.Defaults.Rectangle.fillColor ; },
     getLabelPos   : function() { return this.labelPos 
 				 || Canvas2D.Defaults.Rectangle.labelPos; },
     getLabelColor : function() { return this.labelColor
 				 || Canvas2D.Defaults.Rectangle.labelColor; },
-    getWidth : function() { return this.width  || Canvas2D.Defaults.Rectangle.width ; },
-    getHeight: function() { return this.height || Canvas2D.Defaults.Rectangle.height; },
+    getWidth : function() { return this.width  
+			    || Canvas2D.Defaults.Rectangle.width ; },
+    getHeight: function() { return this.height 
+			    || Canvas2D.Defaults.Rectangle.height; },
 
     getLineWidth: function() { return this.lineWidth
 			       || Canvas2D.Defaults.Rectangle.lineWidth; },
 
     draw: function(sheet, left, top) {
-	sheet.beginPath(); 
-	sheet.strokeStyle = this.getLineColor();
+	sheet.save();
 	sheet.lineWidth = this.getLineWidth();
+	sheet.strokeStyle = this.getLineColor();
+	sheet.fillStyle = this.getFillColor();
+	sheet.fillRect( left, top, this.getWidth(), this.getHeight() );
 	sheet.strokeRect( left, top, this.getWidth(), this.getHeight() );
+	sheet.restore();
     },
 
     hit: function(x,y) { 

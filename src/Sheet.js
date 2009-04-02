@@ -15,20 +15,20 @@ Canvas2D.Sheet = Class.create( {
 	this.dirty = false;
 
 	// dynamically add passthrough functions
-	passThroughFunctions = [ "scale", "translate", "transform", "setTransform",
-				 "createLinearGradient",  "createRadialGradient", 
-				 "createPattern",
-				 "save", "restore",
-				 "clearRect", "fillRect", "strokeRect", "fillStrokeRect",
-				 "arc", "rotate", "drawImage",
-				 "fillText", "strokeText", "measureText",
-				 "fillTextCenter", "strokeTextCenter",
-				 "fillTextRight", "strokeTextRight",
-				 "lineTo", "moveTo",
-				 "fill", "stroke",
-				 "closePath", "beginPath",
-				 "clip", "isPointInPath",
-				 "createImageData", "getImageData", "putImageData" ];
+	passThroughFunctions = 
+	    [ "scale", "translate", "transform", "setTransform",
+	      "createLinearGradient",  "createRadialGradient", "createPattern",
+	      "save", "restore",
+	      "clearRect", "fillRect", "strokeRect", "fillStrokeRect",
+	      "arc", "rotate", "drawImage",
+	      "fillText", "strokeText", "measureText",
+	      "fillTextCenter", "strokeTextCenter",
+	      "fillTextRight", "strokeTextRight",
+	      "lineTo", "moveTo",
+	      "fill", "stroke",
+	      "closePath", "beginPath",
+	      "clip", "isPointInPath",
+	      "createImageData", "getImageData", "putImageData" ];
 	var me = this;
 	passThroughFunctions.each(function(fnc) {
 	    if( !me[fnc] ) {

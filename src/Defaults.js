@@ -29,7 +29,8 @@ Canvas2D.Defaults.Shape = {
 
 Canvas2D.Defaults.Rectangle = {
     lineWidth      : 1,
-    lineColor      : "black",
+    lineColor      : "rgba(0,0,0,0)",
+    fillColor      : "rgba(0,0,0,0)",
     labelPos       : "center",
     labelColor     : "black",
     width          : 50,
