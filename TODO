@@ -1,6 +1,5 @@
 0.1.0
 - add keyboard short cuts to align/distribute shapes
-- FIX BUG: apparantly alphatransparant stroking of rectanlge during first draw
 - introduce library layer as virtual container of shapes
 - introduce svg-path-shape
 - add multi-connectorhead support
@@ -39,3 +38,12 @@ IDEAS FOR PLUGINS
 - Navigator Toolbar
 - Layout Toolbar
 - add options for showing grid with custom size and align to grid
+
+More Future Things
+- CanvasCaption
+- Composite shapes
+- Macro shapes, catching and wrapping native canvas calls
+- Link shape
+- support gradients
+- support rotation, resize of shapes
+- allow DSL to omit Sheet declaration (for even less code)
