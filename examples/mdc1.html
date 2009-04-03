@@ -7,21 +7,20 @@
     <h1>MDC 1 : Basic Usage</h1>
     <p>
       The example is taken from the excellent Canvas Tutorial by the
-      Mozilla developers and implemented both using Javascript as the
-      Canvas2D DSL.<br>
+      Mozilla developers. Besides the standard HTML5 Canvas API, the
+      same example is implemented using the Canvas2D API and the
+      Canvas2D Shapes DSL.<br/>
       See: <a href="https://developer.mozilla.org/en/Canvas_tutorial/Basic_usage">https://developer.mozilla.org/en/Canvas_tutorial/Basic_usage</a>.
     </p>
 
     <h2>HTML5 Canvas API</h2>
     <table cellspacing="10">
       <tr>
-	<td><canvas id="myCanvas1" width="150" height="150"></canvas></td>
-	<td>
+	<td valign="top">
+	  <canvas id="canvas" width="150" height="150"></canvas></td>
+	<td valign="top">
 	  <pre>
-var manager = new Canvas2D.Manager();
-var canvas  = manager.setupBook("myCanvas1");
-var ctx     = canvas.addSheet();
-manager.startAll();
+var ctx = document.getElementById("canvas").getContext("2d");
 
 ctx.fillStyle = "rgb(200,0,0)";
 ctx.fillRect (10, 10, 55, 50);
@@ -33,10 +32,7 @@ ctx.fillRect (30, 30, 55, 50);
       </tr>
     </table>
     <script>
-      var manager = new Canvas2D.Manager();
-      var canvas  = manager.setupBook("myCanvas1");
-      var ctx     = canvas.addSheet();
-      manager.startAll();
+      var ctx = document.getElementById("canvas").getContext("2d");
 
       ctx.fillStyle = "rgb(200,0,0)";
       ctx.fillRect (10, 10, 55, 50);
@@ -48,10 +44,52 @@ ctx.fillRect (30, 30, 55, 50);
     <h2>Canvas2D API</h2>
     <table cellspacing="10">
       <tr>
-	<td><canvas id="myCanvas2" class="Canvas2D" 
+	<td valign="top">
+	  <canvas id="Canvas2D" width="150" height="150"></canvas></td>
+	<td valign="top">
+	  <pre>
+var manager = new Canvas2D.Manager();
+var canvas  = manager.setupBook("Canvas2D");
+var ctx     = canvas.addSheet();
+manager.startAll();
+
+ctx.fillStyle = "rgb(200,0,0)";
+ctx.fillRect (10, 10, 55, 50);
+
+ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+ctx.fillRect (30, 30, 55, 50);
+	  </pre>
+	</td>
+	<td valign="top">
+	  <pre>
+var ctx = Canvas2D.activate("Canvas2D");
+
+ctx.fillStyle = "rgb(200,0,0)";
+ctx.fillRect (10, 10, 55, 50);
+
+ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+ctx.fillRect (30, 30, 55, 50);
+	  </pre>
+	</td>
+      </tr>
+    </table>
+    <script>
+      var ctx = Canvas2D.activate("Canvas2D");
+
+      ctx.fillStyle = "rgb(200,0,0)";
+      ctx.fillRect (10, 10, 55, 50);
+
+      ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+      ctx.fillRect (30, 30, 55, 50);
+    </script>
+
+    <h2>Canvas2D Shapes</h2>
+    <table cellspacing="10">
+      <tr>
+	<td valign="top"><canvas id="Canvas2DShapes" class="Canvas2D" 
 		    width="150" height="150"></canvas></td>
-	<td>
-	  <pre id="myCanvas2Source">
+	<td valign="top">
+	  <pre id="Canvas2DShapesSource">
 sheet mySheet {
   [@10,10] rectangle rect1 +geo="55x50" +fillColor="rgb(200,0,0)";
   [@30,30] rectangle rect2 +geo="55x50" +fillColor="rgba(0,0,200,0.5)";
