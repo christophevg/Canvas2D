@@ -1,37 +1,56 @@
-Canvas2D.Line = Class.create( Canvas2D.Shape, {
+Canvas2D.LinePath = Class.create( Canvas2D.Shape, {
     myProperties: function() {
-	return [ "color", "dx", "dy", "lineWidth", "lineStyle" ];
+	return [ "color", "moves", "lineWidth", "lineStyle" ];
     },
 
-    getType  : function() { return "line"; },
+    getType  : function() { return "linePath"; },
 
     getColor    : function() { return this.color 
-			       || Canvas2D.Defaults.Line.color; },
-    getDX       : function() { return this.dx != null ?
-			       this.dx : Canvas2D.Defaults.Line.dx },
-    getDY       : function() { return this.dy != null ? 
-			       this.dy : Canvas2D.Defaults.Line.dy  },
+			       || Canvas2D.Defaults.LinePath.color; },
     getLineWidth: function() { return this.lineWidth 
-			       || Canvas2D.Defaults.Line.lineWidth; },
+			       || Canvas2D.Defaults.LinePath.lineWidth; },
     getLineStyle: function() { return this.lineStyle 
-			       || Canvas2D.Defaults.Line.lineWidth; },
+			       || Canvas2D.Defaults.LinePath.lineWidth; },
     getLabelPos   : function() { return this.labelPos 
-				 || Canvas2D.Defaults.Line.labelPos; },
+				 || Canvas2D.Defaults.LinePath.labelPos; },
     getLabelColor : function() { return this.labelColor
-				 || Canvas2D.Defaults.Line.labelColor; },
+				 || Canvas2D.Defaults.LinePath.labelColor; },
 
-    getWidth : function() { return this.getDX() },
-    getHeight: function() { return this.getDY() },
+    getWidth : function() { return this.dx },
+    getHeight: function() { return this.dy },
+
+    getMoves : function() { return this.moves; },
+
+    preprocess : function(props) {
+	if( props.moves ) {
+	    var moves = [];
+	    var dx = 0;
+	    var dy = 0;
+	    props.moves.split(";").each( function(move) {
+		var parts = move.split(",");
+		moves.push( {dx:parseInt(parts[0]), dy:parseInt(parts[1])} );
+		dx += parseInt(parts[0]);
+		dy += parseInt(parts[1]);
+	    });
+	    props.moves = moves;
+	    props.dx = dx;
+	    props.dy = dy;
+	}
+	return props;
+    },
 
     draw: function(sheet, left, top) {
 	sheet.beginPath();
-
 	sheet.strokeStyle = this.getColor();
 	sheet.lineWidth = this.getLineWidth();
 	sheet.lineStyle = this.getLineStyle();
 
 	sheet.moveTo(left, top);
-	sheet.lineTo(left + this.getDX(), top + this.getDY());
+	this.getMoves().each( function(move) {
+	    left = left + move.dx;
+	    top  = top  + move.dy;
+	    sheet.lineTo(left, top);
+	} );
 	sheet.stroke();
 
 	sheet.closePath();
@@ -78,11 +97,11 @@ Canvas2D.Line = Class.create( Canvas2D.Shape, {
     }
 } );
 
-Canvas2D.Line.getNames = function() {
-    return [ "line" ];
+Canvas2D.LinePath.getNames = function() {
+    return [ "linepath" ];
 }
 
-Canvas2D.Line.from = function( construct, sheet ) {
+Canvas2D.LinePath.from = function( construct, sheet ) {
     var props = { name: construct.name };
     construct.modifiers.each(function(pair) {
 	var key   = pair.key;
@@ -98,7 +117,7 @@ Canvas2D.Line.from = function( construct, sheet ) {
 	props[key] = value;
     } );
 
-    var shape = new Canvas2D.Line(props);
+    var shape = new Canvas2D.LinePath(props);
     var left, top;
     if( construct.annotation ) {    
 	var pos = construct.annotation.data.split(",");
@@ -112,4 +131,4 @@ Canvas2D.Line.from = function( construct, sheet ) {
     return shape;
 };
 
-Canvas2D.ADLVisitor.registerConstruct(Canvas2D.Line);
+Canvas2D.ADLVisitor.registerConstruct(Canvas2D.LinePath);

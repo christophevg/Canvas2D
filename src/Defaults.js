@@ -63,3 +63,11 @@ Canvas2D.Defaults.Line = {
     dx             : 50,
     dy             : 50
 };
+
+Canvas2D.Defaults.LinePath = {
+    lineWidth      : 1,
+    lineStyle      : "solid",
+    labelPos       : "center",
+    labelColor     : "black",
+    color          : "black"
+};
