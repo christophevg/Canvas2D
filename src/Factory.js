@@ -76,8 +76,6 @@ Canvas2D.Factory.extensions.DashedLineSupport = {
 	    beginPath();
 	    strokeStyle = c;
 	    fillStyle = c;
-	    //fillRect(x,y,1,1);
-	    // TODO: Why doesn't this produce crisp lines of width 1???
 	    moveTo(x,y);
 	    lineTo(x+1,y+1);
 	    stroke();
@@ -127,7 +125,63 @@ Canvas2D.Factory.extensions.DashedLineSupport = {
 	    else      { this._plotPixel(x, y, color); }
 	}
     }
+};
 
+Canvas2D.Factory.extensions.CrispLineSupport = {
+    makeCrisp: function(x, y, xx, yy) {
+	var x1 = x;  var y1 = y;
+	var x2 = xx; var y2 = yy;
+	var w  = xx; var h  = yy;
+
+	// if the lineWidth is odd
+	if( this.lineWidth % 2 ) {
+	    x1 = Math.floor(x) + 0.5;
+	    y1 = Math.floor(y) + 0.5;
+	    if(typeof x2 != "undefined") {
+		x2 = Math.floor(xx) + 0.5;
+		y2 = Math.floor(yy) + 0.5;
+	    }
+	    // if the width/height is fractional
+	    if( xx % 1 != 0 ) { w = Math.floor(xx); }
+	    if( yy % 1 != 0 ) { h = Math.floor(yy); }
+	} else {
+	    x1 = Math.floor(x);
+	    y1 = Math.floor(y);
+	    if(typeof x2 != "undefined" ) {
+		x2 = Math.floor(xx);
+		y2 = Math.floor(yy);
+	    }
+	    // if the width/height is fractional
+	    if( xx % 1 != 0 ) { w = Math.floor(xx) + 0.5; }
+	    if( yy % 1 != 0 ) { h = Math.floor(yy) + 0.5; }
+	}
+
+	return {x:x1, y:y1, x1:x1, y1:y1, w:w, h:h, x2:x2, y2:y2};
+    },
+
+    lineTo: function($super, x,y) {
+	if( this.noCrispLines ) { return $super(x,y); }
+	var adjusted = this.makeCrisp(x,y);
+	$super(adjusted.x, adjusted.y);
+    },
+
+    moveTo: function($super, x,y) {
+	if( this.noCrispLines ) { return $super(x,y); }
+	var adjusted = this.makeCrisp(x,y);
+	$super(adjusted.x, adjusted.y);
+    },
+
+    strokeRect: function($super, x, y, h, w) {
+	if( this.noCrispLines ) { return $super(x,y,w,h); }
+	var adjusted = this.makeCrisp(x,y,w,h);
+	$super(adjusted.x, adjusted.y, adjusted.w, adjusted.h);
+    },
+
+    rect: function($super, x, y, h, w) {
+	if( this.noCrispLines ) { return $super(x,y,w,h); }
+	var adjusted = this.makeCrisp(x,y,w,h);
+	$super(adjusted.x, adjusted.y, adjusted.w, adjusted.h);
+    }
 };
 
 Canvas2D.Factory.extensions.TextDecorationSupport = {
@@ -255,21 +309,23 @@ Canvas2D.Factory.CanvasText = {
     	this.beginPath();
 	
     	this.save();
-	
 	this.moveTo(x, y);
 	// CanvasText implementation is stroke-based
 	// fix lineStyle, lineWidth
 	this.lineStyle = "solid";
 	this.lineWidth = 1;
+	// we do want anti-aliased effects
+	this.noCrispLines = true;
+	// just in case the fillStyle is set in stead of strokStyle
 	this.strokeStyle = this.fillStyle;
 
 	x = this.adjustToAlignment(x, text);
 	CanvasTextFunctions.draw(this, this.font, getFontSize(this.font), 
 				 x, y, text);
-	this.closePath();
-	this.restore();
-	
 	this.decorateText(text, x, y, maxWidth);
+	this.restore();
+
+	this.closePath();
     },
     
     measureText  : function(text) {

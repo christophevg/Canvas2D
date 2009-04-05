@@ -2,6 +2,7 @@ Canvas2D.Defaults = {};
 
 Canvas2D.Defaults.Canvas = {
     lineWidth      : 1,   
+    noCrispLines   : false,
     lineStyle      : "solid",
     strokeStyle    : "black", 
     fillStyle      : "black", 

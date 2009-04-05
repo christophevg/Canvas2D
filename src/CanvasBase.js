@@ -2,23 +2,28 @@ Canvas2D.CanvasBase = Class.create( Canvas2D.ICanvas, {
     initialize: function(ctx) {
 	this.htmlcanvas = ctx.canvas;
 	this.canvas     = ctx;
+	var currentValues = this;
+	$H(Canvas2D.Defaults.Canvas).keys().each(function(prop) {
+	    currentValues[prop] = Canvas2D.Defaults.Canvas[prop];
+	} );
+	this.savedValues = [];
     },
 
     save         : function() { 
 	var oldValues = {};
 	var currentValues = this;
 	$H(Canvas2D.Defaults.Canvas).keys().each(function(prop) {
-	      oldValues[prop] = currentValues[prop];
-	  } );
-	this.oldValues = oldValues;
+	    oldValues[prop] = currentValues[prop];
+	} );
+	this.savedValues.push(oldValues);
 	this.canvas.save(); 
     },
     restore      : function() { 
-	var oldValues = this.oldValues;
+	var oldValues = this.savedValues.pop();
 	var currentValues = this;
 	$H(Canvas2D.Defaults.Canvas).keys().each(function(prop) {
-	      currentValues[prop] = oldValues[prop];
-	  } );
+	    currentValues[prop] = oldValues[prop];
+	} );
 	this.canvas.restore();
     },
 
