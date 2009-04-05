@@ -1,6 +1,7 @@
 Canvas2D.LinePath = Class.create( Canvas2D.Shape, {
     myProperties: function() {
-	return [ "color", "moves", "lineWidth", "lineStyle" ];
+	return [ "dx", "dy", "start", "moves",
+		 "color", "lineWidth", "lineStyle" ];
     },
 
     getType  : function() { return "linePath"; },
@@ -19,22 +20,30 @@ Canvas2D.LinePath = Class.create( Canvas2D.Shape, {
     getWidth : function() { return this.dx },
     getHeight: function() { return this.dy },
 
+    getStart : function() { return this.start; },
     getMoves : function() { return this.moves; },
 
     preprocess : function(props) {
+	if( props.start ) {
+	    var parts = props.start.split(",");
+	    props.start = { left:parseInt(parts[0]), top:parseInt(parts[1]) };
+	} else {
+	    props.start = { left:0, top:0 };
+	}
 	if( props.moves ) {
 	    var moves = [];
-	    var dx = 0;
-	    var dy = 0;
+	    var dx = max(0,props.start.left);
+	    var dy = max(0,props.start.top );
+
 	    props.moves.split(";").each( function(move) {
 		var parts = move.split(",");
 		moves.push( {dx:parseInt(parts[0]), dy:parseInt(parts[1])} );
-		dx += parseInt(parts[0]);
-		dy += parseInt(parts[1]);
+		dx = max(dx, dx + parseInt(parts[0]));
+		dy = max(dy, dy + parseInt(parts[1]));
 	    });
 	    props.moves = moves;
-	    props.dx = dx;
-	    props.dy = dy;
+	    props.dx    = dx;
+	    props.dy    = dy;
 	}
 	return props;
     },
@@ -45,6 +54,8 @@ Canvas2D.LinePath = Class.create( Canvas2D.Shape, {
 	sheet.lineWidth = this.getLineWidth();
 	sheet.lineStyle = this.getLineStyle();
 
+	left += this.start.left;
+	top  += this.start.top;
 	sheet.moveTo(left, top);
 	this.getMoves().each( function(move) {
 	    left = left + move.dx;
