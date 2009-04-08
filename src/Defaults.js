@@ -13,6 +13,7 @@ Canvas2D.Defaults.Canvas = {
 };
 
 Canvas2D.Defaults.Sheet = { 
+    noCrispLines   : false,
     lineWidth      : 1,   
     lineStyle      : "solid",
     strokeStyle    : "black", 
@@ -29,6 +30,7 @@ Canvas2D.Defaults.Shape = {
 };
 
 Canvas2D.Defaults.Rectangle = {
+    noCrispLines   : false,
     lineWidth      : 1,
     lineColor      : "rgba(0,0,0,0)",
     fillColor      : "rgba(0,0,0,0)",
@@ -49,6 +51,7 @@ Canvas2D.Defaults.Connector = {
 };
     
 Canvas2D.Defaults.Text = {
+    noCrispLines   : true,
     color          : "black",
     font           : "10pt Sans-Serif", 
     textAlign      : "left", 

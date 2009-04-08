@@ -7,14 +7,21 @@ Canvas2D.Text = Class.create( Canvas2D.Rectangle, {
 
     getText       : function() { return this.text;  },
 
-    getColor      : function() { return this.color || Canvas2D.Defaults.Text.color; },
-    getFont       : function() { return this.font  || Canvas2D.Defaults.Text.font;  },
+    getColor      : function() { return this.color 
+				 || Canvas2D.Defaults.Text.color; },
+    getFont       : function() { return this.font  
+				 || Canvas2D.Defaults.Text.font;  },
     getTextAlign  : function() { return this.textAlign 
 				 || Canvas2D.Defaults.Text.textAlign; },
     getTextDecoration : function() { return this.textDecoration
 				 || Canvas2D.Defaults.Text.textDecoration; },
 
+    useNoCrispLines : function() { return this.noCrispLines 
+				   != null ? this.noCrispLines 
+				   : Canvas2D.Defaults.Text.noCrispLines; },
+
     draw: function(sheet, left, top) {
+	sheet.noCrispLines   = this.useNoCrispLines();
 	sheet.strokeStyle    = this.getColor();
 	sheet.fillStyle      = this.getColor();
 	sheet.font           = this.getFont();

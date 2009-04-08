@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <style>
+      .box {
+        border: 2px solid #000;
+        float:left;
+        margin:10px; 
+        height: 385px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    </style>
+    <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
+    <script src="../build/Canvas2D.standalone.js"></script>
+  </head>
+  <body>
+    <h1>Crisp Lines Support</h1>
+    <div class="box">
+      <h2>Crisp or Fuzzy</h2>
+      <canvas class="Canvas2D" 
+	      id="myCrispDiagram" width="300" height="250"></canvas>
+    </div>
+    <pre id="myCrispDiagramSource" style="display:none;">  
+sheet crispyOrNot {
+  [@ 10,10] rectangle fuzzy +geo="35x35" +lineWidth=1 +black +noCrispLines=true;
+  [@ 28,37] text fuzzyText1 +textAlign="center" +font="20pt" :="+";
+
+  [@ 55,10] rectangle crisp +geo="35x35"  +lineWidth=1 +black; 
+  [@ 73,37] text crispText1 +textAlign="center" +font="20pt"
+                            +noCrispLines=false :="+";
+
+  [@100,10] rectangle mixed +geo="35x35"  +lineWidth=1 +black;
+  [@118,37] text fuzzyText1 +textAlign="center" +font="20pt" :="+";
+}
+    </pre>  
+  </body>
+</html>

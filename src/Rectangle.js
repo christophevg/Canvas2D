@@ -21,8 +21,13 @@ Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
     getLineWidth: function() { return this.lineWidth
 			       || Canvas2D.Defaults.Rectangle.lineWidth; },
 
+    useNoCrispLines: function() { return this.noCrispLines 
+				  != null ? this.noCrispLines 
+				  : Canvas2D.Defaults.Rectangle.noCrispLines; },
+
     draw: function(sheet, left, top) {
 	sheet.save();
+	sheet.noCrispLines = this.useNoCrispLines();
 	sheet.lineWidth = this.getLineWidth();
 	sheet.strokeStyle = this.getLineColor();
 	sheet.fillStyle = this.getFillColor();

@@ -309,16 +309,9 @@ Canvas2D.Factory.CanvasText = {
     	this.beginPath();
 	
     	this.save();
-	this.moveTo(x, y);
-	// CanvasText implementation is stroke-based
-	// fix lineStyle, lineWidth
-	this.lineStyle = "solid";
-	this.lineWidth = 1;
-	// we do want anti-aliased effects
-	this.noCrispLines = true;
-	// just in case the fillStyle is set in stead of strokStyle
+	// CanvasText implementation is stroke-based. Just in case the
+	// fillStyle is set in stead of strokStyle
 	this.strokeStyle = this.fillStyle;
-
 	x = this.adjustToAlignment(x, text);
 	CanvasTextFunctions.draw(this, this.font, getFontSize(this.font), 
 				 x, y, text);
