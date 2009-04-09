@@ -3,7 +3,7 @@ Canvas2D.ShapeCounter = 0;
 Canvas2D.Shape = Class.create( {
     allProperties: function() {
 	var base = [ "name", "label", "labelPos", "labelColor", 
-	             "noCrispLines" ];
+	             "useCrispLines" ];
 	var ext  = this.myProperties();
 	return base.concat(ext);
     },

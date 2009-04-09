@@ -16,12 +16,12 @@ Canvas2D.Text = Class.create( Canvas2D.Rectangle, {
     getTextDecoration : function() { return this.textDecoration
 				 || Canvas2D.Defaults.Text.textDecoration; },
 
-    useNoCrispLines : function() { return this.noCrispLines 
-				   != null ? this.noCrispLines 
-				   : Canvas2D.Defaults.Text.noCrispLines; },
+    getUseCrispLines : function() { return this.useCrispLines != null ? 
+				    this.useCrispLines : 
+				    Canvas2D.Defaults.Text.useCrispLines; },
 
     draw: function(sheet, left, top) {
-	sheet.noCrispLines   = this.useNoCrispLines();
+	sheet.useCrispLines  = this.getUseCrispLines();
 	sheet.strokeStyle    = this.getColor();
 	sheet.fillStyle      = this.getColor();
 	sheet.font           = this.getFont();
@@ -49,7 +49,8 @@ Canvas2D.Text.from = function( construct, sheet ) {
     var props = { name: construct.name, text: construct.value.value };
     construct.modifiers.each(function(pair) {
 	var key   = pair.key;
-	var value = ( pair.value.value ? pair.value.value.value : "" );
+	var value = ( typeof pair.value.value != "undefined" ? 
+		      pair.value.value.value : "" );
 	props[key] = value;
     } );
 

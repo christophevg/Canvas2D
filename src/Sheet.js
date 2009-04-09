@@ -284,7 +284,8 @@ Canvas2D.Sheet = Class.create( {
 	var canvas = this.canvas;
 	var currentValues = this;
 	$H(Canvas2D.Defaults.Sheet).each(function(prop) {
-	    canvas[prop.key] = currentValues[prop.key] || prop.value;
+	    canvas[prop.key] = typeof currentValues[prop.key] != "undefined" ?
+		currentValues[prop.key] : prop.value;
 	} );
     },
 

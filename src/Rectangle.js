@@ -21,13 +21,13 @@ Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
     getLineWidth: function() { return this.lineWidth
 			       || Canvas2D.Defaults.Rectangle.lineWidth; },
 
-    useNoCrispLines: function() { return this.noCrispLines 
-				  != null ? this.noCrispLines 
-				  : Canvas2D.Defaults.Rectangle.noCrispLines; },
+    getUseCrispLines: function() { return this.useCrispLines != null ? 
+				   this.useCrispLines : 
+				   Canvas2D.Defaults.Rectangle.useCrispLines; },
 
     draw: function(sheet, left, top) {
 	sheet.save();
-	sheet.noCrispLines = this.useNoCrispLines();
+	sheet.useCrispLines = this.getUseCrispLines();
 	sheet.lineWidth = this.getLineWidth();
 	sheet.strokeStyle = this.getLineColor();
 	sheet.fillStyle = this.getFillColor();
@@ -96,7 +96,7 @@ Canvas2D.Rectangle.from = function( construct, sheet ) {
 	    props["height"]  = parseInt(value.split("x")[1]);
 	}
 
-	if( value == "" ) {
+	if( "" + value == "" ) {
 	    value = key;
 	    key = "lineColor";
 	}

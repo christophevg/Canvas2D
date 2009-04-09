@@ -160,25 +160,25 @@ Canvas2D.Factory.extensions.CrispLineSupport = {
     },
 
     lineTo: function($super, x,y) {
-	if( this.noCrispLines ) { return $super(x,y); }
+	if( !this.useCrispLines ) { return $super(x,y); }
 	var adjusted = this.makeCrisp(x,y);
 	$super(adjusted.x, adjusted.y);
     },
 
     moveTo: function($super, x,y) {
-	if( this.noCrispLines ) { return $super(x,y); }
+	if( !this.useCrispLines ) { return $super(x,y); }
 	var adjusted = this.makeCrisp(x,y);
 	$super(adjusted.x, adjusted.y);
     },
 
-    strokeRect: function($super, x, y, h, w) {
-	if( this.noCrispLines ) { return $super(x,y,w,h); }
+    strokeRect: function($super, x, y, w, h) {
+	if( !this.useCrispLines ) { return $super(x,y,w,h); }
 	var adjusted = this.makeCrisp(x,y,w,h);
 	$super(adjusted.x, adjusted.y, adjusted.w, adjusted.h);
     },
 
-    rect: function($super, x, y, h, w) {
-	if( this.noCrispLines ) { return $super(x,y,w,h); }
+    rect: function($super, x, y, w, h) {
+	if( !this.useCrispLines ) { return $super(x,y,w,h); }
 	var adjusted = this.makeCrisp(x,y,w,h);
 	$super(adjusted.x, adjusted.y, adjusted.w, adjusted.h);
     }
