@@ -12,6 +12,7 @@ COMPRESSOR-DIST=yuicompressor-${COMPRESSOR-VERSION}.zip
 COMPRESSOR-URL=http://www.julienlecomte.net/yuicompressor/${COMPRESSOR-DIST}
 COMPRESS-JAR=lib/yuicompressor-${COMPRESSOR-VERSION}/build/yuicompressor-${COMPRESSOR-VERSION}.jar
 
+MAKE=make
 FETCH=wget -q
 GIT-PULL=git pull -q
 GIT-CLONE=git clone -q
@@ -85,7 +86,7 @@ build: .check-deps ${TARGETS}
 dist: dist/${DIST} dist/${DIST-SRC} dist/${DIST-EXT}
 
 update-libs:
-	@(cd lib/ADL; ${GIT-PULL}; make clean; make)
+	@(cd lib/ADL; ${GIT-PULL}; ${MAKE} clean; ${MAKE})
 
 lib/${PROTOTYPE-DIST}:
 	@echo "*** importing $@"
