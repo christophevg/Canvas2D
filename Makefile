@@ -25,7 +25,8 @@ APP=Canvas2D
 TARGETS=build/${APP}.shared.min.js \
         build/${APP}.standalone.min.js \
         build/${APP}.css 
-SRCS=src/SanityChecks.js \
+SRCS=src/DepCheck.js \
+     src/SanityChecks.js \
      src/Common.js \
      src/Canvas2D.js \
      src/Defaults.js \
@@ -127,6 +128,7 @@ build/${APP}.shared.js: ${SRCS}
 	@echo "*** building $@"
 	@mkdir -p build
 	@cat ${SRCS} > $@
+	@echo "\nCanvas2D.version = \"${VERSION}\";\n" >> $@;
 
 build/${APP}.standalone.js: build/${APP}.shared.js ${LIBS}
 	@echo "*** building $@"
