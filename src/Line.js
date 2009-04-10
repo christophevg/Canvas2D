@@ -1,27 +1,16 @@
 Canvas2D.Line = Class.create( Canvas2D.Shape, {
-    myProperties: function() {
-	return [ "color", "dx", "dy", "lineWidth", "lineStyle" ];
+    getClass : function() { return Canvas2D.Line; },
+    getType  : function() { return "line"; },
+    getAllProperties: function($super) {
+	return $super().concat( [ "color", "dx", "dy", "lineWidth",
+	                          "lineStyle" ] );
+    },
+    getClassHierarchy : function($super) {
+	return $super().concat( Canvas2D.Line );
     },
 
-    getType  : function() { return "line"; },
-
-    getColor    : function() { return this.color 
-			       || Canvas2D.Defaults.Line.color; },
-    getDX       : function() { return this.dx != null ?
-			       this.dx : Canvas2D.Defaults.Line.dx },
-    getDY       : function() { return this.dy != null ? 
-			       this.dy : Canvas2D.Defaults.Line.dy  },
-    getLineWidth: function() { return this.lineWidth 
-			       || Canvas2D.Defaults.Line.lineWidth; },
-    getLineStyle: function() { return this.lineStyle 
-			       || Canvas2D.Defaults.Line.lineWidth; },
-    getLabelPos   : function() { return this.labelPos 
-				 || Canvas2D.Defaults.Line.labelPos; },
-    getLabelColor : function() { return this.labelColor
-				 || Canvas2D.Defaults.Line.labelColor; },
-
-    getWidth : function() { return this.getDX() },
-    getHeight: function() { return this.getDY() },
+    getWidth : function() { return this.getDx() },
+    getHeight: function() { return this.getDy() },
 
     draw: function(sheet, left, top) {
 	sheet.beginPath();
@@ -31,7 +20,7 @@ Canvas2D.Line = Class.create( Canvas2D.Shape, {
 	sheet.lineStyle = this.getLineStyle();
 
 	sheet.moveTo(left, top);
-	sheet.lineTo(left + this.getDX(), top + this.getDY());
+	sheet.lineTo(left + this.getDx(), top + this.getDy());
 	sheet.stroke();
 
 	sheet.closePath();

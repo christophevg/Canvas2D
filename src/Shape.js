@@ -1,36 +1,62 @@
 Canvas2D.ShapeCounter = 0;
 
 Canvas2D.Shape = Class.create( {
-    allProperties: function() {
-	var base = [ "name", "label", "labelPos", "labelColor", 
-	             "useCrispLines" ];
-	var ext  = this.myProperties();
-	return base.concat(ext);
+    getClass : function() { return Canvas2D.Shape; },
+    getType  : function() { return "shape";        },
+    getAllProperties : function() {
+	return [ "name", "label", "labelPos", "labelColor", "useCrispLines" ];
     },
 
-    getType : function() { return "shape"; },
+    getClassHierarchy : function() {
+	return [ Canvas2D.Shape ];
+    },
 
     initialize: function( props ) {
 	props = props || {};
+
 	// preprocess is used to allow Shapes to preprocess the
 	// properties before they are automatically initialized
 	props = this.preprocess(props);
-	this.allProperties().each(function(prop) {
-	    this[prop] = props[prop] != null ? props[prop] : null;
-	}.bind(this) );
-	if( !this.name ) { this.name = "__shape__" + Canvas2D.ShapeCounter++; }
+	this.setProperties(props);
+
+	// setup getters
+	this.getAllProperties().each(function(prop) {
+	    var propName = prop.substr(0,1).toUpperCase() + prop.substr(1);
+	    var getterName = "get"+propName;
+	    if( typeof this[getterName] == "undefined" ) {
+		this[getterName] = function() {
+		    var retVal = null;
+		    if( typeof this[prop] != "undefined"  &&
+			this[prop] != null )
+		    {
+			retVal = this[prop];
+		    } else {
+			var classes = this.getClassHierarchy();
+			classes.reverse().each(function(clazz){
+			    if( retVal == null &&
+				typeof clazz.Defaults[prop] != "undefined" )
+			    {
+				retVal = clazz.Defaults[prop];
+			    }
+			});
+		    }
+		    return retVal;
+		};
+	    }
+	}.bind(this));
 	// setup is used to allow Shapes to do initialization stuff,
 	// without the need to override this construtor and make sure
 	// it is called correctly
 	this.setup();
     },
     
-    getName       : function() { return this.name;   },
-    getLabel      : function() { return this.label;  },
-    getLabelPos   : function() { return this.labelPos 
-				 || Canvas2D.Defaults.Shape.labelPos; },
-    getLabelColor : function() { return this.labelColor
-				 || Canvas2D.Defaults.Shape.labelColor; },
+    setProperties : function(props) {
+	this.getAllProperties().each(function(prop) {
+	    this[prop] = props[prop] != null ? props[prop] : null;
+	}.bind(this) );
+	// support for default
+	if( !this.name ) { this.name = "__shape__" + Canvas2D.ShapeCounter++; }
+    },
 
     getProperties: function() {
 	var props = {};
@@ -106,10 +132,12 @@ Canvas2D.Shape = Class.create( {
 	    }
 	    // NOTE: don't use with() here, because with() doesn't do getters
 	    sheet.save();
-	    sheet.fillStyle   = this.getLabelColor();
-	    sheet.textAlign   = "center";
-	    sheet.font        = "7pt Sans-Serif";
+	    sheet.fillStyle     = this.getLabelColor();
+	    sheet.textAlign     = "center";
+	    sheet.font          = "7pt Sans-Serif";
+	    sheet.useCrispLines = false;
 	    sheet.fillText(this.getLabel(), left, top);
+	    sheet.useCrispLines = true;
 	    sheet.restore();
 	}
     },
@@ -123,8 +151,6 @@ Canvas2D.Shape = Class.create( {
     preprocess  : function(props)                    { return props; },
     setup       : function()                         { },
     myProperties: function()                         { return [];    },
-    getWidth    : function()                         { return 0;     },
-    getHeight   : function()                         { return 0;     },
     getNames    : function()                         { return [];    },
     draw        : function(sheet, left, top)         { },
     hit         : function(x, y)                     { return false; },

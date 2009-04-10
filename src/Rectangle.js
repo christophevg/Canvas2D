@@ -1,38 +1,25 @@
 Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
-    myProperties: function() {
-	return [ "lineColor", "fillColor", "width", "height", "lineWidth" ];
-    },
-
+    getClass : function() { return Canvas2D.Rectangle; },
     getType  : function() { return "rectangle"; },
-
-    getLineColor : function() { return this.lineColor  
-				|| Canvas2D.Defaults.Rectangle.lineColor ; },
-    getFillColor : function() { return this.fillColor  
-				|| Canvas2D.Defaults.Rectangle.fillColor ; },
-    getLabelPos   : function() { return this.labelPos 
-				 || Canvas2D.Defaults.Rectangle.labelPos; },
-    getLabelColor : function() { return this.labelColor
-				 || Canvas2D.Defaults.Rectangle.labelColor; },
-    getWidth : function() { return this.width  
-			    || Canvas2D.Defaults.Rectangle.width ; },
-    getHeight: function() { return this.height 
-			    || Canvas2D.Defaults.Rectangle.height; },
-
-    getLineWidth: function() { return this.lineWidth
-			       || Canvas2D.Defaults.Rectangle.lineWidth; },
-
-    getUseCrispLines: function() { return this.useCrispLines != null ? 
-				   this.useCrispLines : 
-				   Canvas2D.Defaults.Rectangle.useCrispLines; },
+    getAllProperties: function($super) {
+	return $super().concat( [ "lineColor", "fillColor",
+				  "width", "height", "lineWidth" ] );
+    },
+    getClassHierarchy : function($super) {
+	return $super().concat( Canvas2D.Rectangle );
+    },
 
     draw: function(sheet, left, top) {
 	sheet.save();
+
 	sheet.useCrispLines = this.getUseCrispLines();
-	sheet.lineWidth = this.getLineWidth();
-	sheet.strokeStyle = this.getLineColor();
-	sheet.fillStyle = this.getFillColor();
+	sheet.lineWidth     = this.getLineWidth();
+	sheet.strokeStyle   = this.getLineColor();
+	sheet.fillStyle     = this.getFillColor();
+
 	sheet.fillRect( left, top, this.getWidth(), this.getHeight() );
 	sheet.strokeRect( left, top, this.getWidth(), this.getHeight() );
+
 	sheet.restore();
     },
 

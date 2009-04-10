@@ -119,12 +119,6 @@ Canvas2D.Book = Class.create( {
 	this.canvas.restore();
     },
     
-    addToolbar: function() {
-	if( this.canvas.mouseOver ) {
-	    // TODO: future feature, which should go into an extension
-	}
-    },
-
     updateSource: function(source) {
 	if( this.source && this.getCurrentSheet() ) {
 	    var newSource = this.getCurrentSheet().toADL();
@@ -170,9 +164,8 @@ Canvas2D.Book = Class.create( {
 	    }
 	    
 	    this.addWaterMark();
-	    this.addToolbar();
 
-	    this.log( "Canvas2D::publish: Render Time: " + timer.stop() + "ms" );
+	    this.log( "Canvas2D::publish: RenderTime: " + timer.stop() + "ms" );
 	    this.rePublishNeeded = false;
 	}
 	
@@ -188,5 +181,3 @@ Canvas2D.Book = Class.create( Canvas2D.Book,
 
 // add support for plugins
 Canvas2D.Book.plugins = {};
-//Canvas2D.Book = Class.create( Canvas2D.Book, 
-//			      Canvas2D.Factory.extensions.PluginSupport );

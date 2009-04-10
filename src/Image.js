@@ -1,9 +1,12 @@
 Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
-    myProperties: function($super) {
-	return [ "src" ];
+    getClass : function() { return Canvas2D.Image; },
+    getType  : function() { return "image"; },
+    getAllProperties: function($super) {
+	return $super().concat( [ "src" ] );
     },
-
-    getType   : function() { return "image"; },
+    getClassHierarchy : function($super) {
+	return $super().concat( Canvas2D.Image );
+    },
 
     getSource : function() { return this.src;   },
     getImage  : function() { return this.image; },

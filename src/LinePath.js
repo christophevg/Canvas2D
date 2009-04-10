@@ -1,21 +1,13 @@
 Canvas2D.LinePath = Class.create( Canvas2D.Shape, {
-    myProperties: function() {
-	return [ "dx", "dy", "start", "moves",
-		 "color", "lineWidth", "lineStyle" ];
-    },
-
+    getClass : function() { return Canvas2D.LinePath; },
     getType  : function() { return "linePath"; },
-
-    getColor    : function() { return this.color 
-			       || Canvas2D.Defaults.LinePath.color; },
-    getLineWidth: function() { return this.lineWidth 
-			       || Canvas2D.Defaults.LinePath.lineWidth; },
-    getLineStyle: function() { return this.lineStyle 
-			       || Canvas2D.Defaults.LinePath.lineWidth; },
-    getLabelPos   : function() { return this.labelPos 
-				 || Canvas2D.Defaults.LinePath.labelPos; },
-    getLabelColor : function() { return this.labelColor
-				 || Canvas2D.Defaults.LinePath.labelColor; },
+    getAllProperties: function($super) {
+	return $super().concat( [ "dx", "dy", "start", "moves",
+	                          "color", "lineWidth", "lineStyle" ] );
+    },
+    getClassHierarchy : function($super) {
+	return $super().concat( Canvas2D.LinePath );
+    },
 
     getWidth : function() { return this.dx },
     getHeight: function() { return this.dy },

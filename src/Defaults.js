@@ -24,12 +24,15 @@ Canvas2D.Defaults.Sheet = {
     textDecoration : "none" 
 };
 
-Canvas2D.Defaults.Shape = {
+// Shapes start here ...
+
+Canvas2D.Shape.Defaults = {
+    label          : "",
     labelPos       : "center",
     labelColor     : "black"
 };
 
-Canvas2D.Defaults.Rectangle = {
+Canvas2D.Rectangle.Defaults = {
     useCrispLines  : true,
     lineWidth      : 1,
     lineColor      : "rgba(0,0,0,0)",
@@ -40,7 +43,8 @@ Canvas2D.Defaults.Rectangle = {
     height         : 50
 };
 
-Canvas2D.Defaults.Connector = { 
+Canvas2D.Connector.Defaults = {
+    useCrispLines  : true,
     lineWidth      : 1, 
     lineColor      : "black", 
     lineStyle      : "solid",
@@ -50,7 +54,7 @@ Canvas2D.Defaults.Connector = {
     minCornerDist  : 15
 };
     
-Canvas2D.Defaults.Text = {
+Canvas2D.Text.Defaults = {
     useCrispLines  : false,
     color          : "black",
     font           : "10pt Sans-Serif", 
@@ -58,7 +62,7 @@ Canvas2D.Defaults.Text = {
     textDecoration : "none"
 };
 
-Canvas2D.Defaults.Line = {
+Canvas2D.Line.Defaults = {
     lineWidth      : 1,
     lineStyle      : "solid",
     labelPos       : "center",
@@ -68,10 +72,14 @@ Canvas2D.Defaults.Line = {
     dy             : 50
 };
 
-Canvas2D.Defaults.LinePath = {
+Canvas2D.LinePath.Defaults = {
     lineWidth      : 1,
     lineStyle      : "solid",
     labelPos       : "center",
     labelColor     : "black",
     color          : "black"
+};
+
+Canvas2D.Image.Defaults = {
+
 };

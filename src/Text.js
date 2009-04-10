@@ -1,24 +1,13 @@
 Canvas2D.Text = Class.create( Canvas2D.Rectangle, {
-    myProperties: function() {
-	return [ "text", "color", "font", "textAlign", "textDecoration" ];
-    },
-
+    getClass : function() { return Canvas2D.Text; },
     getType  : function() { return "text"; },
-
-    getText       : function() { return this.text;  },
-
-    getColor      : function() { return this.color 
-				 || Canvas2D.Defaults.Text.color; },
-    getFont       : function() { return this.font  
-				 || Canvas2D.Defaults.Text.font;  },
-    getTextAlign  : function() { return this.textAlign 
-				 || Canvas2D.Defaults.Text.textAlign; },
-    getTextDecoration : function() { return this.textDecoration
-				 || Canvas2D.Defaults.Text.textDecoration; },
-
-    getUseCrispLines : function() { return this.useCrispLines != null ? 
-				    this.useCrispLines : 
-				    Canvas2D.Defaults.Text.useCrispLines; },
+    getAllProperties: function($super) {
+	return $super().concat( [ "text", "color", "font", "textAlign",
+	                          "textDecoration" ] );
+    },
+    getClassHierarchy : function($super) {
+	return $super().concat( Canvas2D.Text );
+    },
 
     draw: function(sheet, left, top) {
 	sheet.useCrispLines  = this.getUseCrispLines();

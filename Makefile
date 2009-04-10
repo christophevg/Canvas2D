@@ -29,7 +29,6 @@ SRCS=src/DepCheck.js \
      src/SanityChecks.js \
      src/Common.js \
      src/Canvas2D.js \
-     src/Defaults.js \
      src/Factory.js src/ICanvas.js src/CanvasBase.js \
      src/ImageManager.js \
      src/Manager.js \
@@ -44,7 +43,8 @@ SRCS=src/DepCheck.js \
      src/Image.js \
      src/Alias.js \
      src/plugins/TabbedCanvas.js \
-     src/KickStart.js
+     src/KickStart.js \
+     src/Defaults.js
 CSSSRCS=lib/tabber/example.css src/${APP}.css
 VERSION=$(shell git describe --tags | cut -d'-' -f1,2)
 LIBS=lib/${PROTOTYPE-DIST} \
