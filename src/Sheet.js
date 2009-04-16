@@ -34,7 +34,7 @@ Canvas2D.Sheet = Class.create( {
 	    if( !me[fnc] ) {
 		me[fnc] = function() {
 		    this.transferProperties();
-		    this.canvas[fnc].apply(this.canvas, arguments);
+		    return this.canvas[fnc].apply(this.canvas, arguments);
 		};
 	    }
 	});

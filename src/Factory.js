@@ -418,7 +418,7 @@ Canvas2D.Factory.setup = function(element) {
     passThroughFunctions.each(function(fnc) {
 	    Canvas2D.CanvasBase.prototype[fnc] = function() {
 		this.transferProperties();
-		this.canvas[fnc].apply(this.canvas, arguments);
+		return this.canvas[fnc].apply(this.canvas, arguments);
 	    };
     });
 
