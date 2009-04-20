@@ -155,22 +155,26 @@ Canvas2D.Book = Class.create( {
 
     publish : function() {
 	if( this.rePublishNeeded && !this.wait ) {
-	    var timer = new Timer();
-	    this.canvas.clear();
-
-	    if( this.getCurrentSheet() ) {
-		this.getCurrentSheet().render();
-		this.updateSource();
-	    }
-	    
-	    this.addWaterMark();
-
-	    this.log( "Canvas2D::publish: RenderTime: " + timer.stop() + "ms" );
+	    this.publishOnce();
 	    this.rePublishNeeded = false;
 	}
 	
 	// reshedule publish in 1/100 of a second
 	this.nextPublish = this.publish.bind(this).delay(0.01);
+    },
+
+    publishOnce : function() {
+	var timer = new Timer();
+	this.canvas.clear();
+
+	if( this.getCurrentSheet() ) {
+	    this.getCurrentSheet().render();
+	    this.updateSource();
+	}
+
+	this.addWaterMark();
+
+	this.log( "Canvas2D::publish: RenderTime: " + timer.stop() + "ms" );
     }
 
 } );
