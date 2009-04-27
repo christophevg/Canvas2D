@@ -38,6 +38,8 @@ Canvas2D.Sheet = Class.create( {
 		};
 	    }
 	});
+
+	this.setupProperties();
     },
 
     makeDirty: function() {
@@ -280,7 +282,20 @@ Canvas2D.Sheet = Class.create( {
 	return s;
     },
 
+    setupProperties : function() {
+	if( typeof Object.__defineGetter__ !== "function" ) { return; }
+	$H(Canvas2D.Defaults.Sheet).each(function(prop) {
+	    this.__defineGetter__(prop.key, function(){
+		return this.canvas[prop.key];
+	    } );
+	    this.__defineSetter__(prop.key, function(val) {
+		this.canvas[prop.key] = val;
+	    } );
+	}.bind(this) );
+    },
+
     transferProperties : function() {
+	if( typeof Object.__defineGetter__ === "function" ) { return; }
 	var canvas = this.canvas;
 	var currentValues = this;
 	$H(Canvas2D.Defaults.Sheet).each(function(prop) {
