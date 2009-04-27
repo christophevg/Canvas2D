@@ -4,7 +4,8 @@ Canvas2D.Shape = Class.create( {
     getClass : function() { return Canvas2D.Shape; },
     getType  : function() { return "shape";        },
     getAllProperties : function() {
-	return [ "name", "label", "labelPos", "labelColor", "useCrispLines" ];
+	return [ "name", "label", "labelPos", "labelColor", "labelAlign",
+		 "labelFont", "labelUseCrispLines", "useCrispLines" ];
     },
 
     getClassHierarchy : function() {
@@ -130,14 +131,13 @@ Canvas2D.Shape = Class.create( {
 	    case "bottom":          top  += this.getHeight() + 11;  break;
 	    case "center": default: top  += this.getCenter().top + 2.5;
 	    }
-	    // NOTE: don't use with() here, because with() doesn't do getters
+
 	    sheet.save();
 	    sheet.fillStyle     = this.getLabelColor();
-	    sheet.textAlign     = "center";
-	    sheet.font          = "7pt Sans-Serif";
-	    sheet.useCrispLines = false;
+	    sheet.textAlign     = this.getLabelAlign();
+	    sheet.font          = this.getLabelFont();
+	    sheet.useCrispLines = this.getLabelUseCrispLines();
 	    sheet.fillText(this.getLabel(), left, top);
-	    sheet.useCrispLines = true;
 	    sheet.restore();
 	}
     },

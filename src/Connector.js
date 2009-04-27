@@ -20,9 +20,10 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
     delayRender: function() { return true;  },
     
     draw: function(sheet, left, top) {
-	sheet.strokeStyle = this.getLineColor();
-	sheet.lineWidth   = this.getLineWidth();
-	sheet.lineStyle   = this.getLineStyle(); 
+	sheet.useCrispLines = this.getUseCrispLines();
+	sheet.strokeStyle   = this.getLineColor();
+	sheet.lineWidth     = this.getLineWidth();
+	sheet.lineStyle     = this.getLineStyle();
 	
 	sheet.beginPath();
 	switch( this.getRouting() ) {

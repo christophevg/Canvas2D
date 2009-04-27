@@ -27,9 +27,12 @@ Canvas2D.Defaults.Sheet = {
 // Shapes start here ...
 
 Canvas2D.Shape.Defaults = {
-    label          : "",
-    labelPos       : "center",
-    labelColor     : "black"
+    label              : "",
+    labelFont          : "7pt Sans-Serif",
+    labelAlign         : "center",
+    labelPos           : "center",
+    labelColor         : "black",
+    labelUseCrispLines : false
 };
 
 Canvas2D.Rectangle.Defaults = {
