@@ -10,8 +10,6 @@ Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
     },
 
     draw: function(sheet, left, top) {
-	sheet.save();
-
 	sheet.useCrispLines = this.getUseCrispLines();
 	sheet.lineWidth     = this.getLineWidth();
 	sheet.strokeStyle   = this.getLineColor();
@@ -19,8 +17,6 @@ Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
 
 	sheet.fillRect( left, top, this.getWidth(), this.getHeight() );
 	sheet.strokeRect( left, top, this.getWidth(), this.getHeight() );
-
-	sheet.restore();
     },
 
     hit: function(x,y) { 

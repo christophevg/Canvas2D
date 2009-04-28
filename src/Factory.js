@@ -189,7 +189,7 @@ Canvas2D.Factory.extensions.TextDecorationSupport = {
 	if( !this.textDecoration ) { return; }
 
 	this.save();
-	this.useCripsLines = true;
+	this.useCrispLines = true;
 	this.textDecoration.toLowerCase().split(" ").each(function(decoration) {
 	    var decorator = null;
 	    switch(decoration) {

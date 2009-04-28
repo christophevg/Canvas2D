@@ -143,8 +143,10 @@ Canvas2D.Shape = Class.create( {
     },
 
     render: function(sheet, left, top) {
+	sheet.save();
 	this.draw     (sheet, left, top);
 	this.drawLabel(sheet, left, top);
+	sheet.restore();
     },
 
     // the remaining methods are not applicable for abstract shapes
