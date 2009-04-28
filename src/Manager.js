@@ -17,7 +17,7 @@ Canvas2D.Manager = Class.create( {
     },
 
     getBook : function(id) {
-	return this.books[id];
+	return this.books.get(id);
     },
     
     startAll :function() {
