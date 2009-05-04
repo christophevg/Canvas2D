@@ -11,7 +11,35 @@
       }
     </style>
     <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
-    <script src="../build/Canvas2D.standalone.min.js"></script>
+<!--    <script src="../build/Canvas2D.standalone.js"></script> -->
+    <script src="../lib/prototype-1.6.0.3.js"></script>
+    <script src="../lib/canvastext.js"></script>
+    <script src="../lib/tabber/tabber.js"></script>
+    <script src="../lib/ADL/build/ADL.shared.js"></script>
+
+    <script src="../src/DepCheck.js"></script> 
+    <script src="../src/SanityChecks.js"></script> 
+    <script src="../src/Common.js"></script> 
+    <script src="../src/Canvas2D.js"></script> 
+    <script src="../src/Factory.js"></script> 
+    <script src="../src/ImageManager.js"></script> 
+    <script src="../src/Manager.js"></script> 
+    <script src="../src/ADLVisitor.js"></script> 
+    <script src="../src/Book.js"></script> 
+    <script src="../src/Sheet.js"></script> 
+    <script src="../src/Position.js"></script> 
+    <script src="../src/Shape.js"></script> 
+    <script src="../src/Rectangle.js"></script> 
+    <script src="../src/Connector.js"></script> 
+    <script src="../src/Line.js"></script> 
+    <script src="../src/LinePath.js"></script> 
+    <script src="../src/Text.js"></script> 
+    <script src="../src/Image.js"></script> 
+    <script src="../src/Alias.js"></script> 
+    <script src="../src/plugins/TabbedCanvas.js"></script> 
+    <script src="../src/KickStart.js"></script> 
+    <script src="../src/Defaults.js"></script>
+
   </head>
   <body onload="drawIt();">
     <h1>Diagram Styles Example</h1>
@@ -33,15 +61,20 @@
         with( book.addSheet() ) {
           freeze();
           var rect1 = at(75, 55)
-              .put(new Canvas2D.Rectangle({width:75,height:75,lineColor:"green"}));
+              .put(new Canvas2D.Rectangle({ width:75, height:75,
+                                            lineColor:"green"}));
           var rect2 = at(50, 175)
-              .put(new Canvas2D.Rectangle({width:50,height:50,lineColor:"red"  }));
+              .put(new Canvas2D.Rectangle({ width:50, height:50,
+                                            lineColor:"red"  }));
           var rect3 = at(200, 100)
-              .put(new Canvas2D.Rectangle({width:50,height:50,lineColor:"blue" }));
+              .put(new Canvas2D.Rectangle({ width:50, height:50,
+                                            lineColor:"blue" }));
           var rect4 = at(200, 25) 
-              .put(new Canvas2D.Rectangle({width:50,height:50,lineColor:"yellow"}));
+              .put(new Canvas2D.Rectangle({ width:50, height:50,
+                                            lineColor:"yellow"}));
           var rect5 = at(125, 175)
-              .put(new Canvas2D.Rectangle({width:50,height:50,lineColor:"red"   }));
+              .put(new Canvas2D.Rectangle({ width:50, height:50,
+                                            lineColor:"red"   }));
 
           var conn1 = put(new Canvas2D.Connector( { from: rect1, to: rect2, 
                                                     routing: "vertical" } ));

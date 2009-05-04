@@ -1,45 +1,112 @@
-Canvas2D.Factory = {};
+/**
+ * Factory.js
+ *
+ * Author: Christophe VG & TheSoftwareFactory
+ * http://thesoftwarefactory.be/wiki/Canvas2D
+ *
+ * License: http://thesoftwarefactory.be/wiki/BSD_License
+ *
+ * This factory takes a standard HTML5 Canvas element and adds (clearly
+ * missing) features, tries to overcome the differences between
+ * browsers implementations.
+ *
+ * The Factory extensions sub-namespace, contains sets of functionality
+ * that need to be merged in. The sub-namespace "all" contains sets
+ * that are merged in for all browsers. 
+ */
 
-Canvas2D.Factory.extensions = {};
+Canvas2D.Factory = { extensions: { all: {} } };
 
-Canvas2D.Factory.extensions.ShortHands = {
-    clear: function() {
-	this.canvas.clearRect( 0, 0, 
-			       this.htmlcanvas.width, 
-			       this.htmlcanvas.height );
+/**
+ * We use a metaphore of a book with sheets to construct the API. The
+ * actual canvas is reused as sheet. This namespace add sheet-specific
+ * methods.
+ */
+Canvas2D.Factory.extensions.all.SheetSupport = {
+    setBook: function setBook(book) {
+	this.book = book;
     },
 
-    fillTextCenter : function(text, x, y, maxWidth) {
+    at: function at(left,top) {
+	return this.book.getCurrentSheet().at(left,top);
+    },
+
+    add: function add(shape) {
+	return this.book.getCurrentSheet().add( shape );
+    },
+
+    put: function put(shape) {
+	return this.add(shape);
+    },
+
+    freeze: function freeze() {
+	return this.book.getCurrentSheet().freeze();
+    },
+
+    thaw: function thaw() {
+	return this.book.getCurrentSheet().thaw();
+    },
+
+    makeDynamic: function makeDynamic() {
+	return this.book.getCurrentSheet().makeDynamic();
+    },
+
+    makeStatic: function makeStatic() {
+	return this.book.getCurrentSheet().makeStatic();
+    },
+
+    getPosition: function getPosition(shape) {
+	return this.book.getCurrentSheet().positionsMap[shape];
+    }
+
+};
+
+/**
+ * There are a few methods clearly missing on the HTML5 Canvas
+ * element. This namespace adds a few utility methods that make life a
+ * lot easier.
+ */
+Canvas2D.Factory.extensions.all.ShortHands = {
+    clear: function clear() {
+	this.clearRect( 0, 0, this.canvas.width, this.canvas.height );
+    },
+
+    fillTextCenter : function fillTextCenter(text, x, y, maxWidth) {
 	var dx = this.measureText(text) / 2;
 	this.fillText(text, x-dx, y, maxWidth);
     },
-    fillTextRight : function(text, x, y, maxWidth) {
+
+    fillTextRight : function fillTextRight(text, x, y, maxWidth) {
 	var dx = this.measureText(text);
 	this.fillText(text, x-dx, y, maxWidth);
     },
 
-    strokeTextCenter : function(text, x, y, maxWidth) {
+    strokeTextCenter : function strokeTextCenter(text, x, y, maxWidth) {
 	var dx = this.measureText(text) / 2;
 	this.strokeText(text, x-dx, y, maxWidth);
     },
-    strokeTextRight : function(text, x, y, maxWidth) {
+
+    strokeTextRight : function strokeTextRight(text, x, y, maxWidth) {
 	var dx = this.measureText(text);
 	this.strokeText(text, x-dx, y, maxWidth);
     },
 
-    fillStrokeRect : function(left, top, width, height) {
+    fillStrokeRect : function fillStrokeRect(left, top, width, height) {
 	this.fillRect( left, top, width, height );
 	this.strokeRect( left, top, width, height );
     }
 };
 
-Canvas2D.Factory.extensions.EventHandling = {
-    on: function( event, handler ) {
+/**
+ * This namespace adds basic event-handling supporting functions.
+ */
+Canvas2D.Factory.extensions.all.EventHandling = {
+    on: function on( event, handler ) {
 	if( !this.eventHandlers ) { this.eventHandlers = []; }
 	this.eventHandlers[event] = handler;
     },
 
-    fireEvent: function( event, data ) {
+    fireEvent: function fireEvent( event, data ) {
 	if( !this.eventHandlers ) { return; }
 	if( this.eventHandlers[event] ) {
 	    this.eventHandlers[event](data);
@@ -47,52 +114,103 @@ Canvas2D.Factory.extensions.EventHandling = {
     }
 };
 
-Canvas2D.Factory.extensions.DashedLineSupport = {
-    setCurrentXY: function( x, y) {
+/**
+ * We add some functionality, which also requires some additional
+ * attributes, that are by default not part of the HTML5 Canvas spec. We
+ * need to extend the some basic functionality to include these extended
+ * properties.
+ */
+
+Canvas2D.Factory.extensions.all.ExtendedCanvasSupport = {
+    __extend__: function __extend__(ctx) {
+	var extProperties = [ "useCrispLines", "textDecoration", "lineStyle" ];
+
+	var $superSave = ctx["save"];
+	ctx["save"] = function() {
+	    var oldValues = {};
+	    var currentValues = this;
+	    extProperties.each(function(prop) {
+		oldValues[prop] = currentValues[prop];
+	    });
+	    if( !this.savedValues ) { this.savedValues = []; }
+	    this.savedValues.push(oldValues);
+
+	    $superSave.apply(this);
+	};
+
+	var $superRestore = ctx["restore"];
+	ctx["restore"] = function() {
+	    if( !this.savedValues ) { return; }
+
+	    var oldValues = this.savedValues.pop();
+	    var currentValues = this;
+	    extProperties.each(function(prop) {
+		currentValues[prop] = oldValues[prop];
+	    });
+
+	    $superRestore.apply(this);
+	}
+
+	return ctx;
+    }
+};
+
+/**
+ * The HTML5 specs did not specify dashed line support, because it is
+ * said not to be trivial to implement natively ?! So we have to do it
+ * ourselves!
+ */
+Canvas2D.Factory.extensions.all.DashedLineSupport = {
+    __extend__: function __extend__(ctx) {
+	[ "_setCurrentXY", "_plotPixel", "_drawLine" ].each( function(f) {
+	    ctx[f] = Canvas2D.Factory.extensions.all.DashedLineSupport[f];
+	});
+
+	ctx.nativeMoveTo = ctx["moveTo"];
+	ctx["moveTo"] = function(x,y) {
+	    ctx.nativeMoveTo.apply( this, arguments );
+	    this._setCurrentXY( x, y );
+	}
+
+	ctx.nativeLineTo = ctx["lineTo"];
+	ctx["lineTo"] = function(x,y) {
+	    if( this.lineStyle == "dashed" ) {
+		this._drawLine( this.currentX, this.currentY, x, y );
+	    } else {
+		this.nativeLineTo.apply( this, arguments );
+	    }
+	    this._setCurrentXY(x, y);
+	}
+
+	return ctx;
+    },
+
+    _setCurrentXY: function _setCurrentXY(x, y) {
 	if( !this.currentX ) { this.currentX = 0; }
 	if( !this.currentY ) { this.currentY = 0; }
 	this.currentX = x;
 	this.currentY = y;
     },
 
-    moveTo: function(x,y) {
-	this.canvas.moveTo( x, y );
-	this.setCurrentXY( x, y );
+    _plotPixel: function _plotPixel( x, y, c ) {
+	var oldStyle = this.strokeStyle;
+	this.beginPath();
+	this.strokeStyle = c;
+	this.fillStyle = c;
+	this.moveTo(x,y);
+	this.nativeLineTo(x+1,y+1);
+	this.stroke();
+	this.closePath();
+	this.strokeStyle = oldStyle;
     },
 
-    lineTo: function(x,y) {
-	this.transferProperties();
-	if( this.lineStyle == "dashed" ) {
-	    this._drawLine( this.currentX, this.currentY, x, y );
-	} else {
-	    this.canvas.lineTo( x, y );
-	}
-	this.setCurrentXY(x, y);
-    },
-
-    _plotPixel: function( x, y, c ) {
-	with( this.canvas ) {
-	    var oldStyle = strokeStyle;
-	    beginPath();
-	    strokeStyle = c;
-	    fillStyle = c;
-	    moveTo(x,y);
-	    lineTo(x+1,y+1);
-	    stroke();
-	    closePath();
-	    strokeStyle = oldStyle;
-	}
-    },
-
-    _drawLine: function(x1, y1, x2, y2 ) {
-	x1 = Math.floor(x1);
-	x2 = Math.floor(x2);
-	y1 = Math.floor(y1-1);
-	y2 = Math.floor(y2-1);
+    _drawLine: function _drawLine(x1, y1, x2, y2 ) {
+	x1 = Math.floor(x1);	x2 = Math.floor(x2);
+	y1 = Math.floor(y1-1);	y2 = Math.floor(y2-1);
 	// to make sure other strokes are stroked:
-	this.canvas.stroke();
+	this.stroke();
 
-	var c = this.strokeStyle;
+	var c     = this.strokeStyle;
 	var style = this.lineStyle;
 
 	var steep = Math.abs(y2 - y1) > Math.abs(x2 - x1);
@@ -127,14 +245,34 @@ Canvas2D.Factory.extensions.DashedLineSupport = {
     }
 };
 
-Canvas2D.Factory.extensions.CrispLineSupport = {
-    makeCrisp: function(x, y, xx, yy) {
+/**
+ * Althought the HTML5 Canvas is a pixel-oriented environment, it still
+ * uses anti-aliassing to smooth its drawings. I some cases this
+ * default behaviour is not optimal (think horizontal/vertical
+ * hairlines). This namspace adds support for crisp lines.
+ */
+Canvas2D.Factory.extensions.all.CrispLineSupport = {
+    __extend__: function __extend__(ctx) {
+	[ "strokeRect", "moveTo", "lineTo", "rect" ].each(function(f) {
+	    var $super = ctx[f];
+	    ctx[f] = function(x,y,w,h) {
+		if(!this.useCrispLines) { return $super.apply(this,arguments); }
+		var crisp = 
+		    Canvas2D.Factory.extensions.all.CrispLineSupport.makeCrisp
+		      (x,y,w,h,this.lineWidth);
+		return $super.apply(this, [crisp.x, crisp.y, crisp.w, crisp.h]);
+	    }
+	});
+	return ctx;
+    },
+
+    makeCrisp : function makeCrisp(x, y, xx, yy, lineWidth) {
 	var x1 = x;  var y1 = y;
 	var x2 = xx; var y2 = yy;
 	var w  = xx; var h  = yy;
 
 	// if the lineWidth is odd
-	if( this.lineWidth % 2 ) {
+	if( lineWidth % 2 ) {
 	    x1 = Math.floor(x) + 0.5;
 	    y1 = Math.floor(y) + 0.5;
 	    if(typeof x2 != "undefined") {
@@ -157,35 +295,15 @@ Canvas2D.Factory.extensions.CrispLineSupport = {
 	}
 
 	return {x:x1, y:y1, x1:x1, y1:y1, w:w, h:h, x2:x2, y2:y2};
-    },
-
-    lineTo: function($super, x,y) {
-	if( !this.useCrispLines ) { return $super(x,y); }
-	var adjusted = this.makeCrisp(x,y);
-	$super(adjusted.x, adjusted.y);
-    },
-
-    moveTo: function($super, x,y) {
-	if( !this.useCrispLines ) { return $super(x,y); }
-	var adjusted = this.makeCrisp(x,y);
-	$super(adjusted.x, adjusted.y);
-    },
-
-    strokeRect: function($super, x, y, w, h) {
-	if( !this.useCrispLines ) { return $super(x,y,w,h); }
-	var adjusted = this.makeCrisp(x,y,w,h);
-	$super(adjusted.x, adjusted.y, adjusted.w, adjusted.h);
-    },
-
-    rect: function($super, x, y, w, h) {
-	if( !this.useCrispLines ) { return $super(x,y,w,h); }
-	var adjusted = this.makeCrisp(x,y,w,h);
-	$super(adjusted.x, adjusted.y, adjusted.w, adjusted.h);
     }
 };
 
-Canvas2D.Factory.extensions.TextDecorationSupport = {
-    decorateText : function(text, x, y, maxWidth) {
+/**
+ * The HTML5 Canvas provides no support for decorating text. So, this
+ * namespace adds simple support for it.
+ */
+Canvas2D.Factory.extensions.all.TextDecorationSupport = {
+    decorateText : function decorateText(text, x, y, maxWidth) {
 	if( !this.textDecoration ) { return; }
 
 	this.save();
@@ -209,34 +327,38 @@ Canvas2D.Factory.extensions.TextDecorationSupport = {
 	this.restore();
     },
 
-    underlineText : function(text, x, y, length) {
+    underlineText : function underlineText(text, x, y, length) {
         this.moveTo(x, y + 3);
         this.lineTo(x + length, y + 3);
     },
 
-    overlineText : function(text, x, y, length) {
+    overlineText : function overlineText(text, x, y, length) {
         this.moveTo(x, y - getFontSize(this.font) );
         this.lineTo(x + length, y - getFontSize(this.font) );
     },
 
-    linethroughText : function(text, x, y, length) {
+    linethroughText : function linethroughText(text, x, y, length) {
         this.moveTo(x, y - (getFontSize(this.font) / 2) + 2);
         this.lineTo(x + length, y - (getFontSize(this.font) / 2) + 2);
     }
 };
 
-Canvas2D.Factory.extensions.MouseEvents = {
-    setupMouseEventHandlers: function() {
-	Event.observe(this.htmlcanvas, 'mousedown', 
+/**
+ * We also want to add interaction with the Canvas. This namespace adds
+ * basic mouse tracking and exposing of events to subscribers
+ */
+Canvas2D.Factory.extensions.all.MouseEvents = {
+    setupMouseEventHandlers: function setupMouseEventHandlers() {
+	Event.observe(this.canvas, 'mousedown', 
 		      this.handleMouseDown.bindAsEventListener(this));
-	Event.observe(this.htmlcanvas, 'mouseup', 
+	Event.observe(this.canvas, 'mouseup', 
 		      this.handleMouseUp.bindAsEventListener(this));
 	Event.observe(document, 'mousemove', 
 		      this.handleMouseMove.bindAsEventListener(this));
     },
 
-    getLeft: function() {
-	var elem = this.htmlcanvas;
+    getLeft: function getLeft() {
+	var elem = this.canvas;
 	var left = 0;
 	while( elem != null ) {
 	    left += elem.offsetLeft;
@@ -245,8 +367,8 @@ Canvas2D.Factory.extensions.MouseEvents = {
 	return left;
     },
 
-    getTop: function() {
-	var elem = this.htmlcanvas;
+    getTop: function getTop() {
+	var elem = this.canvas;
 	var top = 0;
 	while( elem != null ) {
 	    top += elem.offsetTop;
@@ -255,7 +377,7 @@ Canvas2D.Factory.extensions.MouseEvents = {
 	return top;
     },
 
-    getXY: function(event) {
+    getXY: function getXY(event) {
 	if( event == null ) { event = window.event; }
 	if( event == null ) { return null;          }
 	if( event.pageX || event.pageY ) {
@@ -265,32 +387,32 @@ Canvas2D.Factory.extensions.MouseEvents = {
 	return null;
     },
 
-    handleMouseDown: function(event) {
+    handleMouseDown: function handleMouseDown(event) {
 	this.mousepressed = true;
 	var pos = this.getXY(event);
 	this.fireEvent( "mousedown", pos );
 	this.mousePos = pos;
     },
 
-    handleMouseUp: function(event) {
+    handleMouseUp: function handleMouseUp(event) {
 	this.mousepressed = false;
 	var pos = this.getXY(event);
 	this.fireEvent( "mouseup", pos );
 	this.mousePos = pos;
     },
 
-    handleMouseMove: function(event) {
+    handleMouseMove: function handleMouseMove(event) {
 	if( this.mousepressed ) { this.handleMouseDrag(event); }
 	var pos = this.getXY(event);
 	if( pos ) {
 	    this.mouseOver = 
-		( pos.x >= 0 && pos.x <= this.htmlcanvas.width )
+		( pos.x >= 0 && pos.x <= this.canvas.width )
 		&&  
-		( pos.y >= 0 && pos.y <= this.htmlcanvas.height );
+		( pos.y >= 0 && pos.y <= this.canvas.height );
 	}
     },
 
-    handleMouseDrag: function(event) {
+    handleMouseDrag: function handleMouseDrag(event) {
 	var pos = this.getXY(event);
 	this.fireEvent( "mousedrag", { x: pos.x, 
 				       y: pos.y, 
@@ -299,14 +421,45 @@ Canvas2D.Factory.extensions.MouseEvents = {
 	this.mousePos = pos;
     }
 };
-    
-Canvas2D.Factory.CanvasText = {
-    fillText : function(text, x, y, maxWidth) {
+
+/**
+ * The HTML5 Canvas specification specifies functions for rendering
+ * text. Currently only recent FF implementations provide an
+ * implementation for these functions.
+ *
+ * Different browsers have different custom support for rendering
+ * text. This namespace provides common functions for our
+ * implementation.
+ */
+Canvas2D.Factory.extensions.all.TextSupport = {
+    adjustToAlignment: function adjustToAlignment(x, text) {
+	switch(this.textAlign) {
+	  case "center": x -= this.measureText(text) / 2; break;
+	  case "right":  x -= this.measureText(text);     break;
+	}
+	return x;
+    },
+
+    getFontSize: function() {
+	return getFontSize( this.font || Canvas2D.Defaults.Sheet.font );
+    }
+};
+
+/**
+ * The HTML5 Canvas specification specifies functions for rendering
+ * text. Currently only recent FF implementations provide an
+ * implementation for these functions.
+ *
+ * For browsers that have no support at all, we render text using small
+ * lines. We use the canvastext library by Jim Studt.
+ */
+Canvas2D.Factory.extensions.CanvasText = {
+    fillText : function fillText(text, x, y, maxWidth) {
 	// CanvasText implementation is stroke-based, no filling, just stroking
 	this.strokeText(text, x, y, maxWidth);
     },
     
-    strokeText : function(text, x, y, maxWidth) {
+    strokeText : function strokeText(text, x, y, maxWidth) {
     	this.beginPath();
 	
     	this.save();
@@ -322,55 +475,74 @@ Canvas2D.Factory.CanvasText = {
 	this.closePath();
     },
     
-    measureText  : function(text) {
+    measureText  : function measureText(text) {
 	return CanvasTextFunctions.measure( this.font, getFontSize(this.font), 
 					    text);
     }
 };
 
-Canvas2D.Factory.HTML5CanvasText = {
-    fillText     : function(text, x, y, maxWidth) {
-        x = this.adjustToAlignment(x, text);
-	maxWidth = maxWidth  || this.measureText(text);
-        this.canvas.fillText(text, x, y, maxWidth);
-        this.decorateText(text, x, y, maxWidth);
-    },
+/**
+ * The HTML5 Canvas specification specifies functions for rendering
+ * text. Currently only recent FF implementations provide an
+ * implementation for these functions.
+ *
+ * Even with HTML5 compliant text rendering functions, we still want to
+ * add some missing functionalities like text-alignment and
+ * text-decoration.
+ */
+Canvas2D.Factory.extensions.HTML5CanvasText = {
+    __extend__: function __extend__(ctx) {
+	var $superMeasureText = ctx["measureText"];
+	ctx["measureText"] = function measureText(text) {
+	    return $superMeasureText.apply(this, arguments).width;
+	}
 
-    strokeText   : function(text, x, y, maxWidth) {
-        x = this.adjustToAlignment(x, text);
-	maxWidth = maxWidth  || this.measureText(text);
-        this.canvas.strokeText(text, x, y, maxWidth);
-        this.decorateText(text, x, y, maxWidth);
-    },
+	var $superFillText = ctx["fillText"];
+	ctx["fillText"] = function fillText(text, x, y, maxWidth) {
+            x = this.adjustToAlignment(x, text);
+	    maxWidth = maxWidth  || this.measureText(text);
+            $superFillText.apply(this, arguments);
+            this.decorateText(text, x, y, maxWidth);
+	}
 
-    measureText  : function(text) {
-        return this.canvas.measureText(text).width;
+	var $superStrokeText = ctx["strokeText"];
+	ctx["strokeText"] = function strokeText(text, x, y, maxWidth) {
+            x = this.adjustToAlignment(x, text);
+	    maxWidth = maxWidth  || this.measureText(text);
+            $superStrokeText.apply(this, text, x, y, maxWidth);
+            this.decorateText(text, x, y, maxWidth);
+	}
+
+	return ctx;
     }
 };
 
 /**
- * Adds text rendering functions to Canvas.
- * This implementation should be used for pre Gecko 1.9.1.
- * Later versions of Gecko should use HTML5CanvasText, 
- * which wraps the native HTML5 text rendering functions.
+ * The HTML5 Canvas specification specifies functions for rendering
+ * text. Currently only recent FF implementations provide an
+ * implementation for these functions.
+ *
+ * This implementation should be used for pre Gecko 1.9.1.  Later
+ * versions of Gecko should use HTML5CanvasText, which wraps the native
+ * HTML5 text rendering functions.
  */
-Canvas2D.Factory.GeckoCanvasText = {
-    fillText     : function(text, x, y, maxWidth) {
+Canvas2D.Factory.extensions.GeckoCanvasText = {
+    fillText     : function fillText(text, x, y, maxWidth) {
 	x = this.adjustToAlignment(x, text);
-        this.drawText(text, x, y, true);
+        this._drawText(text, x, y, true);
         this.decorateText(text, x, y, maxWidth);
     },
 
-    strokeText   : function(text, x, y, maxWidth) {
+    strokeText   : function strokeText(text, x, y, maxWidth) {
 	x = this.adjustToAlignment(x, text);
-        this.drawText(text, x, y, false);
+        this._drawText(text, x, y, false);
         this.decorateText(text, x, y, maxWidth);
     },
 
-    measureText  : function(text) {
+    measureText  : function measureText(text) {
         this.save();
-        this.canvas.mozTextStyle = this.font;
-        var width = this.canvas.mozMeasureText(text);
+        this.mozTextStyle = this.font;
+        var width = this.mozMeasureText(text);
         this.restore();
         return width;
     },
@@ -383,13 +555,13 @@ Canvas2D.Factory.GeckoCanvasText = {
      * @param {boolean} fill If true, then text is filled, 
      * 			otherwise it is stroked  
      */
-    drawText : function(text, x, y, fill) {
+    _drawText : function _drawText(text, x, y, fill) {
         this.save();
 
         this.beginPath();
         this.translate(x, y);
-        this.canvas.mozTextStyle = this.font;
-        this.canvas.mozPathText(text);
+        this.mozTextStyle = this.font;
+        this.mozPathText(text);
         if (fill) {
             this.fill();
         } else {
@@ -401,74 +573,74 @@ Canvas2D.Factory.GeckoCanvasText = {
     }
 };
 
+/**
+ * This is the main Factory method. It takes a native Canvas 2D Context
+ * and transforms it into a Canvas2D.
+ */
 Canvas2D.Factory.setup = function(element) {
-    var canvas = null;
-
-    // dynamically add passthrough functions to CanvasBase, before we mixin
-    passThroughFunctions = [ "scale", "translate", "transform", "setTransform",
-			     "createLinearGradient",  "createRadialGradient",
-			     "createPattern",
-			     "clearRect", "fillRect", "strokeRect", "rect",
-			     "arc", "rotate", "drawImage",
-			     "lineTo", "moveTo",
-			     "quadraticCurveTo",  "bezierCurveTo", "arcTo", 
-			     "fill", "stroke",
-			     "closePath", "beginPath",
-			     "clip", "isPointInPath",
-			     "createImageData", "getImageData", "putImageData"];
-    passThroughFunctions.each(function(fnc) {
-	    Canvas2D.CanvasBase.prototype[fnc] = function() {
-		this.transferProperties();
-		return this.canvas[fnc].apply(this.canvas, arguments);
-	    };
-    });
+    // prepare Canvas Prototype
+    if (!window.CanvasRenderingContext2D) {   // webkit
+	window.CanvasRenderingContext2D = 
+	    document.createElement("canvas").getContext("2d").__proto__;
+    } else {   // firefox
+	window.CanvasRenderingContext2D = CanvasRenderingContext2D.prototype
+    }
 
     unless( element && element.nodeType &&
 	    element.nodeType == Node.ELEMENT_NODE,
 	    function() {
-		alert( "CanvasBase:initialize: expected HTMLElement" );
+		throw( "CanvasBase:initialize: expected HTMLElement" );
 	    } );
-
-    var ctx = element.getContext("2d");
-
+    
+    try {
+	var ctx = element.getContext("2d");    
+    } catch(e) {
+	throw( "Canvas2D: element is no HTML5 Canvas." );
+    }
+    
+    // Browser Specific Configuration
     if( Prototype.Browser.WebKit ) { 
-	canvas = Class.create( Canvas2D.CanvasBase, 
-			       Canvas2D.Factory.CanvasText );
-    }
+	ctx = Object.extend( ctx, Canvas2D.Factory.extensions.CanvasText );
 
-    if( Prototype.Browser.Gecko )  {
-        canvas = Class.create( Canvas2D.CanvasBase,
-                               ( ctx.strokeText &&
-				 ctx.fillText &&
-				 ctx.measureText ) ?
-			       Canvas2D.Factory.HTML5CanvasText :
-                               Canvas2D.Factory.GeckoCanvasText );
-    }
-
-    if( Prototype.Browser.IE )     { 
-	canvas = Class.create( Canvas2D.CanvasBase, 
-			       Canvas2D.Factory.CanvasText );
+    } else if( Prototype.Browser.IE ) { 
+	ctx = Object.extend( ctx, Canvas2D.Factory.extensions.CanvasText );
 	Canvas2D.Book.prototype.addWaterMark = function() { };
-    }
 
-    if( Prototype.Browser.Opera ) {
-	canvas = Class.create( Canvas2D.CanvasBase, 
-			       Canvas2D.Factory.CanvasText );
-    }
+    } else if( Prototype.Browser.Opera ) { 
+	ctx = Object.extend( ctx, Canvas2D.Factory.extensions.CanvasText );
 
-    if( Prototype.Browser.MobileSafari ) {
-	canvas = Class.create( Canvas2D.CanvasBase, 
-			       Canvas2D.Factory.CanvasText );
-    }
+    } else if( Prototype.Browser.MobileSafari ) { 
+	ctx = Object.extend( ctx, Canvas2D.Factory.extensions.CanvasText );
 
-    if( canvas == null ) { throw( "Factory::setup: unknown browser." ); }
+    } else if( Prototype.Browser.Gecko )  {
+	if( ctx.strokeText && ctx.fillText && ctx.measureText ) {
+	    // post 1.9 gecko suports HTML5 interface (>= FF 3.5)
+	    ctx = Object.extend( ctx, 
+				 Canvas2D.Factory.extensions.HTML5CanvasText );
+	} else {
+	    // pre 1.9 gecko suports own interface (<= FF 3.1)
+	    ctx = Object.extend( ctx, 
+				 Canvas2D.Factory.extensions.GeckoCanvasText );
+	}
+
+    } else { throw( "Canvas2D: Unknown or Unsupported Browser." ); }
 
     // mixin some functions that clearly are missing ;-)
-    $H(Canvas2D.Factory.extensions).values().each(function(ext) {
-	canvas = Class.create( canvas, ext );
+    $H(Canvas2D.Factory.extensions.all).values().each(function(ext) {
+	if( ext.__extend__ ) {
+	    ctx = ext.__extend__(ctx);
+	} else {
+	    ctx = Object.extend( ctx, ext );
+	}
     } );
 
-    var canvasObj = new canvas(ctx);
-    canvasObj.setupMouseEventHandlers();
-    return canvasObj;
-};
+    // initialize own default settings
+    $H(Canvas2D.Defaults.Canvas).each(function(setting) {
+	ctx[setting.key] = setting.value;
+    });
+
+    // activate mouseEventHandlers
+    ctx.setupMouseEventHandlers();
+
+    return ctx;
+}

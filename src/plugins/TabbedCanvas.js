@@ -16,8 +16,8 @@ Canvas2D.Book.plugins.TabbedCanvas = Class.create( {
     },
 
     getAboutTab: function() {
-	var width  = this.book.canvas.htmlcanvas.width;
-	var height = this.book.canvas.htmlcanvas.height;
+	var width  = this.book.canvas.canvas.width;
+	var height = this.book.canvas.canvas.height;
 	var about  = document.createElement("div");
 	about.className = "Canvas2D-about";
 	about.style.height = height + "px";
@@ -45,8 +45,8 @@ Canvas2D.Book.plugins.TabbedCanvas = Class.create( {
     },
 
     getConsoleTab: function() {
-	var width  = this.book.canvas.htmlcanvas.width;
-	var height = this.book.canvas.htmlcanvas.height;
+	var width  = this.book.canvas.canvas.width;
+	var height = this.book.canvas.canvas.height;
 	this.book.console = document.createElement("textarea");
 	this.book.console.className = "Canvas2D-console";
 	this.book.console.style.height = height + "px";
@@ -55,8 +55,8 @@ Canvas2D.Book.plugins.TabbedCanvas = Class.create( {
     },
 
     getSourceTab: function() {
-	var width    = this.book.canvas.htmlcanvas.width;
-	var height   = this.book.canvas.htmlcanvas.height;
+	var width    = this.book.canvas.canvas.width;
+	var height   = this.book.canvas.canvas.height;
 	var oldValue = this.book.source ? this.book.source.value : "";
 	this.book.source = document.createElement("textarea");
 	this.book.source.value = oldValue;
@@ -67,7 +67,7 @@ Canvas2D.Book.plugins.TabbedCanvas = Class.create( {
     },
 
     applyTabber: function() {
-	var source = this.book.canvas.htmlcanvas;
+	var source = this.book.canvas.canvas;
 
 	this.tabber = document.createElement("div");
 	this.tabber.className    = "tabber";

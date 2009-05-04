@@ -8,9 +8,14 @@ Canvas2D.Book = Class.create( {
 		} );
 
 	this.canvas = Canvas2D.Factory.setup(element);
-	this.canvas.on( "mousedown", this.passEvent.bind(this, "mousedown") );
-	this.canvas.on( "mouseup",   this.passEvent.bind(this, "mouseup"  ) );
-	this.canvas.on( "mousedrag", this.passEvent.bind(this, "mousedrag") );
+	this.canvas.setBook(this);
+
+	this.sheets = [];
+	this.currentSheet = 0;      // index of the current show sheet
+
+	this.canvas.on( "mousedown", this.fireEvent.bind(this, "mousedown") );
+	this.canvas.on( "mouseup",   this.fireEvent.bind(this, "mouseup"  ) );
+	this.canvas.on( "mousedrag", this.fireEvent.bind(this, "mousedrag") );
 	
 	this.currentKeysDown = [];
 	Event.observe(document, 'keydown', 
@@ -18,8 +23,6 @@ Canvas2D.Book = Class.create( {
 	Event.observe(document, 'keyup', 
 		      this.handleKeyUpEvent.bindAsEventListener(this));
 
-	this.sheets = [];
-	this.currentSheet = 0;      // index of the current show sheet
 
 	// look for a console and sources for this book
 	this.console = document.getElementById( element.id + "Console" );
@@ -29,6 +32,15 @@ Canvas2D.Book = Class.create( {
 
 	this.setupExtensions();
 	this.setupPlugins();
+    },
+
+    addSheet : function( sheet ) {
+	unless( sheet instanceof Canvas2D.Sheet, function() {
+	    sheet = new Canvas2D.Sheet();
+	} );
+	sheet.setBook(this);
+	this.sheets.push(sheet);
+	return this.canvas;
     },
 
     setupExtensions: function() {
@@ -51,8 +63,6 @@ Canvas2D.Book = Class.create( {
 	}.bind(this) );
     },
 
-    passEvent: function( event, data ) { this.fireEvent( event, data ); },
-
     handleKeyDownEvent: function( event ) {
 	var key = (event || window.event).keyCode;
 	this.currentKeysDown.push(key);
@@ -70,15 +80,6 @@ Canvas2D.Book = Class.create( {
 	    this.console.value = "[" + (new Date).toLocaleString() + "] " 
 		+ msg + "\n" + this.console.value;
 	}
-    },
-
-    addSheet : function( sheet ) {
-	unless( sheet instanceof Canvas2D.Sheet, function() {
-	    sheet = new Canvas2D.Sheet();
-	} );
-	sheet.setBook(this);
-	this.sheets.push(sheet);
-	return sheet;
     },
 
     getCurrentSheet: function() {
@@ -115,7 +116,7 @@ Canvas2D.Book = Class.create( {
 	this.canvas.textAlign = "left";
 	this.canvas.useCrispLines = false;
 	this.canvas.fillText( "Canvas2D" + extensions + " / Christophe VG",
-				3, (this.canvas.htmlcanvas.width * -1) + 7 ); 
+				3, (this.canvas.canvas.width * -1) + 7 ); 
 	this.canvas.restore();
     },
     
@@ -181,7 +182,7 @@ Canvas2D.Book = Class.create( {
 
 // add-in some common functionality
 Canvas2D.Book = Class.create( Canvas2D.Book, 
-			      Canvas2D.Factory.extensions.EventHandling );
+			      Canvas2D.Factory.extensions.all.EventHandling );
 
 // add support for plugins
 Canvas2D.Book.plugins = {};

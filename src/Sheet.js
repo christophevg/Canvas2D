@@ -14,31 +14,6 @@ Canvas2D.Sheet = Class.create( {
 
 	this.dirty = false;
 
-	// dynamically add passthrough functions
-	passThroughFunctions = 
-	    [ "scale", "translate", "transform", "setTransform",
-	      "createLinearGradient",  "createRadialGradient", "createPattern",
-	      "save", "restore",
-	      "clearRect", "fillRect", "strokeRect", "fillStrokeRect",
-	      "arc", "rotate", "drawImage",
-	      "fillText", "strokeText", "measureText",
-	      "fillTextCenter", "strokeTextCenter",
-	      "fillTextRight", "strokeTextRight",
-	      "lineTo", "moveTo",
-	      "fill", "stroke",
-	      "closePath", "beginPath",
-	      "clip", "isPointInPath",
-	      "createImageData", "getImageData", "putImageData" ];
-	var me = this;
-	passThroughFunctions.each(function(fnc) {
-	    if( !me[fnc] ) {
-		me[fnc] = function() {
-		    this.transferProperties();
-		    return this.canvas[fnc].apply(this.canvas, arguments);
-		};
-	    }
-	});
-
 	this.setupProperties();
     },
 
@@ -88,13 +63,13 @@ Canvas2D.Sheet = Class.create( {
     },
 
     at: function(left, top) {
-	this.newTop = top;
+	this.newTop  = top;
 	this.newLeft = left;
-	return this;
+	return this.book.canvas;
     },
 
     put: function(shape) {
-	return this.add(shape);
+	this.add(shape);
     },
 
     add: function(shape) {
@@ -228,12 +203,12 @@ Canvas2D.Sheet = Class.create( {
 	    var dx = pos.x - this.currentPos.x;
 	    var dy = pos.y - this.currentPos.y;
 	    
-	    this.fillStyle = "rgba( 0, 0, 255, 0.1 )";
-	    this.fillRect( pos.x <= this.currentPos.x ? 
-			   pos.x : this.currentPos.x, 
-			   pos.y <= this.currentPos.y ?
-			   pos.y : this.currentPos.y,
-			   Math.abs(dx), Math.abs(dy) );
+	    this.canvas.fillStyle = "rgba( 0, 0, 255, 0.1 )";
+	    this.canvas.fillRect( pos.x <= this.currentPos.x ? 
+				  pos.x : this.currentPos.x, 
+				  pos.y <= this.currentPos.y ?
+				  pos.y : this.currentPos.y,
+				  Math.abs(dx), Math.abs(dy) );
 	}
     },
 
@@ -255,7 +230,7 @@ Canvas2D.Sheet = Class.create( {
 
     render: function() {
 	var delayed = [];
-	var sheet = this;
+	var sheet = this.book.canvas;
 	this.positions.each( function(shape) { 
 	    if( shape.delayRender() ) {
 		delayed.push(shape);
@@ -302,17 +277,12 @@ Canvas2D.Sheet = Class.create( {
 	    canvas[prop.key] = typeof currentValues[prop.key] != "undefined" ?
 		currentValues[prop.key] : prop.value;
 	} );
-    },
-
-    getFontSize: function() {
-	return getFontSize( this.font || Canvas2D.Defaults.Sheet.font );
     }
-
 } );
 
 // add-in some common functionality
 Canvas2D.Sheet = Class.create( Canvas2D.Sheet, 
-			       Canvas2D.Factory.extensions.EventHandling );
+			       Canvas2D.Factory.extensions.all.EventHandling );
 
 Canvas2D.Sheet.getNames = function() {
     return [ "sheet" ];

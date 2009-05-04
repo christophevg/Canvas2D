@@ -163,4 +163,4 @@ Canvas2D.Shape = Class.create( {
 
 // add-in some common functionality
 Canvas2D.Shape = Class.create( Canvas2D.Shape, 
-			       Canvas2D.Factory.extensions.EventHandling );
+			       Canvas2D.Factory.extensions.all.EventHandling );

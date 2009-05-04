@@ -10,11 +10,11 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
     },
 
     getFrom  : function(sheet) { 
-	return sheet ? sheet.positionsMap[this.from.getName()] : this.from; 
+	return sheet ? sheet.getPosition(this.from.getName()) : this.from; 
     },
 
     getTo    : function(sheet) { 
-	return sheet ? sheet.positionsMap[this.to.getName()]   : this.to;   
+	return sheet ? sheet.getPosition(this.to.getName())   : this.to;   
     },
 
     delayRender: function() { return true;  },

@@ -4,6 +4,10 @@ Canvas2D.Manager = Class.create( {
 	this.books   = $H();
     },
 
+    setupBook : function(id) {
+	return this.addBook(new Canvas2D.Book(id));
+    },
+
     addBook : function(book) {
 	unless( book instanceof Canvas2D.Book, function() { 
 	    throw( "Manager::addBook: book must be instance of Canvas2D.Book" );
@@ -12,18 +16,14 @@ Canvas2D.Manager = Class.create( {
 	return book;
     },
 
-    setupBook : function(id) {
-	return this.addBook(new Canvas2D.Book(id));
-    },
-
     getBook : function(id) {
 	return this.books.get(id);
     },
     
     startAll :function() {
 	if( Canvas2D.ImageManager.isReady() ) {
-	    this.plugins.each(function(plugin) { plugin.start();     } );
-	    this.books  .each(function(book)   { book.value.start(); } );
+	    this.plugins.each(function(plugin)      { plugin.start(); } );
+	    this.books.values().each(function(book) { book.start();   } );
 	} else {
 	    this.startAll.bind(this).delay(0.01);
 	}

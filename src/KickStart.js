@@ -51,7 +51,7 @@ Canvas2D.KickStart.Starter = Class.create( {
 // add-in some common functionality
 Canvas2D.KickStart.Starter =
     Class.create( Canvas2D.KickStart.Starter,
-		  Canvas2D.Factory.extensions.EventHandling );
+		  Canvas2D.Factory.extensions.all.EventHandling );
 
 Canvas2D.KickStarter = new Canvas2D.KickStart.Starter();
 Event.observe(window, 'load', function() { Canvas2D.KickStarter.start(); } );
