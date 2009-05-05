@@ -1,11 +1,11 @@
-if( !decomposeVersion ) {
+if( typeof decomposeVersion != "function" ) {
     function decomposeVersion( version ) {
 	var result = version.match(/([0-9]+)\.([0-9]+)(-([0-9]+))?/);
 	return { major: result[0], minor: result[1], build: result[2] || 0 };
     }
 }
 
-if( !iRequire ) {
+if( typeof iRequire != "function" ) {
     function iRequire( lib, low, high ) {
 	var version = decomposeVersion( lib.version );
 	low = decomposeVersion( low );
