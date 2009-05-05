@@ -32,7 +32,8 @@ Canvas2D.Book.plugins.TabbedCanvas = Class.create( {
 	});
 
 	about.innerHTML = '<span class="Canvas2D-about-text">' +
-	    '<b>Canvas2D</b><br>Copyright &copy 2009, ' +
+	    '<b>Canvas2D ' + Canvas2D.version  + 
+	    '</b><br>Copyright &copy 2009, ' +
 	    '<a href="http://christophe.vg" target="_blank">Christophe VG</a>'+ 
 	    ' & <a href="http://thesoftwarefactory.be" ' +
 	    'target="_blank">The Software Factory</a><br>' + 
