@@ -578,12 +578,15 @@ Canvas2D.Factory.extensions.GeckoCanvasText = {
  * and transforms it into a Canvas2D.
  */
 Canvas2D.Factory.setup = function(element) {
-    // prepare Canvas Prototype
-    if (!window.CanvasRenderingContext2D) {   // webkit
-	window.CanvasRenderingContext2D = 
-	    document.createElement("canvas").getContext("2d").__proto__;
-    } else {   // firefox
-	window.CanvasRenderingContext2D = CanvasRenderingContext2D.prototype
+    if( !Canvas2D.initialized ) {
+	Canvas2D.initialized = true;
+	// prepare Canvas Prototype
+	if (!window.CanvasRenderingContext2D) {   // webkit
+	    window.CanvasRenderingContext2D =
+		document.createElement("canvas").getContext("2d").__proto__;
+	} else {   // firefox
+	    window.CanvasRenderingContext2D = CanvasRenderingContext2D.prototype
+	}
     }
 
     unless( element && element.nodeType &&
