@@ -108,7 +108,7 @@ lib/canvastext.js:
 lib/ADL/build/ADL.shared.js:
 	@echo "*** importing $@"
 	@(cd lib; ${GIT-CLONE} ${ADL-URL})
-	@(cd lib/ADL; make)
+	@(cd lib/ADL; ${MAKE})
 
 lib/tabber/tabber.js: lib/tabber
 lib/tabber/tabber.css: lib/tabber
