@@ -5,9 +5,9 @@ Canvas2D.ADLVisitor = Class.create( {
 	    // just move on to the children
 	    construct.childrenAccept(this, parent);
 	    return parent;
-	} else if( Canvas2D.ADLVisitor.knownConstructs[constructType] ) {
-	    var elem = Canvas2D.ADLVisitor.knownConstructs[constructType]
-	                     .from(construct, parent);
+	} else if( Canvas2D.shapes.get(constructType) ) {
+	    var elem = Canvas2D.shapes.get(constructType)
+	                              .from(construct, parent);
 	    construct.childrenAccept(this, elem);
 	    return construct;
 	} else {
@@ -18,11 +18,3 @@ Canvas2D.ADLVisitor = Class.create( {
 	}
     }
 } );
-
-Canvas2D.ADLVisitor.knownConstructs = {};
-
-Canvas2D.ADLVisitor.registerConstruct = function(construct) {
-    construct.getNames().each(function(name) {
-	Canvas2D.ADLVisitor.knownConstructs[name] = construct;
-    } );
-};

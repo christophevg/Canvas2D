@@ -1,14 +1,4 @@
 Canvas2D.Text = Class.create( Canvas2D.Rectangle, {
-    getClass : function() { return Canvas2D.Text; },
-    getType  : function() { return "text"; },
-    getAllProperties: function($super) {
-	return $super().concat( [ "text", "color", "font", "textAlign",
-	                          "textDecoration" ] );
-    },
-    getClassHierarchy : function($super) {
-	return $super().concat( Canvas2D.Text );
-    },
-
     draw: function(sheet, left, top) {
 	sheet.useCrispLines  = this.getUseCrispLines();
 	sheet.strokeStyle    = this.getColor();
@@ -29,10 +19,6 @@ Canvas2D.Text = Class.create( Canvas2D.Rectangle, {
 	return construct;
     }
 } );
-
-Canvas2D.Text.getNames = function() {
-    return [ "text" ];
-}
 
 Canvas2D.Text.from = function( construct, sheet ) {
     var props = { name: construct.name, text: construct.value.value };
@@ -57,4 +43,11 @@ Canvas2D.Text.from = function( construct, sheet ) {
     return shape;
 };
 
-Canvas2D.ADLVisitor.registerConstruct(Canvas2D.Text);
+Canvas2D.Text.MANIFEST = {
+    name         : "text",
+    properties   : [ "text", "color", "font", "textAlign","textDecoration" ],
+    propertyPath : [ Canvas2D.Rectangle ],
+    libraries    : [ "Canvas2D" ]
+};
+
+Canvas2D.registerShape( Canvas2D.Text );

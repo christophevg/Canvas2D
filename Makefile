@@ -35,9 +35,10 @@ SRCS=src/DepCheck.js \
      src/Manager.js \
      src/ADLVisitor.js \
      src/Book.js \
+     src/Shape.js \
      src/Sheet.js \
      src/Position.js \
-     src/Shape.js src/Rectangle.js src/Connector.js \
+     src/Rectangle.js src/Connector.js \
      src/Line.js \
      src/LinePath.js \
      src/Text.js \

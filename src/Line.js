@@ -1,14 +1,4 @@
 Canvas2D.Line = Class.create( Canvas2D.Shape, {
-    getClass : function() { return Canvas2D.Line; },
-    getType  : function() { return "line"; },
-    getAllProperties: function($super) {
-	return $super().concat( [ "color", "dx", "dy", "lineWidth",
-	                          "lineStyle" ] );
-    },
-    getClassHierarchy : function($super) {
-	return $super().concat( Canvas2D.Line );
-    },
-
     getWidth : function() { return this.getDx() },
     getHeight: function() { return this.getDy() },
 
@@ -67,10 +57,6 @@ Canvas2D.Line = Class.create( Canvas2D.Shape, {
     }
 } );
 
-Canvas2D.Line.getNames = function() {
-    return [ "line" ];
-}
-
 Canvas2D.Line.from = function( construct, sheet ) {
     var props = { name: construct.name };
     construct.modifiers.each(function(pair) {
@@ -101,4 +87,10 @@ Canvas2D.Line.from = function( construct, sheet ) {
     return shape;
 };
 
-Canvas2D.ADLVisitor.registerConstruct(Canvas2D.Line);
+Canvas2D.Line.MANIFEST = {
+    name     : "line",
+    properties : [ "color", "dx", "dy", "lineWidth", "lineStyle" ],
+    libraries: [ "Canvas2D" ]
+};
+
+Canvas2D.registerShape( Canvas2D.Line );

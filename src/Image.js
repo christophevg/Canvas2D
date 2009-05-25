@@ -1,13 +1,4 @@
 Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
-    getClass : function() { return Canvas2D.Image; },
-    getType  : function() { return "image"; },
-    getAllProperties: function($super) {
-	return $super().concat( [ "src" ] );
-    },
-    getClassHierarchy : function($super) {
-	return $super().concat( Canvas2D.Image );
-    },
-
     getSource : function() { return this.src;   },
     getImage  : function() { return this.image; },
 
@@ -38,10 +29,6 @@ Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
 
 } );
 
-Canvas2D.Image.getNames = function() {
-    return [ "image", "pic", "picture" ];
-}
-
 Canvas2D.Image.from = function(construct, canvas) {
     var props = { name: construct.name };
     construct.modifiers.each(function(pair) {
@@ -64,4 +51,12 @@ Canvas2D.Image.from = function(construct, canvas) {
     return image;
 };
 
-Canvas2D.ADLVisitor.registerConstruct(Canvas2D.Image);
+Canvas2D.Image.MANIFEST = {
+    name         : "image",
+    aliasses     : [ "pic", "picture" ],
+    properties   : [ "src" ],
+    propertyPath : [ Canvas2D.Rectangle ],
+    libraries    : [ "Canvas2D" ]
+};
+
+Canvas2D.registerShape( Canvas2D.Image );

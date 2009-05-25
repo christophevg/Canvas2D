@@ -1,18 +1,9 @@
 Canvas2D.ShapeCounter = 0;
 
 Canvas2D.Shape = Class.create( {
-    getClass : function() { return Canvas2D.Shape; },
-    getType  : function() { return "shape";        },
-    getAllProperties : function() {
-	return [ "name", "label", "labelPos", "labelColor", "labelAlign",
-		 "labelFont", "labelUseCrispLines", "useCrispLines" ];
-    },
+    getClass : function getClass() { return this.__CLASS__; },
 
-    getClassHierarchy : function() {
-	return [ Canvas2D.Shape ];
-    },
-
-    initialize: function( props ) {
+    initialize: function initialize( props ) {
 	props = props || {};
 
 	// preprocess is used to allow Shapes to preprocess the
@@ -21,7 +12,7 @@ Canvas2D.Shape = Class.create( {
 	this.setProperties(props);
 
 	// setup getters
-	this.getAllProperties().each(function(prop) {
+	this.getPropertyList().each(function propertyListIterator(prop) {
 	    var propName = prop.substr(0,1).toUpperCase() + prop.substr(1);
 	    var getterName = "get"+propName;
 	    if( typeof this[getterName] == "undefined" ) {
@@ -32,8 +23,8 @@ Canvas2D.Shape = Class.create( {
 		    {
 			retVal = this[prop];
 		    } else {
-			var classes = this.getClassHierarchy();
-			classes.reverse().each(function(clazz){
+			this.getClassHierarchy().reverse()
+			.each( function classHierarchyIterator(clazz) {
 			    if( retVal == null &&
 				typeof clazz.Defaults[prop] != "undefined" )
 			    {
@@ -45,14 +36,15 @@ Canvas2D.Shape = Class.create( {
 		};
 	    }
 	}.bind(this));
-	// setup is used to allow Shapes to do initialization stuff,
-	// without the need to override this construtor and make sure
-	// it is called correctly
-	this.setup();
+
+	// postInitialize is used to allow Shapes to do initialization
+	// stuff, without the need to override this construtor and
+	// make sure it is called correctly
+	this.postInitialize();
     },
     
     setProperties : function(props) {
-	this.getAllProperties().each(function(prop) {
+	this.getPropertyList().each(function propertyListIterator(prop) {
 	    this[prop] = props[prop] != null ? props[prop] : null;
 	}.bind(this) );
 	// support for default
@@ -62,7 +54,7 @@ Canvas2D.Shape = Class.create( {
     getProperties: function() {
 	var props = {};
 	var me = this;
-	this.allProperties().each(function(prop) {
+	this.getPropertyList().each(function propertyListIterator(prop) {
 	    props[prop] = me[prop];
 	} );
 	props.type = this.getType();
@@ -97,14 +89,14 @@ Canvas2D.Shape = Class.create( {
 	} );
 	string += prefix + construct.type + " " + construct.name;
 	construct.supers.each( function(zuper) { string += " : " + zuper; } );
-	$H(construct.modifiers).each( function( modifier ) {
+	$H(construct.modifiers).each( function modifierIterator( modifier ) {
 	    string += " +" + modifier.key;
 	    if( modifier.value ) { string += "=" + modifier.value; }
 	} );
 	if( construct.children.length > 0 ) {
 	    string += " {\n";
 	    var me = this;
-	    construct.children.each(function(child) {
+	    construct.children.each(function childIterator(child) {
 		string += me.constructToString(child, prefix + "  " ) + "\n";
 	    } );
 	    string += prefix + "}";
@@ -149,18 +141,85 @@ Canvas2D.Shape = Class.create( {
 	sheet.restore();
     },
 
+    // these methods are required and are created when a shape is
+    // registered correctly.
+    getType            : function() { 
+	throw( "Missing getType. Did you register the shape?" ); 
+    },
+    getClasSHierarchy  : function() { 
+	throw( "Missing getClassHierarchy. Did you register the shape?" ); 
+    },
+
     // the remaining methods are not applicable for abstract shapes
-    preprocess  : function(props)                    { return props; },
-    setup       : function()                         { },
-    myProperties: function()                         { return [];    },
-    getNames    : function()                         { return [];    },
-    draw        : function(sheet, left, top)         { },
-    hit         : function(x, y)                     { return false; },
-    hitArea     : function(left, top, width, height) { return false; },
-    getCenter   : function()                         { return null;  },
-    getPort     : function(side)                     { }
+    preprocess     : function preprocess(props)      { return props; },
+    postInitialize : function postInitialize()       { },
+    draw           : function draw(sheet, left, top) { },
+    hit            : function hit(x, y)              { return false; },
+    hitArea        : function hitArea(l, t, w, h)    { return false; },
+    getCenter      : function getCenter()            { return null;  },
+    getPort        : function getPort(side)          { return null;  }
 } );
 
 // add-in some common functionality
 Canvas2D.Shape = Class.create( Canvas2D.Shape, 
 			       Canvas2D.Factory.extensions.all.EventHandling );
+
+Canvas2D.Shape.MANIFEST = {
+    name : "shape",
+    properties: [ "name", "label", "labelPos", "labelColor", "labelAlign",
+		  "labelFont", "labelUseCrispLines", "useCrispLines" ]
+};
+
+Canvas2D.Shape.manifestHandling = $H( {
+    getManifest: function getManifest() {
+	return this.MANIFEST || this.__CLASS__.MANIFEST;
+    },
+
+    getType: function getType() {
+	return this.getManifest().name;
+    },
+
+    getTypes: function getTypes() {
+	return  [ this.getType(), this.getAliasses() ].flatten();
+    },
+
+    getPropertyPath: function getPropertyPath() {
+	return this.getManifest().propertyPath || [];
+    },
+
+    getClassHierarchy: function getClassHierarchy() {
+	var classes = [ Canvas2D.Shape ].concat( this.getPropertyPath() );
+	classes.push( this.getClass() );
+	return classes;
+    },
+    
+    getLocalProperties: function getLocalProperties() {
+	return this.getManifest().properties || [];
+    },
+
+    getPropertyList: function getPropertyList() {
+	if( !this.allPropertiesCache ) { 
+	    this.allPropertiesCache = [];
+	    this.getClassHierarchy().each(function propertiesCacheFiller(shape){
+		this.allPropertiesCache = 
+		    this.allPropertiesCache.concat(shape.getLocalProperties());
+	    }.bind(this));
+	}
+	return this.allPropertiesCache
+    },
+
+    getAliasses: function getAliasses() {
+	return this.getManifest().aliasses || [];
+    },
+
+    getLibraries: function getLibraries() {
+	return this.getManifest().libraries || [];
+    }
+} );
+
+// add manifestHandling functions to each Shape instance and on the
+// class itself
+Canvas2D.Shape.manifestHandling.each( function(ext) {
+    Canvas2D.Shape.prototype[ext.key] = ext.value;
+    Canvas2D.Shape[ext.key] = ext.value;
+} );

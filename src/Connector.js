@@ -1,14 +1,4 @@
 Canvas2D.Connector = Class.create( Canvas2D.Shape, {
-    getClass : function() { return Canvas2D.Connector; },
-    getType  : function() { return "connector"; },
-    getAllProperties: function($super) {
-	return $super().concat( [ "routing", "lineColor", "lineStyle",
-	                          "lineWidth", "from", "to", "begin", "end" ] );
-    },
-    getClassHierarchy : function($super) {
-	return $super().concat( Canvas2D.Connector );
-    },
-
     getFrom  : function(sheet) { 
 	return sheet ? sheet.getPosition(this.from.getName()) : this.from; 
     },
@@ -17,7 +7,7 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
 	return sheet ? sheet.getPosition(this.to.getName())   : this.to;   
     },
 
-    delayRender: function() { return true;  },
+    delayRender: function() { return true; },
     
     draw: function(sheet, left, top) {
 	sheet.useCrispLines = this.getUseCrispLines();
@@ -252,10 +242,6 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
 
 } );
 
-Canvas2D.Connector.getNames = function() {
-    return [ "connector", "link" ];
-};
-
 Canvas2D.Connector.from = function(construct, sheet) {
     var from, to, routing;
     var fromModifier = construct.modifiers.get( "from"  );
@@ -292,4 +278,12 @@ Canvas2D.Connector.from = function(construct, sheet) {
     return conn;
 };
 
-Canvas2D.ADLVisitor.registerConstruct(Canvas2D.Connector);
+Canvas2D.Connector.MANIFEST = {
+    name         : "connector",
+    aliasses     : [ "link" ],
+    properties   : [ "routing", "lineColor", "lineStyle", "lineWidth", 
+		   "from", "to", "begin", "end" ],
+    libraries    : [ "Canvas2D" ]
+};
+
+Canvas2D.registerShape( Canvas2D.Connector );

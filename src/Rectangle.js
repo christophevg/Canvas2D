@@ -1,14 +1,4 @@
 Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
-    getClass : function() { return Canvas2D.Rectangle; },
-    getType  : function() { return "rectangle"; },
-    getAllProperties: function($super) {
-	return $super().concat( [ "lineColor", "fillColor",
-				  "width", "height", "lineWidth" ] );
-    },
-    getClassHierarchy : function($super) {
-	return $super().concat( Canvas2D.Rectangle );
-    },
-
     draw: function(sheet, left, top) {
 	sheet.useCrispLines = this.getUseCrispLines();
 	sheet.lineWidth     = this.getLineWidth();
@@ -60,10 +50,6 @@ Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
     }
 } );
 
-Canvas2D.Rectangle.getNames = function() {
-    return [ "rectangle", "box" ];
-}
-
 Canvas2D.Rectangle.from = function( construct, sheet ) {
     var props = { name: construct.name };
     construct.modifiers.each(function(pair) {
@@ -101,4 +87,11 @@ Canvas2D.Rectangle.from = function( construct, sheet ) {
     return shape;
 };
 
-Canvas2D.ADLVisitor.registerConstruct(Canvas2D.Rectangle);
+Canvas2D.Rectangle.MANIFEST = {
+    name         : "rectangle",
+    aliasses     : [ "box" ],
+    properties   : [ "lineColor", "fillColor", "width", "height", "lineWidth" ],
+    libraries    : [ "Canvas2D" ]
+};
+
+Canvas2D.registerShape( Canvas2D.Rectangle );

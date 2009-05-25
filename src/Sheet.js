@@ -284,10 +284,6 @@ Canvas2D.Sheet = Class.create( {
 Canvas2D.Sheet = Class.create( Canvas2D.Sheet, 
 			       Canvas2D.Factory.extensions.all.EventHandling );
 
-Canvas2D.Sheet.getNames = function() {
-    return [ "sheet" ];
-}
-
 Canvas2D.Sheet.from = function(construct, book) {
     var style = "static";
     var styleModifier = construct.modifiers.get( "style" );
@@ -307,4 +303,10 @@ Canvas2D.Sheet.from = function(construct, book) {
     return sheet;
 };
 
-Canvas2D.ADLVisitor.registerConstruct(Canvas2D.Sheet);
+Canvas2D.Sheet.MANIFEST = {
+    name      : "sheet",
+    properties : [],
+    libraries : [ "Canvas2D" ]
+};
+
+Canvas2D.registerShape( Canvas2D.Sheet );
