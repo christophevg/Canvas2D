@@ -44,6 +44,7 @@ SRCS=src/DepCheck.js \
      src/Text.js \
      src/Image.js \
      src/Alias.js \
+     src/Arrow.js \
      src/plugins/TabbedCanvas.js \
      src/KickStart.js \
      src/Defaults.js

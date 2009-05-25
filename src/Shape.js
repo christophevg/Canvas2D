@@ -141,6 +141,7 @@ Canvas2D.Shape = Class.create( {
 	sheet.restore();
     },
 
+
     // these methods are required and are created when a shape is
     // registered correctly.
     getType            : function() { 

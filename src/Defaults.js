@@ -86,3 +86,7 @@ Canvas2D.LinePath.Defaults = {
 Canvas2D.Image.Defaults = {
 
 };
+
+Canvas2D.Arrow.Defaults = {
+
+};
