@@ -45,8 +45,8 @@ Canvas2D.Book = Class.create( {
 
     setupExtensions: function() {
 	this.extensions = new Hash();
-	$H(Canvas2D.extensions).each(function(extension) {
-	    this.extensions[extension.name] = extension;
+	Canvas2D.extensions.each(function(extension) {
+	    this.extensions.set(extension.name, extension);
 	}.bind(this) );
     },
 

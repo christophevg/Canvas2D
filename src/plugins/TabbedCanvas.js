@@ -26,7 +26,8 @@ Canvas2D.Book.plugins.TabbedCanvas = Class.create( {
 	var libraries = "";
 	Canvas2D.extensions.each(function(library) {
 	    libraries += "\n<hr>\n";
-	    libraries += "<b>Library: " + library.name + "</b> " + 
+	    libraries += "<b>Library: " +
+		library.name + " " + library.version + "</b> " + 
 		"by " + library.author + "<br>" +
 		library.info;
 	});
