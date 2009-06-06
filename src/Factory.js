@@ -355,6 +355,12 @@ Canvas2D.Factory.extensions.all.MouseEvents = {
 		      this.handleMouseUp.bindAsEventListener(this));
 	Event.observe(document, 'mousemove', 
 		      this.handleMouseMove.bindAsEventListener(this));
+	Event.observe(this.canvas, 'touchstart',
+		      this.handleTouchStart.bindAsEventListener(this));
+	Event.observe(this.canvas, 'touchmove',
+		      this.handleTouchMove.bindAsEventListener(this));
+	Event.observe(this.canvas, 'touchend',
+		      this.handleTouchEnd.bindAsEventListener(this));
     },
 
     getLeft: function getLeft() {
@@ -419,7 +425,35 @@ Canvas2D.Factory.extensions.all.MouseEvents = {
 				       dx: pos.x - this.mousePos.x,
 				       dy: pos.y - this.mousePos.y } );
 	this.mousePos = pos;
-    }
+    },
+
+    handleTouchStart: function handleTouchStart(event) {
+	if( event.touches.length == 1 ) {
+	    var touch = event.touches[0];
+	    // iPhone doesn't do touchUp event ;-)
+	    if( this.mousepressed ) { this.handleMouseUp(touch); }
+	    this.handleMouseDown(touch);
+	    event.preventDefault();
+	}	
+    },
+
+    handleTouchMove: function handleTouchMove(event) {
+	if( event.touches.length == 1 ) {
+	    console.log("move");
+	    var touch = event.touches[0];
+	    this.handleMouseDrag(touch);
+	    event.preventDefault();
+	}	
+    },
+
+    handleTouchEnd: function handleTouchEnd(event) {
+	if( event.touches.length == 1 ) {
+	    console.log("end");
+	    var touch = event.touches[0];
+	    this.handleMouseUp(touch);
+	    event.preventDefault();
+	}	
+    },
 };
 
 /**
