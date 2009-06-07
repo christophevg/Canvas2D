@@ -355,12 +355,6 @@ Canvas2D.Factory.extensions.all.MouseEvents = {
 		      this.handleMouseUp.bindAsEventListener(this));
 	Event.observe(document, 'mousemove', 
 		      this.handleMouseMove.bindAsEventListener(this));
-	Event.observe(this.canvas, 'touchstart',
-		      this.handleTouchStart.bindAsEventListener(this));
-	Event.observe(this.canvas, 'touchmove',
-		      this.handleTouchMove.bindAsEventListener(this));
-	Event.observe(this.canvas, 'touchend',
-		      this.handleTouchEnd.bindAsEventListener(this));
     },
 
     getLeft: function getLeft() {
@@ -425,35 +419,40 @@ Canvas2D.Factory.extensions.all.MouseEvents = {
 				       dx: pos.x - this.mousePos.x,
 				       dy: pos.y - this.mousePos.y } );
 	this.mousePos = pos;
+    }
+};
+
+/**
+ * The iPhone has special events for touching and dragging.
+ */
+Canvas2D.Factory.extensions.TouchEvents = {
+    setupTouchEventHandlers: function setupTouchEventHandlers() {
+	Event.observe(this.canvas, 'touchstart',
+		      this.handleTouchStart.bindAsEventListener(this));
+	Event.observe(this.canvas, 'touchmove',
+		      this.handleTouchMove.bindAsEventListener(this));
+	Event.observe(this.canvas, 'touchend',
+		      this.handleTouchEnd.bindAsEventListener(this));
     },
 
     handleTouchStart: function handleTouchStart(event) {
 	if( event.touches.length == 1 ) {
-	    var touch = event.touches[0];
-	    // iPhone doesn't do touchUp event ;-)
-	    if( this.mousepressed ) { this.handleMouseUp(touch); }
-	    this.handleMouseDown(touch);
+	    this.handleMouseDown(event.touches[0]);
 	    event.preventDefault();
 	}	
     },
 
     handleTouchMove: function handleTouchMove(event) {
 	if( event.touches.length == 1 ) {
-	    console.log("move");
-	    var touch = event.touches[0];
-	    this.handleMouseDrag(touch);
+	    this.handleMouseDrag(event.touches[0]);
 	    event.preventDefault();
 	}	
     },
 
     handleTouchEnd: function handleTouchEnd(event) {
-	if( event.touches.length == 1 ) {
-	    console.log("end");
-	    var touch = event.touches[0];
-	    this.handleMouseUp(touch);
-	    event.preventDefault();
-	}	
-    },
+	this.handleMouseUp(event);
+	event.preventDefault();
+    }
 };
 
 /**
@@ -634,19 +633,21 @@ Canvas2D.Factory.setup = function(element) {
     } catch(e) {
 	throw( "Canvas2D: element is no HTML5 Canvas." );
     }
-    
-    // Browser Specific Configuration
-    if( Prototype.Browser.WebKit ) { 
-	ctx = Object.extend( ctx, Canvas2D.Factory.extensions.CanvasText );
 
+    // Browser Specific Configuration
+    if( Prototype.Browser.MobileSafari ) { 
+	ctx = Object.extend( ctx, Canvas2D.Factory.extensions.CanvasText );
+	ctx = Object.extend( ctx, Canvas2D.Factory.extensions.TouchEvents );
+	ctx.setupTouchEventHandlers();
+
+    } else if( Prototype.Browser.WebKit ) { 
+	ctx = Object.extend( ctx, Canvas2D.Factory.extensions.CanvasText );
+	
     } else if( Prototype.Browser.IE ) { 
 	ctx = Object.extend( ctx, Canvas2D.Factory.extensions.CanvasText );
 	Canvas2D.Book.prototype.addWaterMark = function() { };
 
     } else if( Prototype.Browser.Opera ) { 
-	ctx = Object.extend( ctx, Canvas2D.Factory.extensions.CanvasText );
-
-    } else if( Prototype.Browser.MobileSafari ) { 
 	ctx = Object.extend( ctx, Canvas2D.Factory.extensions.CanvasText );
 
     } else if( Prototype.Browser.Gecko )  {
