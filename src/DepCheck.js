@@ -1,7 +1,9 @@
 if( typeof decomposeVersion != "function" ) {
     function decomposeVersion( version ) {
 	var result = version.match(/([0-9]+)\.([0-9]+)(-([0-9]+))?/);
-	return { major: result[0], minor: result[1], build: result[2] || 0 };
+	return { major: parseInt(result[1]), 
+		 minor: parseInt(result[2]), 
+		 build: parseInt(result[4]) || 0 };
     }
 }
 
@@ -40,5 +42,6 @@ if( typeof iRequire != "function" ) {
 }
     
 if( ! iRequire( ADL, "0.1-4" ) ) {
-    alert( "Canvas2D requires at least ADL version 0.1-4." );
+    alert( "Canvas2D requires at least ADL version 0.1-4. " +
+	   "Current ADL version = " + ADL.version );
 }
