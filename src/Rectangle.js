@@ -44,7 +44,8 @@ Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
 		"\"" + this.getWidth() + "x" + this.getHeight() + "\"";
 	}
 	if( this.getLineColor() ) {
-	    construct.modifiers[lineColor] = "\"" + this.getLineColor() + "\"";
+	    construct.modifiers["lineColor"] = 
+		"\"" + this.getLineColor() + "\"";
 	}
 	return construct;
     }
