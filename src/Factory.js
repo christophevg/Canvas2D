@@ -682,3 +682,7 @@ Canvas2D.Factory.setup = function(element) {
 
     return ctx;
 }
+
+// mix-in event handling to Canvas2D
+Canvas2D = Object.extend( Canvas2D,
+			  Canvas2D.Factory.extensions.all.EventHandling );

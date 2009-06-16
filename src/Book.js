@@ -25,8 +25,9 @@ Canvas2D.Book = Class.create( {
 
 
 	// look for a console and sources for this book
-	this.console = document.getElementById( element.id + "Console" );
-	this.source  = document.getElementById( element.id + "Source"  );
+	this.console   = document.getElementById( element.id + "Console"   );
+	this.source    = document.getElementById( element.id + "Source"    );
+	this.generated = document.getElementById( element.id + "Generated" );
 
 	this.name = element.id;
 
@@ -121,10 +122,10 @@ Canvas2D.Book = Class.create( {
     },
     
     updateSource: function(source) {
-	if( this.source && this.getCurrentSheet() ) {
+	if( this.generated && this.getCurrentSheet() ) {
 	    var newSource = this.getCurrentSheet().toADL();
-	    if( newSource != this.source.value ) {
-		this.source.value = newSource;
+	    if( newSource != this.generated.value ) {
+		this.generated.value = newSource;
 		this.fireEvent( "sourceUpdated", newSource );
 	    }
 	}

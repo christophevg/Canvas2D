@@ -55,3 +55,6 @@ Canvas2D.KickStart.Starter =
 
 Canvas2D.KickStarter = new Canvas2D.KickStart.Starter();
 Event.observe(window, 'load', function() { Canvas2D.KickStarter.start(); } );
+
+Canvas2D.KickStarter.on( "ready",
+			  function() { Canvas2D.fireEvent( "ready" );} );

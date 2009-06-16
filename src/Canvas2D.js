@@ -44,5 +44,9 @@ var Canvas2D = {
 	    }
 	    Canvas2D.libraries.get(library).push(shape);
 	} );
+    },
+
+    getBook : function(id) {
+	return Canvas2D.KickStarter.manager.getBook(id);
     }
 };

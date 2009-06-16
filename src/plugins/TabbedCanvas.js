@@ -59,13 +59,13 @@ Canvas2D.Book.plugins.TabbedCanvas = Class.create( {
     getSourceTab: function() {
 	var width    = this.book.canvas.canvas.width;
 	var height   = this.book.canvas.canvas.height;
-	var oldValue = this.book.source ? this.book.source.value : "";
-	this.book.source = document.createElement("textarea");
-	this.book.source.value = oldValue;
-	this.book.source.className = "Canvas2D-source";
-	this.book.source.style.height = height + "px";
-	this.book.source.style.width  = ( parseInt(width) - 4 )  + "px";
-	return this.makeTab("Source", height, this.book.source );
+	var oldValue = this.book.generated ? this.book.generated.value : "";
+	this.book.generated = document.createElement("textarea");
+	this.book.generated.value = oldValue;
+	this.book.generated.className = "Canvas2D-source";
+	this.book.generated.style.height = height + "px";
+	this.book.generated.style.width  = ( parseInt(width) - 4 )  + "px";
+	return this.makeTab("Source", height, this.book.generated );
     },
 
     applyTabber: function() {

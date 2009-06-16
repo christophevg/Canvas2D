@@ -1,0 +1,102 @@
+<html>
+  <head>
+    <style>
+      .box {
+        border: 2px solid #000;
+        float:left;
+        margin:10px;
+        height: 385px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    </style>
+    <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
+<!--    <script src="../build/Canvas2D.standalone.min.js"></script> -->
+    <script src="../lib/excanvas.js"></script>
+    <script src="../lib/prototype-1.6.0.3.js"></script>
+    <script src="../lib/canvastext.js"></script>
+    <script src="../lib/tabber/tabber.js"></script>
+    <script src="../lib/ADL/build/ADL.shared.js"></script>
+
+    <script src="../src/DepCheck.js"></script>
+    <script src="../src/SanityChecks.js"></script>
+    <script src="../src/Common.js"></script>
+    <script src="../src/Canvas2D.js"></script>
+    <script src="../src/Factory.js"></script>
+    <script src="../src/ImageManager.js"></script>
+    <script src="../src/Manager.js"></script>
+    <script src="../src/ADLVisitor.js"></script>
+    <script src="../src/Book.js"></script>
+    <script src="../src/Shape.js"></script>
+    <script src="../src/Sheet.js"></script>
+    <script src="../src/Position.js"></script>
+    <script src="../src/Rectangle.js"></script>
+    <script src="../src/Connector.js"></script>
+    <script src="../src/Line.js"></script>
+    <script src="../src/LinePath.js"></script>
+    <script src="../src/Text.js"></script>
+    <script src="../src/Image.js"></script>
+    <script src="../src/Alias.js"></script>
+    <script src="../src/Arrow.js"></script>
+    <script src="../src/plugins/TabbedCanvas.js"></script>
+    <script src="../src/KickStart.js"></script>
+    <script src="../src/Defaults.js"></script>
+
+  </head>
+  <body>
+    <h1>Using Source and Console</h1>
+    <div class="box">
+      <h2>Your Source</h2>
+      <textarea id="myDiagramSource" cols="70" rows="18"
+>Sheet mySheet +style="dynamic" {
+  /* define some shapes */
+  [@ 75, 55] Rectangle rect1 +width=75 +height=75 +lineColor="green" +label="green" +labelPos="top";
+  [@ 50,175] Rectangle rect2 +width=50 +height=50 +lineColor="red" +label="red";
+  [@200,100] Rectangle rect3 +width=50 +height=50 +lineColor="blue" +label="blue";
+  [@200, 25] Rectangle rect4 +width=50 +height=50 +lineColor="yellow";
+  [@125,175] Rectangle rect5 +width=50 +height=50 +lineColor="red" +label="red" +labelColor="red" +labelPos="bottom";
+
+  /* connect them  */
+  Connector conn1 +from="rect1" +to="rect2" +routing="vertical";
+  Connector conn2 +from="rect1" +to="rect3" +routing="horizontal";
+  Connector conn3 +from="rect1" +to="rect4" +routing="horizontal";
+  Connector conn4 +from="rect1" +to="rect5" +routing="vertical";
+}</textarea>
+    </div>
+
+    <div id="generated" class="box">
+      <h2>Generated Source</h2>
+      <textarea id="myDiagramGenerated" cols="70" rows="18"></textarea>
+      <br>
+      <input type="button" value="drawIt" onclick="drawIt();"/>
+    </div>
+
+    <div class="box">
+      <h2>Console</h2>
+      <textarea id="myDiagramConsole" cols="70" rows="18"></textarea>
+      <br>
+      <input type="button" value="drawIt" onclick="drawIt();"/>
+    </div>
+
+    <div class="box">
+      <h2>The Canvas</h2>
+      <canvas id="myDiagram" class="Canvas2D"
+	      width="300" height="250"></canvas>
+    </div>
+
+    <script>
+      Canvas2D.on( "ready", function() {
+
+      Canvas2D.getBook("myDiagram").on( "sourceUpdated",
+      function() {
+        document.getElementById( "generated" ).style.backgroundColor =
+         document.getElementById( "myDiagramSource" ).value ==
+         document.getElementById( "myDiagramGenerated" ).value ?
+         "green" : "red";
+      } );
+
+      } );
+    </script>
+
+  </body>
+</html>
