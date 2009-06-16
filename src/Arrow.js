@@ -1,4 +1,4 @@
-Canvas2D.Arrow = Class.create( Canvas2D.Shape, {
+Canvas2D.Arrow = Class.create( Canvas2D.Rectangle, {
     draw: function(sheet, left, top) {
 	// rect
 	sheet.useCrispLines = this.getUseCrispLines();
@@ -63,18 +63,6 @@ Canvas2D.Arrow = Class.create( Canvas2D.Shape, {
 	case "w": case "west":
 	    return { top : this.getHeight() / 2, left: 0               }; break;
 	}
-    },
-
-    asConstruct: function($super) {
-	var construct = $super();
-	if( this.getWidth() && this.getHeight() ) {
-	    construct.modifiers.geo = 
-		"\"" + this.getWidth() + "x" + this.getHeight() + "\"";
-	}
-	if( this.getLineColor() ) {
-	    construct.modifiers[this.getLineColor()] = null;
-	}
-	return construct;
     }
 } );
 
