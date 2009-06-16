@@ -77,15 +77,14 @@ Canvas2D.LinePath = Class.create( Canvas2D.Shape, {
 	}
     },
 
+    getGeo: function() {
+	return this.getWidth() && this.getHeight() ?
+	    this.getWidth() + "x" + this.getHeight() : null;
+    },
+
     asConstruct: function($super) {
 	var construct = $super();
-	if( this.getWidth() && this.getHeight() ) {
-	    construct.modifiers.geo = 
-		"\"" + this.getWidth() + "x" + this.getHeight() + "\"";
-	}
-	if( this.getColor() ) {
-	    construct.modifiers[this.getColor()] = null;
-	}
+	construct.addModifiers( [ "geo", "color" ] );
 	return construct;
     }
 } );

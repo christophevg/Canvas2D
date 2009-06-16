@@ -219,24 +219,16 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
 
     asConstruct: function($super) {
 	var construct = $super();
+
 	if( this.getFrom() && this.getTo() ) {
-	    construct.modifiers[this.getFrom() + "-" + this.getTo()] = null;
+	    construct.modifiers[this.getFrom().getName() + "-" +
+				this.getTo().getName()] = null;
 	}
-	if( this.getLineColor() ) {
-	    construct.modifiers.lineColor = this.getLineColor();
-	}
-	if( this.getLineStyle() ) {
-	    construct.modifiers.lineStyle = this.getLineStyle();
-	}
-	if( this.getLineWidth() ) {
-	    construct.modifiers.lineWidth = this.getLineWidth();
-	}
-	if( this.getBegin() ) {
-	    construct.modifiers.begin = this.getBegin();
-	}
-	if( this.getEnd() ) {
-	    construct.modifiers.end = this.getEnd();
-	}
+
+	construct.addModifiers( [ "lineColor", "lineStyle",
+				  "lineWidth", "begin",
+				  "end", "routing" ] );
+
 	return construct;
     }
 
@@ -282,7 +274,7 @@ Canvas2D.Connector.MANIFEST = {
     name         : "connector",
     aliasses     : [ "link" ],
     properties   : [ "routing", "lineColor", "lineStyle", "lineWidth", 
-		   "from", "to", "begin", "end" ],
+		     "from", "to", "begin", "end" ],
     libraries    : [ "Canvas2D" ]
 };
 

@@ -48,19 +48,21 @@
     <div class="box">
       <h2>Your Source</h2>
       <textarea id="myDiagramSource" cols="70" rows="18"
->Sheet mySheet +style="dynamic" {
-  /* define some shapes */
-  [@ 75, 55] Rectangle rect1 +width=75 +height=75 +lineColor="green" +label="green" +labelPos="top";
-  [@ 50,175] Rectangle rect2 +width=50 +height=50 +lineColor="red" +label="red";
-  [@200,100] Rectangle rect3 +width=50 +height=50 +lineColor="blue" +label="blue";
-  [@200, 25] Rectangle rect4 +width=50 +height=50 +lineColor="yellow";
-  [@125,175] Rectangle rect5 +width=50 +height=50 +lineColor="red" +label="red" +labelColor="red" +labelPos="bottom";
-
-  /* connect them  */
-  Connector conn1 +from="rect1" +to="rect2" +routing="vertical";
-  Connector conn2 +from="rect1" +to="rect3" +routing="horizontal";
-  Connector conn3 +from="rect1" +to="rect4" +routing="horizontal";
-  Connector conn4 +from="rect1" +to="rect5" +routing="vertical";
+>Sheet mySheet +dynamic {
+  [@75,55]
+  rectangle rect1 +label="green" +labelPos="top" +geo="75x75" +lineColor="green";
+  [@50,175]
+  rectangle rect2 +label="red" +geo="50x50" +lineColor="red";
+  [@200,100]
+  rectangle rect3 +label="blue" +geo="50x50" +lineColor="blue";
+  [@200,25]
+  rectangle rect4 +geo="50x50" +lineColor="yellow";
+  [@125,175]
+  rectangle rect5 +label="red" +labelPos="bottom" +labelColor="red" +geo="50x50" +lineColor="red";
+  connector conn1 +rect1-rect2 +routing="vertical";
+  connector conn2 +rect1-rect3 +routing="horizontal";
+  connector conn3 +rect1-rect4 +routing="horizontal";
+  connector conn4 +rect1-rect5 +routing="vertical";
 }</textarea>
     </div>
 

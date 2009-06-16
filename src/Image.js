@@ -2,7 +2,7 @@ Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
     getSource : function() { return this.src;   },
     getImage  : function() { return this.image; },
 
-    setup: function() {
+    postInitialize: function() {
 	if( this.getSource() ) {
 	    this.image = 
 		Canvas2D.ImageManager.load( this.getSource(), 
@@ -21,12 +21,9 @@ Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
 
     asConstruct: function($super) {
 	var construct = $super();
-	if( this.getSource() ) {
-	    construct.modifiers.src = "\"" + this.getSource() + "\"";	    
-	}
+	construct.addModifiers( [ "source" ] );
 	return construct;
     }
-
 } );
 
 Canvas2D.Image.from = function(construct, canvas) {

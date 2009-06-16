@@ -16,24 +16,7 @@ Canvas2D.Shape = Class.create( {
 	    var propName = prop.substr(0,1).toUpperCase() + prop.substr(1);
 	    var getterName = "get"+propName;
 	    if( typeof this[getterName] == "undefined" ) {
-		this[getterName] = function() {
-		    var retVal = null;
-		    if( typeof this[prop] != "undefined"  &&
-			this[prop] != null )
-		    {
-			retVal = this[prop];
-		    } else {
-			this.getClassHierarchy().reverse()
-			.each( function classHierarchyIterator(clazz) {
-			    if( retVal == null &&
-				typeof clazz.Defaults[prop] != "undefined" )
-			    {
-				retVal = clazz.Defaults[prop];
-			    }
-			});
-		    }
-		    return retVal;
-		};
+		this[getterName] = function() { return this.getProperty(prop);};
 	    }
 	}.bind(this));
 
@@ -43,6 +26,19 @@ Canvas2D.Shape = Class.create( {
 	this.postInitialize();
     },
     
+    getPropertyDefault: function getPropertyDefault(prop) {
+	var retVal = null;
+	this.getClassHierarchy().reverse()
+	.each( function classHierarchyIterator(clazz) {
+	    if( retVal == null &&
+		typeof clazz.Defaults[prop] != "undefined" )
+	    {
+		retVal = clazz.Defaults[prop];
+	    }
+	});
+	return retVal;
+    },
+
     setProperties : function(props) {
 	this.getPropertyList().each(function propertyListIterator(prop) {
 	    this[prop] = props[prop] != null ? props[prop] : null;
@@ -61,24 +57,43 @@ Canvas2D.Shape = Class.create( {
 	return props;
     },
 
+    getProperty: function getProperty( prop ) {
+	if( typeof this[prop] == "undefined" ) {
+	    var propName = prop.substr(0,1).toUpperCase() + prop.substr(1);
+	    var getterName = "get"+propName;
+	    return this[getterName]();
+	} else {
+	    return this[prop] != null ? 
+		this[prop] : this.getPropertyDefault(prop);
+	}
+    },
+
     asConstruct: function() {
 	var construct =  
-	    { annotations : [],
+	    { __SHAPE__   : this,
+	      annotations : [],
 	      type        : this.getType(),
 	      name        : this.getName(),
 	      supers      : [],
 	      modifiers   : {},
-	      children    : []
+	      children    : [],
+	      addModifiers: function( props ) {
+		  props.each( function(prop) {
+		      if( this.__SHAPE__.getProperty( prop ) ) {
+			  this.addModifier( prop, 
+					    this.__SHAPE__.getProperty(prop) );
+		      }
+		  }.bind(this) );
+	      },
+	      addModifier : function( key, value ) {
+		  if( this.__SHAPE__.getPropertyDefault( key ) != value ) {
+		      this.modifiers[key] = "\"" + value + "\"";
+		  }
+	      }
 	    };
-	if( this.getLabel() ) {
-	    construct.modifiers.label = "\"" + this.getLabel() + "\"";
-	}
-	if( this.getLabelPos() ) {
-	    construct.modifiers.labelPos = "\"" + this.getLabelPos() + "\"";
-	}
-	if( this.getLabelColor() ) {
-	    construct.modifiers.labelColor = "\"" + this.getLabelColor() + "\"";
-	}
+
+	construct.addModifiers( [ "label", "labelPos", "labelColor" ] );
+
 	return construct;
     },
 

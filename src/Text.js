@@ -13,9 +13,7 @@ Canvas2D.Text = Class.create( Canvas2D.Rectangle, {
 
     asConstruct: function($super) {
 	var construct = $super();
-	if( this.getColor() ) {
-	    construct.modifiers[this.getColor()] = null;
-	}
+	construct.addModifiers( [ "color" ] );
 	return construct;
     }
 } );
