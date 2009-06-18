@@ -7,7 +7,6 @@ Canvas2D.Sheet = Class.create( {
 
 	this.allowedStyles = [ "static", "dynamic" ]; // allowed styles
 
-	this.setBook(props.book);  // reference to the book
 	this.clear();
 
 	this.selectedShapes = [];  // list of selected shapes
@@ -47,12 +46,6 @@ Canvas2D.Sheet = Class.create( {
     		     "Allowed styles are " + this.allowedStyles);
     	    this.style = "static";
 	}
-
-	this.book.on( "mousedown", this.handleMouseDown.bind(this) );
-	this.book.on( "mouseup",   this.handleMouseUp  .bind(this) );
-	this.book.on( "mousedrag", this.handleMouseDrag.bind(this) );
-
-	this.book.on( "keydown",   this.handleKeyDown  .bind(this) );
     },
 
     freeze: function() { if( this.book ) { this.book.freeze(); } },

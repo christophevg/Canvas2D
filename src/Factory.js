@@ -103,13 +103,16 @@ Canvas2D.Factory.extensions.all.ShortHands = {
 Canvas2D.Factory.extensions.all.EventHandling = {
     on: function on( event, handler ) {
 	if( !this.eventHandlers ) { this.eventHandlers = []; }
-	this.eventHandlers[event] = handler;
+	if( !this.eventHandlers[event] ) { this.eventHandlers[event] = []; }
+	this.eventHandlers[event].push(handler);
     },
 
     fireEvent: function fireEvent( event, data ) {
 	if( !this.eventHandlers ) { return; }
 	if( this.eventHandlers[event] ) {
-	    this.eventHandlers[event](data);
+	    this.eventHandlers[event].each( function(handler) { 
+		handler(data) 
+	    } );
 	}
     }
 };

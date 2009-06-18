@@ -13,10 +13,21 @@ Canvas2D.Book = Class.create( {
 	this.sheets = [];
 	this.currentSheet = 0;      // index of the current show sheet
 
-	this.canvas.on( "mousedown", this.fireEvent.bind(this, "mousedown") );
-	this.canvas.on( "mouseup",   this.fireEvent.bind(this, "mouseup"  ) );
-	this.canvas.on( "mousedrag", this.fireEvent.bind(this, "mousedrag") );
-	
+	this.canvas.on( "mousedown", function(data) {
+	    this.fireEvent.bind(this, "mousedown");
+	    this.getCurrentSheet().handleMouseDown(data);
+	}.bind(this) );
+
+	this.canvas.on( "mouseup", function(data) {
+	    this.fireEvent.bind(this, "mouseup");
+	    this.getCurrentSheet().handleMouseUp(data);
+	}.bind(this) );
+
+	this.canvas.on( "mousedrag", function(data) {
+	    this.fireEvent.bind(this, "mousedrag");
+	    this.getCurrentSheet().handleMouseDrag(data);
+	}.bind(this) );
+
 	this.currentKeysDown = [];
 	Event.observe(document, 'keydown', 
 		      this.handleKeyDownEvent.bindAsEventListener(this));
@@ -68,6 +79,7 @@ Canvas2D.Book = Class.create( {
 	var key = (event || window.event).keyCode;
 	this.currentKeysDown.push(key);
 	this.fireEvent( "keydown", key );
+	this.getCurrentSheet().handleKeyDown( key );
     },
 
     handleKeyUpEvent: function( event ) {
