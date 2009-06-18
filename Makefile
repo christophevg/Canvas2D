@@ -65,8 +65,6 @@ DIST-EXT=${APP}-${VERSION}-ext.zip
 DIST-EXTSRCS=LICENSE build/${APP}.standalone.min.js build/${APP}.css \
              src/ext/${APP}.php
 
-PUB=moonbase:~/dist/
-
 all: build
 
 build: .check-deps ${TARGETS}
@@ -99,7 +97,6 @@ lib/excanvas.js:
 	@echo "*** importing $@"
 	@mkdir -p lib
 	@(cd lib; ${FETCH} ${EXCANVAS-URL})
-#@(cd lib; ${PATCH} <../patches/excanvas.diff )
 
 lib/canvastext.js:
 	@echo "*** importing $@"
