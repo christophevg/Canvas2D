@@ -8,32 +8,24 @@ Canvas2D.Book = Class.create( {
 		} );
 
 	this.canvas = Canvas2D.Factory.setup(element);
-	this.canvas.setBook(this);
 
 	this.sheets = [];
 	this.currentSheet = 0;      // index of the current show sheet
 
 	this.canvas.on( "mousedown", function(data) {
-	    this.fireEvent.bind(this, "mousedown");
+	    this.fireEvent("mousedown");
 	    this.getCurrentSheet().handleMouseDown(data);
 	}.bind(this) );
 
 	this.canvas.on( "mouseup", function(data) {
-	    this.fireEvent.bind(this, "mouseup");
+	    this.fireEvent("mouseup");
 	    this.getCurrentSheet().handleMouseUp(data);
 	}.bind(this) );
 
 	this.canvas.on( "mousedrag", function(data) {
-	    this.fireEvent.bind(this, "mousedrag");
+	    this.fireEvent("mousedrag");
 	    this.getCurrentSheet().handleMouseDrag(data);
 	}.bind(this) );
-
-	this.currentKeysDown = [];
-	Event.observe(document, 'keydown', 
-		      this.handleKeyDownEvent.bindAsEventListener(this));
-	Event.observe(document, 'keyup', 
-		      this.handleKeyUpEvent.bindAsEventListener(this));
-
 
 	// look for a console and sources for this book
 	this.console   = document.getElementById( element.id + "Console"   );
@@ -50,9 +42,11 @@ Canvas2D.Book = Class.create( {
 	unless( sheet instanceof Canvas2D.Sheet, function() {
 	    sheet = new Canvas2D.Sheet();
 	} );
-	sheet.setBook(this);
+	sheet.setCanvas(this.canvas);
+	sheet.on( "change", this.rePublish.bind(this) );
+	sheet.on( "newShape", this.log.bindAsEventListener(this) );
 	this.sheets.push(sheet);
-	return this.canvas;
+	return sheet;
     },
 
     setupExtensions: function() {
@@ -73,19 +67,6 @@ Canvas2D.Book = Class.create( {
 		};
 	    }.bind(this) );
 	}.bind(this) );
-    },
-
-    handleKeyDownEvent: function( event ) {
-	var key = (event || window.event).keyCode;
-	this.currentKeysDown.push(key);
-	this.fireEvent( "keydown", key );
-	this.getCurrentSheet().handleKeyDown( key );
-    },
-
-    handleKeyUpEvent: function( event ) {
-	var key = (event || window.event).keyCode;
-	this.currentKeysDown = this.currentKeysDown.without(key);
-	this.fireEvent( "keyup", key );
     },
 
     log: function( msg ) {

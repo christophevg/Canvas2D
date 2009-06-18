@@ -44,6 +44,9 @@ Canvas2D.Position = Class.create( {
     move: function( dleft, dtop ) {
 	this.left += dleft;
 	this.top  += dtop;
+	this.fireEvent( "change", 
+			"from " + this.left - dleft + "," + this.top - dtop +
+			" to " + this.left + "," + this.top );
     },
 
     getName: function() {
@@ -73,3 +76,7 @@ Canvas2D.Position = Class.create( {
 	return this.shape.delayRender();
     }
 });
+
+Canvas2D.Position = 
+    Class.create( Canvas2D.Position,
+		  Canvas2D.Factory.extensions.all.EventHandling );

@@ -12,7 +12,7 @@ Canvas2D.Defaults.Canvas = {
     textDecoration : "none"    
 };
 
-Canvas2D.Defaults.Sheet = { 
+Canvas2D.Sheet.Defaults = { 
     useCrispLines  : true,
     lineWidth      : 1,   
     lineStyle      : "solid",

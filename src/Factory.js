@@ -18,50 +18,6 @@
 Canvas2D.Factory = { extensions: { all: {} } };
 
 /**
- * We use a metaphore of a book with sheets to construct the API. The
- * actual canvas is reused as sheet. This namespace add sheet-specific
- * methods.
- */
-Canvas2D.Factory.extensions.all.SheetSupport = {
-    setBook: function setBook(book) {
-	this.book = book;
-    },
-
-    at: function at(left,top) {
-	return this.book.getCurrentSheet().at(left,top);
-    },
-
-    add: function add(shape) {
-	return this.book.getCurrentSheet().add( shape );
-    },
-
-    put: function put(shape) {
-	return this.add(shape);
-    },
-
-    freeze: function freeze() {
-	return this.book.getCurrentSheet().freeze();
-    },
-
-    thaw: function thaw() {
-	return this.book.getCurrentSheet().thaw();
-    },
-
-    makeDynamic: function makeDynamic() {
-	return this.book.getCurrentSheet().makeDynamic();
-    },
-
-    makeStatic: function makeStatic() {
-	return this.book.getCurrentSheet().makeStatic();
-    },
-
-    getPosition: function getPosition(shape) {
-	return this.book.getCurrentSheet().positionsMap[shape];
-    }
-
-};
-
-/**
  * There are a few methods clearly missing on the HTML5 Canvas
  * element. This namespace adds a few utility methods that make life a
  * lot easier.
@@ -111,7 +67,7 @@ Canvas2D.Factory.extensions.all.EventHandling = {
 	if( !this.eventHandlers ) { return; }
 	if( this.eventHandlers[event] ) {
 	    this.eventHandlers[event].each( function(handler) { 
-		handler(data) 
+		handler(data);
 	    } );
 	}
     }
@@ -477,7 +433,7 @@ Canvas2D.Factory.extensions.all.TextSupport = {
     },
 
     getFontSize: function() {
-	return getFontSize( this.font || Canvas2D.Defaults.Sheet.font );
+	return getFontSize( this.font || Canvas2D.Sheet.Defaults.font );
     }
 };
 
