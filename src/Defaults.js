@@ -13,7 +13,6 @@ Canvas2D.Defaults.Canvas = {
 };
 
 Canvas2D.Sheet.Defaults = { 
-    useCrispLines  : true,
     lineWidth      : 1,   
     lineStyle      : "solid",
     strokeStyle    : "black", 
@@ -27,6 +26,7 @@ Canvas2D.Sheet.Defaults = {
 // Shapes start here ...
 
 Canvas2D.Shape.Defaults = {
+    useCrispLines      : true,
     label              : "",
     labelFont          : "7pt Sans-Serif",
     labelAlign         : "center",
@@ -89,4 +89,15 @@ Canvas2D.Image.Defaults = {
 
 Canvas2D.Arrow.Defaults = {
 
+};
+
+Canvas2D.CompositeShape.Defaults = {};
+
+Canvas2D.Stack.Defaults = {
+    borderColor : "black",
+    borderWidth : 0,
+    fillColor   : "white",
+    orientation : "ns",
+    childPadding : 5,
+    childSpacing : 0
 };

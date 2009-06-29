@@ -23,6 +23,8 @@ Canvas2D.Shape = Class.extend( {
 	// make sure it is called correctly
 	this.postInitialize();
     },
+
+    prepare: function prepare(sheet) {},
     
     setProperties : function(props) {
 	this.getPropertyList().iterate(function propertyListIterator(prop) {
@@ -139,6 +141,8 @@ Canvas2D.Shape = Class.extend( {
     },
 
     render: function(sheet, left, top) {
+	this.prepare(sheet);
+
 	sheet.save();
 	this.draw     (sheet, left, top);
 	this.drawLabel(sheet, left, top);
@@ -172,7 +176,8 @@ ProtoJS.mix( Canvas2D.Factory.extensions.all.EventHandling,
 Canvas2D.Shape.MANIFEST = {
     name : "shape",
     properties: [ "name", "label", "labelPos", "labelColor", "labelAlign",
-		  "labelFont", "labelUseCrispLines", "useCrispLines" ]
+		  "labelFont", "labelUseCrispLines", "useCrispLines",
+		  "topDown" ]
 };
 
 Canvas2D.Shape.manifestHandling = $H( {

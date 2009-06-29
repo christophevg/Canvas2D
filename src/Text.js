@@ -1,14 +1,18 @@
 Canvas2D.Text = Canvas2D.Rectangle.extend( {
-    draw: function(sheet, left, top) {
+    prepare: function(sheet) {
 	sheet.useCrispLines  = this.getUseCrispLines();
 	sheet.strokeStyle    = this.getColor();
 	sheet.fillStyle      = this.getColor();
 	sheet.font           = this.getFont();
 	sheet.textAlign      = this.getTextAlign();
 	sheet.textDecoration = this.getTextDecoration();
-	sheet.fillText(this.getText(), left, top );
 	this.width  = sheet.measureText(this.getText());
 	this.height = sheet.getFontSize();
+    },
+
+    draw: function(sheet, left, top) {
+	if( this.getTopDown() ) { top += this.getHeight(); }
+	sheet.fillText(this.getText(), left, top );
     },
 
     asConstruct: function() {
@@ -18,7 +22,7 @@ Canvas2D.Text = Canvas2D.Rectangle.extend( {
     }
 } );
 
-Canvas2D.Text.from = function( construct, sheet ) {
+Canvas2D.Text.from = function( construct, parent ) {
     var props = { name: construct.name, text: construct.value.value };
     construct.modifiers.iterate(function(key, value) {
 	value = ( typeof value.value != "undefined" ? 
@@ -26,18 +30,7 @@ Canvas2D.Text.from = function( construct, sheet ) {
 	props[key] = value;
     } );
 
-    var shape = new Canvas2D.Text(props);
-    var left, top;
-    if( construct.annotation ) {    
-	var pos = construct.annotation.data.split(",");
-	left = parseInt(pos[0]);
-	top  = parseInt(pos[1]);
-    } else {
-	left = this.offset * ( this.unknownIndex++ );
-	top = left;
-    }
-    sheet.at(left,top).put( shape );
-    return shape;
+    return new Canvas2D.Text(props);
 };
 
 Canvas2D.Text.MANIFEST = {

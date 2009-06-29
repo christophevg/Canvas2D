@@ -38,6 +38,10 @@ Canvas2D.Book = Class.extend( {
 	this.setupPlugins();
     },
 
+    add: function( sheet) {
+	return this.addSheet(sheet);
+    },
+    
     addSheet : function( sheet ) {
 	unless( sheet instanceof Canvas2D.Sheet, function() {
 	    sheet = new Canvas2D.Sheet();

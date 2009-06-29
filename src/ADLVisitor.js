@@ -6,9 +6,19 @@ Canvas2D.ADLVisitor = Class.extend( {
 	    construct.childrenAccept(this, parent);
 	    return parent;
 	} else if( Canvas2D.shapes.get(constructType) ) {
-	    var elem = Canvas2D.shapes.get(constructType)
+	    var shape = Canvas2D.shapes.get(constructType)
 	                              .from(construct, parent);
-	    construct.childrenAccept(this, elem);
+	    var left, top;
+	    if( construct.annotation ) {    
+		var pos = construct.annotation.data.split(",");
+		left = parseInt(pos[0]);
+		top  = parseInt(pos[1]);
+		parent.at(left,top).add( shape );
+	    } else {
+		parent.add( shape );
+	    }
+
+	    construct.childrenAccept(this, shape);
 	    return construct;
 	} else {
 	    console.log( "Canvas2D.ADLVisitor: Unknown Construct Type: " 

@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <style>
+      .box {
+        border: 2px solid #000;
+        float:left;
+        margin:10px; 
+        height: 385px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    </style>
+    <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
+<!--    <script src="../build/Canvas2D.standalone.min.js"></script> -->
+    <script src="../lib/excanvas.js"></script>
+    <script src="../lib/prototype-1.6.0.3.js"></script>
+    <script src="../lib/canvastext.js"></script>
+    <script src="../lib/tabber/tabber.js"></script>
+    <script src="../lib/ADL/build/ADL.shared.js"></script>
+
+    <script src="../src/DepCheck.js"></script>
+    <script src="../src/SanityChecks.js"></script>
+    <script src="../src/Common.js"></script>
+    <script src="../src/Canvas2D.js"></script>
+    <script src="../src/Factory.js"></script>
+    <script src="../src/Keyboard.js"></script>
+    <script src="../src/ImageManager.js"></script>
+    <script src="../src/Manager.js"></script>
+    <script src="../src/ADLVisitor.js"></script>
+    <script src="../src/Book.js"></script>
+    <script src="../src/Shape.js"></script>
+    <script src="../src/CompositeShape.js"></script>
+    <script src="../src/Sheet.js"></script>
+    <script src="../src/Position.js"></script>
+    <script src="../src/Rectangle.js"></script>
+    <script src="../src/Connector.js"></script>
+    <script src="../src/Line.js"></script>
+    <script src="../src/LinePath.js"></script>
+    <script src="../src/Text.js"></script>
+    <script src="../src/Image.js"></script>
+    <script src="../src/Arrow.js"></script>
+    <script src="../src/Alias.js"></script>
+    <script src="../src/Stack.js"></script>
+    <script src="../src/plugins/TabbedCanvas.js"></script>
+    <script src="../src/KickStart.js"></script>
+    <script src="../src/Defaults.js"></script>
+
+  </head>
+  <body>
+    <h1>Composite Shapes</h1>
+    <div class="box">
+      <h2>Stack</h2>
+      <canvas class="Canvas2D" id="myDiagram" width="300" height="250"></canvas>
+    </div>
+    <pre id="myDiagramSource" style="display:none;">  
+sheet mySheet +style="dynamic" {
+  [@10,10] stack masterStack +childPadding=0 +childSpacing=0 {
+    stack stack1 +borderWidth=1 +borderColor="red" 
+                 +fillColor="rgba(255,255,200,1)" {
+      text text11 := "1. some text";
+      text text12 := "1. some more text";
+    }
+    stack stack2 +borderWidth=1 +borderColor="red" 
+                 +fillColor="rgba(255,255,200,1)" {
+      text text21 := "2. some text";
+      text text22 := "2. some more text";
+    }
+    stack stack3 +borderWidth=1 +borderColor="red" 
+                 +fillColor="rgba(255,255,200,1)" {
+      text text31 := "3. some text";
+      text text32 := "3. some more text";
+    }
+  }
+}
+    </pre>  
+  </body>
+</html>

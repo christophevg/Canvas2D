@@ -88,18 +88,7 @@ Canvas2D.Arrow.from = function( construct, sheet ) {
 	props[key] = value;
     } );
 
-    var shape = new Canvas2D.Arrow(props);
-    var left, top;
-    if( construct.annotation ) {    
-	var pos = construct.annotation.data.split(",");
-	left = parseInt(pos[0]);
-	top  = parseInt(pos[1]);
-    } else {
-	left = this.offset * ( this.unknownIndex++ );
-	top = left;
-    }
-    sheet.at(left,top).put( shape );
-    return shape;
+    return new Canvas2D.Arrow(props);
 };
 
 Canvas2D.Arrow.MANIFEST = {
