@@ -2,7 +2,7 @@ EXCANVAS-AG=http://excanvas.svn.sourceforge.net/viewvc/excanvas/silverlight/exca
 EXCANVAS-URL=http://excanvas.svn.sourceforge.net/viewvc/excanvas/excanvas.js
 CANVASTEXT-URL=http://www.federated.com/~jim/canvastext/canvastext.js
 ADL-URL=http://git.thesoftwarefactory.be/pub/ADL.git
-PROTOJS-URL=../../ProtoJS
+PROTOJS-URL=http://git.thesoftwarefactory.be/pub/ProtoJS.git
 TABBER-DIST=tabber.zip
 TABBER-URL=http://www.barelyfitz.com/projects/tabber/${TABBER-DIST}
 
