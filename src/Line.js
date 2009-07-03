@@ -1,4 +1,4 @@
-Canvas2D.Line = Class.create( Canvas2D.Shape, {
+Canvas2D.Line = Canvas2D.Shape.extend( {
     getWidth : function() { return this.getDx() },
     getHeight: function() { return this.getDy() },
 
@@ -49,8 +49,8 @@ Canvas2D.Line = Class.create( Canvas2D.Shape, {
 	    this.getWidth() + "x" + this.getHeight() : null;
     },
 
-    asConstruct: function($super) {
-	var construct = $super();
+    asConstruct: function() {
+	var construct = this._super();
 	construct.addModifiers( [ "geo", "color" ] );
 	return construct;
     }
@@ -58,9 +58,8 @@ Canvas2D.Line = Class.create( Canvas2D.Shape, {
 
 Canvas2D.Line.from = function( construct, sheet ) {
     var props = { name: construct.name };
-    construct.modifiers.each(function(pair) {
-	var key   = pair.key;
-	var value = ( pair.value.value ? pair.value.value.value : "" );
+    construct.modifiers.iterate(function(key, value) {
+	value = ( value.value ? value.value.value : "" );
 
 	if( key == "dx" || key == "dy" || key == "lineWidth" ) {
 	    value = parseInt(value);

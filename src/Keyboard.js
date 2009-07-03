@@ -1,10 +1,10 @@
-Canvas2D.KeyboardDriver = Class.create( {
-    initialize: function initialize() {
+Canvas2D.KeyboardDriver = Class.extend( {
+    init: function initialize() {
 	this.currentKeysDown = [];
-	Event.observe(document, 'keydown', 
-		      this.handleKeyDownEvent.bindAsEventListener(this));
-	Event.observe(document, 'keyup', 
-		      this.handleKeyUpEvent.bindAsEventListener(this));
+	ProtoJS.Event.observe(document, 'keydown', 
+			      this.handleKeyDownEvent.scope(this));
+	ProtoJS.Event.observe(document, 'keyup', 
+			      this.handleKeyUpEvent.scope(this));
     },
 
     handleKeyDownEvent: function( event ) {
@@ -15,7 +15,7 @@ Canvas2D.KeyboardDriver = Class.create( {
 
     handleKeyUpEvent: function handleKeyUpEvent( event ) {
 	var key = (event || window.event).keyCode;
-	this.currentKeysDown = this.currentKeysDown.without(key);
+	this.currentKeysDown = this.currentKeysDown.remove(key);
 	this.fireEvent( "keyup", key );
     },
 
@@ -28,8 +28,7 @@ Canvas2D.KeyboardDriver = Class.create( {
     }
 } );
 
-Canvas2D.KeyboardDriver =
-    Class.create( Canvas2D.KeyboardDriver,
-		  Canvas2D.Factory.extensions.all.EventHandling );
+ProtoJS.mix( Canvas2D.Factory.extensions.all.EventHandling,
+	     Canvas2D.KeyboardDriver.prototype );
 
 Canvas2D.Keyboard = new Canvas2D.KeyboardDriver();

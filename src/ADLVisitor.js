@@ -1,4 +1,4 @@
-Canvas2D.ADLVisitor = Class.create( {
+Canvas2D.ADLVisitor = Class.extend( {
     visit: function( construct, parent ) {
 	var constructType = construct.type.toLowerCase();
 	if( constructType == "root" ) {
@@ -11,8 +11,8 @@ Canvas2D.ADLVisitor = Class.create( {
 	    construct.childrenAccept(this, elem);
 	    return construct;
 	} else {
-	    alert( "Canvas2D.ADLVisitor: Unknown Construct Type: " 
-		   + construct.type );
+	    console.log( "Canvas2D.ADLVisitor: Unknown Construct Type: " 
+			 + construct.type );
 	    // if we don't know the construct type, no need to go further
 	    return parent;
 	}

@@ -1,4 +1,4 @@
-Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
+Canvas2D.Rectangle = Canvas2D.Shape.extend( {
     draw: function(sheet, left, top) {
 	sheet.useCrispLines = this.getUseCrispLines();
 	sheet.lineWidth     = this.getLineWidth();
@@ -42,8 +42,8 @@ Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
 	    this.getWidth() + "x" + this.getHeight() : null;
     },
 
-    asConstruct: function($super) {
-	var construct = $super();
+    asConstruct: function() {
+	var construct = this._super();
 	construct.addModifiers( [ "geo", "lineColor" ] );
 	return construct;
     }
@@ -51,9 +51,8 @@ Canvas2D.Rectangle = Class.create( Canvas2D.Shape, {
 
 Canvas2D.Rectangle.from = function( construct, sheet ) {
     var props = { name: construct.name };
-    construct.modifiers.each(function(pair) {
-	var key   = pair.key;
-	var value = ( pair.value.value ? pair.value.value.value : "" );
+    construct.modifiers.iterate(function(key, value) {
+	value = ( value.value ? value.value.value : "" );
 
 	if( key == "width" || key == "height" ) {
 	    value = parseInt(value);

@@ -1,4 +1,4 @@
-Canvas2D.Text = Class.create( Canvas2D.Rectangle, {
+Canvas2D.Text = Canvas2D.Rectangle.extend( {
     draw: function(sheet, left, top) {
 	sheet.useCrispLines  = this.getUseCrispLines();
 	sheet.strokeStyle    = this.getColor();
@@ -11,8 +11,8 @@ Canvas2D.Text = Class.create( Canvas2D.Rectangle, {
 	this.height = sheet.getFontSize();
     },
 
-    asConstruct: function($super) {
-	var construct = $super();
+    asConstruct: function() {
+	var construct = this._super();
 	construct.addModifiers( [ "color" ] );
 	return construct;
     }
@@ -20,10 +20,9 @@ Canvas2D.Text = Class.create( Canvas2D.Rectangle, {
 
 Canvas2D.Text.from = function( construct, sheet ) {
     var props = { name: construct.name, text: construct.value.value };
-    construct.modifiers.each(function(pair) {
-	var key   = pair.key;
-	var value = ( typeof pair.value.value != "undefined" ? 
-		      pair.value.value.value : "" );
+    construct.modifiers.iterate(function(key, value) {
+	value = ( typeof value.value != "undefined" ? 
+		      value.value.value : "" );
 	props[key] = value;
     } );
 

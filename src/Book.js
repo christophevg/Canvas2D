@@ -1,5 +1,5 @@
-Canvas2D.Book = Class.create( {
-    initialize: function(element) {
+Canvas2D.Book = Class.extend( {
+    init: function(element) {
 	// overloaded constructor implementation allows the passing of an id
 	unless( element && element.nodeType && 
 		element.nodeType == Node.ELEMENT_NODE, 
@@ -15,17 +15,17 @@ Canvas2D.Book = Class.create( {
 	this.canvas.on( "mousedown", function(data) {
 	    this.fireEvent("mousedown");
 	    this.getCurrentSheet().handleMouseDown(data);
-	}.bind(this) );
+	}.scope(this) );
 
 	this.canvas.on( "mouseup", function(data) {
 	    this.fireEvent("mouseup");
 	    this.getCurrentSheet().handleMouseUp(data);
-	}.bind(this) );
+	}.scope(this) );
 
 	this.canvas.on( "mousedrag", function(data) {
 	    this.fireEvent("mousedrag");
 	    this.getCurrentSheet().handleMouseDrag(data);
-	}.bind(this) );
+	}.scope(this) );
 
 	// look for a console and sources for this book
 	this.console   = document.getElementById( element.id + "Console"   );
@@ -43,30 +43,30 @@ Canvas2D.Book = Class.create( {
 	    sheet = new Canvas2D.Sheet();
 	} );
 	sheet.setCanvas(this.canvas);
-	sheet.on( "change", this.rePublish.bind(this) );
-	sheet.on( "newShape", this.log.bindAsEventListener(this) );
+	sheet.on( "change", this.rePublish.scope(this) );
+	sheet.on( "newShape", this.log.scope(this) );
 	this.sheets.push(sheet);
 	return sheet;
     },
 
     setupExtensions: function() {
 	this.extensions = new Hash();
-	Canvas2D.extensions.each(function(extension) {
+	Canvas2D.extensions.iterate(function(extension) {
 	    this.extensions.set(extension.name, extension);
-	}.bind(this) );
+	}.scope(this) );
     },
 
     setupPlugins: function() {
 	this.plugins = {};
-	$H(Canvas2D.Book.plugins).each(function(pair) {
-	    var plugin = new (pair.value)(this);
-	    this.plugins[pair.key] = plugin;
-	    pair.value.exposes.each(function(func) {
+	$H(Canvas2D.Book.plugins).iterate(function(key, value) {
+	    var plugin = new (value)(this);
+	    this.plugins[key] = plugin;
+	    value.exposes.iterate(function(func) {
 		this[func] = function(arg1, arg2, arg3) { 
-		    this.plugins[pair.key][func](arg1, arg2, arg3);
+		    this.plugins[key][func](arg1, arg2, arg3);
 		};
-	    }.bind(this) );
-	}.bind(this) );
+	    }.scope(this) );
+	}.scope(this) );
     },
 
     log: function( msg ) {
@@ -81,7 +81,9 @@ Canvas2D.Book = Class.create( {
     },
 
     clear : function() {
-	this.sheets.clear();
+	// FIXME
+	this.sheets.length = 0;
+	// this.sheets.clear();
     },
 
     start : function() {
@@ -103,8 +105,8 @@ Canvas2D.Book = Class.create( {
 	this.canvas.textDecoration = "none";
 	this.canvas.rotate(Math.PI/2);
 	var extensions = "";
-	this.extensions.each(function(library) { 
-	    extensions += " + " + library.key; 
+	this.extensions.iterate(function(key, value) { 
+	    extensions += " + " + key; 
 	});
 	this.canvas.font = "6pt Sans-Serif";
 	this.canvas.textAlign = "left";
@@ -133,12 +135,13 @@ Canvas2D.Book = Class.create( {
 	    this.freeze();
 	    tree.getRoot().accept(new Canvas2D.ADLVisitor(), this );
 	    this.thaw();
+	    this.rePublish();
 	}
     },
 
     toADL: function() {
 	var s = "";
-	this.sheets.each(function(sheet) {
+	this.sheets.iterate(function(sheet) {
 	    s += sheet.toADL() + "\n";
 	} );
 	return s;
@@ -154,8 +157,8 @@ Canvas2D.Book = Class.create( {
 	    this.rePublishNeeded = false;
 	}
 	
-	// reshedule publish in 1/100 of a second
-	this.nextPublish = this.publish.bind(this).delay(0.01);
+	// reshedule publish in 10ms
+	this.nextPublish = this.publish.scope(this).after(10);
     },
 
     publishOnce : function() {
@@ -173,10 +176,10 @@ Canvas2D.Book = Class.create( {
     }
 
 } );
-
-// add-in some common functionality
-Canvas2D.Book = Class.create( Canvas2D.Book, 
-			      Canvas2D.Factory.extensions.all.EventHandling );
+    
+// mix-in some common functionality at class level
+ProtoJS.mix( Canvas2D.Factory.extensions.all.EventHandling,
+	     Canvas2D.Book.prototype );
 
 // add support for plugins
 Canvas2D.Book.plugins = {};

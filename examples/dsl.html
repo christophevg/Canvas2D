@@ -1,48 +1,11 @@
 <html>
   <head>
-    <style>
-      .box {
-        border: 2px solid #000;
-        float:left;
-        margin:10px; 
-        height: 385px;
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-    </style>
+    <link rel="stylesheet" type="text/css" href="examples.css" />
     <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
-<!--    <script src="../build/Canvas2D.standalone.min.js"></script> -->
-    <script src="../lib/excanvas.js"></script>
-    <script src="../lib/prototype-1.6.0.3.js"></script>
-    <script src="../lib/canvastext.js"></script>
-    <script src="../lib/tabber/tabber.js"></script>
-    <script src="../lib/ADL/build/ADL.shared.js"></script>
 
-    <script src="../src/DepCheck.js"></script>
-    <script src="../src/SanityChecks.js"></script>
-    <script src="../src/Common.js"></script>
-    <script src="../src/Canvas2D.js"></script>
-    <script src="../src/Factory.js"></script>
-    <script src="../src/ImageManager.js"></script>
-    <script src="../src/Manager.js"></script>
-    <script src="../src/ADLVisitor.js"></script>
-    <script src="../src/Book.js"></script>
-    <script src="../src/Shape.js"></script>
-    <script src="../src/Sheet.js"></script>
-    <script src="../src/Position.js"></script>
-    <script src="../src/Rectangle.js"></script>
-    <script src="../src/Connector.js"></script>
-    <script src="../src/Line.js"></script>
-    <script src="../src/LinePath.js"></script>
-    <script src="../src/Text.js"></script>
-    <script src="../src/Image.js"></script>
-    <script src="../src/Alias.js"></script>
-    <script src="../src/plugins/TabbedCanvas.js"></script>
-    <script src="../src/KickStart.js"></script>
-    <script src="../src/Defaults.js"></script>
-
+    <script type="text/javascript" src="includes.js"></script>
   </head>
-  <body onload="startIt();">
+  <body>
     <h1>Diagram DSL Example</h1>
     <div class="box">
       <h2>Dynamic + Tabs</h2>
@@ -73,20 +36,16 @@ Sheet mySheet +style="dynamic" {
     </div>
   
     <script>  
-      var manager = new Canvas2D.Manager();
-      var book;
-
       function drawIt() {
           book.load(document.getElementById("src").value);
       }
 
-      function startIt() {
-        book = manager.setupBook("myTabbedDiagram");
-        book.makeTabbed( [ "source", "console", "about" ]);
-        drawIt();
-
-        manager.startAll();
-      }
+      var manager = new Canvas2D.Manager();
+      var book = manager.setupBook("myTabbedDiagram");
+      book.makeTabbed( [ "source", "console", "about" ]);
+      drawIt();
+      
+      manager.startAll();
     </script>  
 
   </body>

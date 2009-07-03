@@ -1,48 +1,9 @@
 <html>
   <head>
-    <style>
-      .box {
-        border: 2px solid #000;
-        float:left;
-        margin:10px; 
-        height: 375px;
-        width: 200px;
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-    </style>
+    <link rel="stylesheet" type="text/css" href="examples.css" />
     <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
-<!--    <script src="../build/Canvas2D.standalone.js"></script> -->
-    <script src="../lib/excanvas.js"></script>
-    <script src="../lib/prototype-1.6.0.3.js"></script>
-    <script src="../lib/canvastext.js"></script>
-    <script src="../lib/tabber/tabber.js"></script>
-    <script src="../lib/ADL/build/ADL.shared.js"></script>
 
-    <script src="../src/DepCheck.js"></script> 
-    <script src="../src/SanityChecks.js"></script> 
-    <script src="../src/Common.js"></script> 
-    <script src="../src/Canvas2D.js"></script> 
-
-    <script src="../src/Factory.js"></script> 
-    <script src="../src/ImageManager.js"></script> 
-    <script src="../src/Manager.js"></script> 
-    <script src="../src/ADLVisitor.js"></script> 
-    <script src="../src/Book.js"></script> 
-    <script src="../src/Shape.js"></script> 
-    <script src="../src/Sheet.js"></script> 
-    <script src="../src/Position.js"></script> 
-    <script src="../src/Rectangle.js"></script> 
-    <script src="../src/Connector.js"></script> 
-    <script src="../src/Line.js"></script> 
-    <script src="../src/LinePath.js"></script> 
-    <script src="../src/Text.js"></script> 
-    <script src="../src/Image.js"></script> 
-    <script src="../src/Alias.js"></script> 
-    <script src="../src/plugins/TabbedCanvas.js"></script> 
-    <script src="../src/KickStart.js"></script> 
-    <script src="../src/Defaults.js"></script>
-
+    <script type="text/javascript" src="includes.js"></script>
   </head>
   <body>
     <h1>Libraries &amp; Shapes</h1>
@@ -56,9 +17,8 @@
       <h2>All Shapes</h2>
       <ol>
 	<script>
-	  Canvas2D.shapes.each(function(shape) {
-            document.writeln("<li>" + shape.key + " : " 
-	                     + shape.value.getType() + "</li>");
+	  Canvas2D.shapes.iterate(function(name, clazz) {
+            document.writeln("<li>" + name + " : " + clazz.getType() + "</li>");
           } );
 	</script>
       </ol>
@@ -68,7 +28,7 @@
       <h2>Registered Libraries</h2>
       <ol>
 	<script>
-	  Canvas2D.libraries.each(function(library) {
+	  Canvas2D.libraries.iterate(function(library) {
             document.writeln("<li>" + library.key + "</li>");
           } );
 	</script>
@@ -79,7 +39,7 @@
       <h2>Shapes in Canvas2D library</h2>
       <ol>
 	<script>
-	  Canvas2D.libraries.get("Canvas2D").each(function(shape) {
+	  Canvas2D.libraries.get("Canvas2D").iterate(function(shape) {
             document.writeln("<li>" + shape.getType() + "</li>");
           } );
 	</script>
@@ -90,7 +50,7 @@
       <h2>Shapes in Aliasses library</h2>
       <ol>
 	<script>
-	  Canvas2D.libraries.get("Aliasses").each(function(shape) {
+	  Canvas2D.libraries.get("Aliasses").iterate(function(shape) {
             document.writeln("<li>" + shape.getType() + "</li>");
           } );
 	</script>

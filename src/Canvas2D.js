@@ -28,17 +28,17 @@ var Canvas2D = {
 	shape.prototype.__CLASS__ = shape;
 
 	// mixin static methods for dealing with manifests
-	Canvas2D.Shape.manifestHandling.each( function(ext) {
-	    shape[ext.key] = ext.value;
+	Canvas2D.Shape.manifestHandling.iterate( function(key, value) {
+	    shape[key] = value;
 	} );
 
 	// register shape with all names (including aliasses)
-	shape.getTypes().each(function(name) {
+	shape.getTypes().iterate(function(name) {
 	    Canvas2D.shapes.set(name, shape);
 	} );
 
 	// add shape to libraries
-	shape.getLibraries().each(function(library) {
+	shape.getLibraries().iterate(function(library) {
 	    if( !Canvas2D.libraries.get(library) ) { 
 		Canvas2D.libraries.set(library, []);
 	    }

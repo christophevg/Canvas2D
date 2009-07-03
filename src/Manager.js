@@ -1,5 +1,5 @@
-Canvas2D.Manager = Class.create( {
-    initialize : function() {
+Canvas2D.Manager = Class.extend( {
+    init : function() {
 	this.plugins = [];
 	this.books   = $H();
     },
@@ -22,10 +22,10 @@ Canvas2D.Manager = Class.create( {
     
     startAll :function() {
 	if( Canvas2D.ImageManager.isReady() ) {
-	    this.plugins.each(function(plugin)      { plugin.start(); } );
-	    this.books.values().each(function(book) { book.start();   } );
+	    this.plugins.iterate(function(plugin)      { plugin.start(); } );
+	    this.books.values().iterate(function(book) { book.start();   } );
 	} else {
-	    this.startAll.bind(this).delay(0.01);
+	    this.startAll.scope(this).after(10);
 	}
     }
 } );

@@ -1,9 +1,9 @@
 Canvas2D.ShapeCounter = 0;
 
-Canvas2D.Shape = Class.create( {
+Canvas2D.Shape = Class.extend( {
     getClass : function getClass() { return this.__CLASS__; },
 
-    initialize: function initialize( props ) {
+    init: function initialize( props ) {
 	props = props || {};
 
 	// preprocess is used to allow Shapes to preprocess the
@@ -12,13 +12,13 @@ Canvas2D.Shape = Class.create( {
 	this.setProperties(props);
 
 	// setup getters
-	this.getPropertyList().each(function propertyListIterator(prop) {
+	this.getPropertyList().iterate(function propertyListIterator(prop) {
 	    var propName = prop.substr(0,1).toUpperCase() + prop.substr(1);
 	    var getterName = "get"+propName;
 	    if( typeof this[getterName] == "undefined" ) {
 		this[getterName] = function() { return this.getProperty(prop);};
 	    }
-	}.bind(this));
+	}.scope(this));
 
 	// postInitialize is used to allow Shapes to do initialization
 	// stuff, without the need to override this construtor and
@@ -29,7 +29,7 @@ Canvas2D.Shape = Class.create( {
     getPropertyDefault: function getPropertyDefault(prop) {
 	var retVal = null;
 	this.getClassHierarchy().reverse()
-	.each( function classHierarchyIterator(clazz) {
+	.iterate( function classHierarchyIterator(clazz) {
 	    if( retVal == null &&
 		typeof clazz.Defaults[prop] != "undefined" )
 	    {
@@ -40,9 +40,9 @@ Canvas2D.Shape = Class.create( {
     },
 
     setProperties : function(props) {
-	this.getPropertyList().each(function propertyListIterator(prop) {
+	this.getPropertyList().iterate(function propertyListIterator(prop) {
 	    this[prop] = props[prop] != null ? props[prop] : null;
-	}.bind(this) );
+	}.scope(this) );
 	// support for default
 	if( !this.name ) { this.name = "__shape__" + Canvas2D.ShapeCounter++; }
     },
@@ -50,7 +50,7 @@ Canvas2D.Shape = Class.create( {
     getProperties: function() {
 	var props = {};
 	var me = this;
-	this.getPropertyList().each(function propertyListIterator(prop) {
+	this.getPropertyList().iterate(function propertyListIterator(prop) {
 	    props[prop] = me[prop];
 	} );
 	props.type = this.getType();
@@ -78,12 +78,12 @@ Canvas2D.Shape = Class.create( {
 	      modifiers   : {},
 	      children    : [],
 	      addModifiers: function( props ) {
-		  props.each( function(prop) {
+		  props.iterate( function(prop) {
 		      if( this.__SHAPE__.getProperty( prop ) ) {
 			  this.addModifier( prop, 
 					    this.__SHAPE__.getProperty(prop) );
 		      }
-		  }.bind(this) );
+		  }.scope(this) );
 	      },
 	      addModifier : function( key, value ) {
 		  if( this.__SHAPE__.getPropertyDefault( key ) != value ) {
@@ -99,19 +99,20 @@ Canvas2D.Shape = Class.create( {
 
     constructToString: function(construct, prefix) {
 	var string = "";
-	construct.annotations.each(function(annotation) {
+	construct.annotations.iterate(function(annotation) {
 	    string += prefix + "[@" + annotation + "]\n";
 	} );
 	string += prefix + construct.type + " " + construct.name;
-	construct.supers.each( function(zuper) { string += " : " + zuper; } );
-	$H(construct.modifiers).each( function modifierIterator( modifier ) {
-	    string += " +" + modifier.key;
-	    if( modifier.value ) { string += "=" + modifier.value; }
-	} );
+	construct.supers.iterate(function(zuper) { string += " : " + zuper; });
+	$H(construct.modifiers).iterate( 
+	    function modifierIterator( key, value ) {
+		string += " +" + key;
+		if( value ) { string += "=" + value; }
+	    } );
 	if( construct.children.length > 0 ) {
 	    string += " {\n";
 	    var me = this;
-	    construct.children.each(function childIterator(child) {
+	    construct.children.iterate(function childIterator(child) {
 		string += me.constructToString(child, prefix + "  " ) + "\n";
 	    } );
 	    string += prefix + "}";
@@ -177,8 +178,8 @@ Canvas2D.Shape = Class.create( {
 } );
 
 // add-in some common functionality
-Canvas2D.Shape = Class.create( Canvas2D.Shape, 
-			       Canvas2D.Factory.extensions.all.EventHandling );
+ProtoJS.mix( Canvas2D.Factory.extensions.all.EventHandling,
+	     Canvas2D.Shape.prototype );
 
 Canvas2D.Shape.MANIFEST = {
     name : "shape",
@@ -196,7 +197,7 @@ Canvas2D.Shape.manifestHandling = $H( {
     },
 
     getTypes: function getTypes() {
-	return  [ this.getType(), this.getAliasses() ].flatten();
+	return [ this.getType() ].concat( this.getAliasses() );
     },
 
     getPropertyPath: function getPropertyPath() {
@@ -216,10 +217,12 @@ Canvas2D.Shape.manifestHandling = $H( {
     getPropertyList: function getPropertyList() {
 	if( !this.allPropertiesCache ) { 
 	    this.allPropertiesCache = [];
-	    this.getClassHierarchy().each(function propertiesCacheFiller(shape){
-		this.allPropertiesCache = 
-		    this.allPropertiesCache.concat(shape.getLocalProperties());
-	    }.bind(this));
+	    this.getClassHierarchy().iterate(
+		function propertiesCacheFiller(shape){
+		    this.allPropertiesCache = 
+			this.allPropertiesCache
+		            .concat(shape.getLocalProperties());
+		}.scope(this));
 	}
 	return this.allPropertiesCache
     },
@@ -235,7 +238,7 @@ Canvas2D.Shape.manifestHandling = $H( {
 
 // add manifestHandling functions to each Shape instance and on the
 // class itself
-Canvas2D.Shape.manifestHandling.each( function(ext) {
-    Canvas2D.Shape.prototype[ext.key] = ext.value;
-    Canvas2D.Shape[ext.key] = ext.value;
+Canvas2D.Shape.manifestHandling.iterate( function(key, value) {
+    Canvas2D.Shape.prototype[key] = value;
+    Canvas2D.Shape[key] = value;
 } );

@@ -1,4 +1,4 @@
-Canvas2D.LinePath = Class.create( Canvas2D.Shape, {
+Canvas2D.LinePath = Canvas2D.Shape.extend( {
     getWidth : function() { return this.dx },
     getHeight: function() { return this.dy },
 
@@ -17,7 +17,7 @@ Canvas2D.LinePath = Class.create( Canvas2D.Shape, {
 	    var dx = max(0,props.start.left);
 	    var dy = max(0,props.start.top );
 
-	    props.moves.split(";").each( function(move) {
+	    props.moves.split(";").iterate( function(move) {
 		var parts = move.split(",");
 		moves.push( {dx:parseInt(parts[0]), dy:parseInt(parts[1])} );
 		dx = max(dx, dx + parseInt(parts[0]));
@@ -39,7 +39,7 @@ Canvas2D.LinePath = Class.create( Canvas2D.Shape, {
 	left += this.start.left;
 	top  += this.start.top;
 	sheet.moveTo(left, top);
-	this.getMoves().each( function(move) {
+	this.getMoves().iterate( function(move) {
 	    left = left + move.dx;
 	    top  = top  + move.dy;
 	    sheet.lineTo(left, top);
@@ -82,8 +82,8 @@ Canvas2D.LinePath = Class.create( Canvas2D.Shape, {
 	    this.getWidth() + "x" + this.getHeight() : null;
     },
 
-    asConstruct: function($super) {
-	var construct = $super();
+    asConstruct: function() {
+	var construct = this._super();
 	construct.addModifiers( [ "geo", "color" ] );
 	return construct;
     }
@@ -91,9 +91,8 @@ Canvas2D.LinePath = Class.create( Canvas2D.Shape, {
 
 Canvas2D.LinePath.from = function( construct, sheet ) {
     var props = { name: construct.name };
-    construct.modifiers.each(function(pair) {
-	var key   = pair.key;
-	var value = ( pair.value.value ? pair.value.value.value : "" );
+    construct.modifiers.iterate(function(key, value) {
+	value = ( value.value ? value.value.value : "" );
 
 	if( key == "dx" || key == "dy" || key == "lineWidth" ) {
 	    value = parseInt(value);

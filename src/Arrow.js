@@ -1,4 +1,4 @@
-Canvas2D.Arrow = Class.create( Canvas2D.Rectangle, {
+Canvas2D.Arrow = Canvas2D.Rectangle.extend( {
     draw: function(sheet, left, top) {
 	// rect
 	sheet.useCrispLines = this.getUseCrispLines();
@@ -68,9 +68,8 @@ Canvas2D.Arrow = Class.create( Canvas2D.Rectangle, {
 
 Canvas2D.Arrow.from = function( construct, sheet ) {
     var props = { name: construct.name };
-    construct.modifiers.each(function(pair) {
-	var key   = pair.key;
-	var value = ( pair.value.value ? pair.value.value.value : "" );
+    construct.modifiers.iterate(function(key, value) {
+	value = ( value.value ? value.value.value : "" );
 
 	if( key == "width" || key == "height" ) {
 	    value = parseInt(value);

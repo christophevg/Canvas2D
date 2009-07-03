@@ -1,4 +1,4 @@
-Canvas2D.Connector = Class.create( Canvas2D.Shape, {
+Canvas2D.Connector = Canvas2D.Shape.extend( {
     getFrom  : function(sheet) { 
 	return sheet ? sheet.getPosition(this.from) : this.from; 
     },
@@ -55,7 +55,7 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
 	    sheet.stroke();
 	    sheet.beginPath();
 	    sheet.moveTo(left, top);
-	    connector.lines.each(function(d){
+	    connector.lines.iterate(function(d){
 		if(d == "fill") {
 		    sheet.fillStyle = "rgba( 0, 0, 0, 1 )";
 		    sheet.fill();
@@ -217,8 +217,8 @@ Canvas2D.Connector = Class.create( Canvas2D.Shape, {
 	return false;
     },
 
-    asConstruct: function($super) {
-	var construct = $super();
+    asConstruct: function() {
+	var construct = this._super();
 
 	if( this.getFrom() && this.getTo() ) {
 	    construct.modifiers[this.getFrom().getName() + "-" +
@@ -248,14 +248,14 @@ Canvas2D.Connector.from = function(construct, sheet) {
     if( routingModifier ) {
 	routing = routingModifier.value.value;
     }
-    construct.modifiers.each(function(pair) {
-	if( pair.value.value == null ) {
-	    if( pair.key.include("-") ) {
-		var parts = pair.key.split( "-" );
+    construct.modifiers.iterate(function(key, value) {
+	if( value.value == null ) {
+	    if( key.contains("-") ) {
+		var parts = key.split( "-" );
 		from = parts[0];
 		to   = parts[1];
 	    } else {
-		routing = pair.key;
+		routing = key;
 	    }
 	}
     });

@@ -1,7 +1,5 @@
-if( typeof Prototype == "undefined" ) {
-    alert( "Canvas2D requires the Prototype JS library." );
-} else if( !document.createElement('canvas').getContext &&
-	   !G_vmlCanvasManager.initElement ) {
+if( !document.createElement('canvas').getContext &&
+    !G_vmlCanvasManager.initElement ) {
     alert( "You browser doesn't support the Canvas element. " +
 	   "If you're using IE, ExplorerCanvas is required." );
 } else if( typeof CanvasTextFunctions == "undefined" ) {

@@ -66,7 +66,7 @@ Canvas2D.Factory.extensions.all.EventHandling = {
     fireEvent: function fireEvent( event, data ) {
 	if( !this.eventHandlers ) { return; }
 	if( this.eventHandlers[event] ) {
-	    this.eventHandlers[event].each( function(handler) { 
+	    this.eventHandlers[event].iterate( function(handler) { 
 		handler(data);
 	    } );
 	}
@@ -88,7 +88,7 @@ Canvas2D.Factory.extensions.all.ExtendedCanvasSupport = {
 	ctx["save"] = function() {
 	    var oldValues = {};
 	    var currentValues = this;
-	    extProperties.each(function(prop) {
+	    extProperties.iterate(function(prop) {
 		oldValues[prop] = currentValues[prop];
 	    });
 	    if( !this.savedValues ) { this.savedValues = []; }
@@ -103,7 +103,7 @@ Canvas2D.Factory.extensions.all.ExtendedCanvasSupport = {
 
 	    var oldValues = this.savedValues.pop();
 	    var currentValues = this;
-	    extProperties.each(function(prop) {
+	    extProperties.iterate(function(prop) {
 		currentValues[prop] = oldValues[prop];
 	    });
 
@@ -121,7 +121,7 @@ Canvas2D.Factory.extensions.all.ExtendedCanvasSupport = {
  */
 Canvas2D.Factory.extensions.all.DashedLineSupport = {
     __extend__: function __extend__(ctx) {
-	[ "_setCurrentXY", "_plotPixel", "_drawLine" ].each( function(f) {
+	[ "_setCurrentXY", "_plotPixel", "_drawLine" ].iterate( function(f) {
 	    ctx[f] = Canvas2D.Factory.extensions.all.DashedLineSupport[f];
 	});
 
@@ -212,7 +212,7 @@ Canvas2D.Factory.extensions.all.DashedLineSupport = {
  */
 Canvas2D.Factory.extensions.all.CrispLineSupport = {
     __extend__: function __extend__(ctx) {
-	[ "strokeRect", "moveTo", "lineTo", "rect" ].each(function(f) {
+	[ "strokeRect", "moveTo", "lineTo", "rect" ].iterate(function(f) {
 	    var $super = ctx[f];
 	    ctx[f] = function(x,y,w,h) {
 		if(!this.useCrispLines) { return $super.apply(this,arguments); }
@@ -267,7 +267,8 @@ Canvas2D.Factory.extensions.all.TextDecorationSupport = {
 
 	this.save();
 	this.useCrispLines = true;
-	this.textDecoration.toLowerCase().split(" ").each(function(decoration) {
+	this.textDecoration.toLowerCase().split(" ")
+	                                 .iterate(function(decoration) {
 	    var decorator = null;
 	    switch(decoration) {
 	    case "underline"   : decorator = this.underlineText;   break;
@@ -282,7 +283,7 @@ Canvas2D.Factory.extensions.all.TextDecorationSupport = {
 		this.stroke();
 		this.closePath();
 	    }
-	}.bind(this) );
+	}.scope(this) );
 	this.restore();
     },
 
@@ -308,12 +309,12 @@ Canvas2D.Factory.extensions.all.TextDecorationSupport = {
  */
 Canvas2D.Factory.extensions.all.MouseEvents = {
     setupMouseEventHandlers: function setupMouseEventHandlers() {
-	Event.observe(this.canvas, 'mousedown', 
-		      this.handleMouseDown.bindAsEventListener(this));
-	Event.observe(this.canvas, 'mouseup', 
-		      this.handleMouseUp.bindAsEventListener(this));
-	Event.observe(document, 'mousemove', 
-		      this.handleMouseMove.bindAsEventListener(this));
+	ProtoJS.Event.observe(this.canvas, 'mousedown', 
+		      this.handleMouseDown.scope(this));
+	ProtoJS.Event.observe(this.canvas, 'mouseup', 
+		      this.handleMouseUp.scope(this));
+	ProtoJS.Event.observe(document, 'mousemove', 
+		      this.handleMouseMove.scope(this));
     },
 
     getLeft: function getLeft() {
@@ -386,12 +387,12 @@ Canvas2D.Factory.extensions.all.MouseEvents = {
  */
 Canvas2D.Factory.extensions.TouchEvents = {
     setupTouchEventHandlers: function setupTouchEventHandlers() {
-	Event.observe(this.canvas, 'touchstart',
-		      this.handleTouchStart.bindAsEventListener(this));
-	Event.observe(this.canvas, 'touchmove',
-		      this.handleTouchMove.bindAsEventListener(this));
-	Event.observe(this.canvas, 'touchend',
-		      this.handleTouchEnd.bindAsEventListener(this));
+	ProtoJS.Event.observe(this.canvas, 'touchstart',
+			      this.handleTouchStart.scope(this));
+	ProtoJS.Event.observe(this.canvas, 'touchmove',
+			      this.handleTouchMove.scope(this));
+	ProtoJS.Event.observe(this.canvas, 'touchend',
+			      this.handleTouchEnd.scope(this));
     },
 
     handleTouchStart: function handleTouchStart(event) {
@@ -594,46 +595,46 @@ Canvas2D.Factory.setup = function(element) {
     }
 
     // Browser Specific Configuration
-    if( Prototype.Browser.MobileSafari ) { 
-	ctx = Object.extend( ctx, Canvas2D.Factory.extensions.CanvasText );
-	ctx = Object.extend( ctx, Canvas2D.Factory.extensions.TouchEvents );
+    if( ProtoJS.Browser.MobileSafari ) { 
+	ProtoJS.mix( Canvas2D.Factory.extensions.CanvasText, ctx, true );
+	ProtoJS.mix( Canvas2D.Factory.extensions.TouchEvents, ctx, true );
 	ctx.setupTouchEventHandlers();
 
-    } else if( Prototype.Browser.WebKit ) { 
-	ctx = Object.extend( ctx, Canvas2D.Factory.extensions.CanvasText );
+    } else if( ProtoJS.Browser.WebKit ) { 
+	ProtoJS.mix( Canvas2D.Factory.extensions.CanvasText, ctx, true );
 	
-    } else if( Prototype.Browser.IE ) { 
-	ctx = Object.extend( ctx, Canvas2D.Factory.extensions.CanvasText );
+    } else if( ProtoJS.Browser.IE ) { 
+	ProtoJS.mix( Canvas2D.Factory.extensions.CanvasText, ctx, true );
 	Canvas2D.Book.prototype.addWaterMark = function() { };
 
-    } else if( Prototype.Browser.Opera ) { 
-	ctx = Object.extend( ctx, Canvas2D.Factory.extensions.CanvasText );
+    } else if( ProtoJS.Browser.Opera ) { 
+	ProtoJS.mix( Canvas2D.Factory.extensions.CanvasText, ctx, true );
 
-    } else if( Prototype.Browser.Gecko )  {
+    } else if( ProtoJS.Browser.Gecko )  {
 	if( ctx.strokeText && ctx.fillText && ctx.measureText ) {
 	    // post 1.9 gecko suports HTML5 interface (>= FF 3.5)
-	    ctx = Object.extend( ctx, 
-				 Canvas2D.Factory.extensions.HTML5CanvasText );
+	    ProtoJS.mix( Canvas2D.Factory.extensions.HTML5CanvasText, ctx,
+			 true );
 	} else {
 	    // pre 1.9 gecko suports own interface (<= FF 3.1)
-	    ctx = Object.extend( ctx, 
-				 Canvas2D.Factory.extensions.GeckoCanvasText );
+	    ProtoJS.mix(Canvas2D.Factory.extensions.GeckoCanvasText, ctx,
+			true );
 	}
 
     } else { throw( "Canvas2D: Unknown or Unsupported Browser." ); }
 
     // mixin some functions that clearly are missing ;-)
-    $H(Canvas2D.Factory.extensions.all).values().each(function(ext) {
+    $H(Canvas2D.Factory.extensions.all).values().iterate(function(ext) {
 	if( ext.__extend__ ) {
 	    ctx = ext.__extend__(ctx);
 	} else {
-	    ctx = Object.extend( ctx, ext );
+	    ProtoJS.mix( ext, ctx, true );
 	}
     } );
 
     // initialize own default settings
-    $H(Canvas2D.Defaults.Canvas).each(function(setting) {
-	ctx[setting.key] = setting.value;
+    $H(Canvas2D.Defaults.Canvas).iterate(function(key, value) {
+	ctx[key] = value;
     });
 
     // activate mouseEventHandlers
@@ -643,5 +644,4 @@ Canvas2D.Factory.setup = function(element) {
 }
 
 // mix-in event handling to Canvas2D
-Canvas2D = Object.extend( Canvas2D,
-			  Canvas2D.Factory.extensions.all.EventHandling );
+ProtoJS.mix( Canvas2D.Factory.extensions.all.EventHandling, Canvas2D );

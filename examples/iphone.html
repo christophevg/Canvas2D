@@ -1,84 +1,9 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
-    <style>
-      body {
-        margin: 0;
-        font-family: Helvetica;
-        background: #FFFFFF;
-        color: #000000;
-        overflow: hidden;
-        -webkit-text-size-adjust: none;
-      }
-      
-      body > h1 {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 10px;
-        line-height: 20px;
-        font-size: 20px;
-        font-weight: bold;
-        text-align: center;
-        text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
-        text-overflow: ellipsis;
-        color: #FFFFFF;
-        background: url(images/iphone/iPhoneToolbar.png) #6d84a2 repeat-x;
-        border-bottom: 1px solid #2d3642;
-      }
+    <link rel="stylesheet" type="text/css" href="iphone.css" />
 
-      .button {
-        position: absolute;
-        top: 8px;
-        right: 6px;
-        -webkit-border-image: url(images/iphone/iPhoneButton.png) 0 5 0 5;
-        -webkit-border-radius: 0;
-        border-width: 0 5px 0 5px;
-        padding: 0;
-        height: 28px;
-        line-height: 28px;
-        font-size: 12px;
-        font-weight: bold;
-        color: #FFFFFF;
-        text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
-        text-decoration: none;
-        background: none;
-      }
-
-      #homeButton {
-        left: 6px;
-        right: auto;
-        -webkit-border-image: url(images/iphone/iPhoneBackButton.png) 0 8 0 14;
-        border-width: 0 8px 0 14px;
-      }
-    </style>
-    <script src="../lib/excanvas.js"></script>
-    <script src="../lib/prototype-1.6.0.3.js"></script>
-    <script src="../lib/canvastext.js"></script>
-    <script src="../lib/tabber/tabber.js"></script>
-    <script src="../lib/ADL/build/ADL.shared.js"></script>
-
-    <script src="../src/DepCheck.js"></script> 
-    <script src="../src/SanityChecks.js"></script> 
-    <script src="../src/Common.js"></script> 
-    <script src="../src/Canvas2D.js"></script> 
-    <script src="../src/Factory.js"></script> 
-    <script src="../src/ImageManager.js"></script> 
-    <script src="../src/Manager.js"></script> 
-    <script src="../src/ADLVisitor.js"></script> 
-    <script src="../src/Book.js"></script> 
-    <script src="../src/Shape.js"></script> 
-    <script src="../src/Sheet.js"></script> 
-    <script src="../src/Position.js"></script> 
-    <script src="../src/Rectangle.js"></script> 
-    <script src="../src/Connector.js"></script> 
-    <script src="../src/Line.js"></script> 
-    <script src="../src/LinePath.js"></script> 
-    <script src="../src/Text.js"></script> 
-    <script src="../src/Image.js"></script> 
-    <script src="../src/Alias.js"></script> 
-    <script src="../src/plugins/TabbedCanvas.js"></script> 
-    <script src="../src/KickStart.js"></script> 
-    <script src="../src/Defaults.js"></script>
+    <script type="text/javascript" src="includes.js"></script>
 </head>
 <body>
   <h1 id="pageTitle">Canvas2D</h1>

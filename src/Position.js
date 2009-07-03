@@ -1,5 +1,5 @@
-Canvas2D.Position = Class.create( {
-    initialize: function( shape, left, top ) {
+Canvas2D.Position = Class.extend( {
+    init: function( shape, left, top ) {
 	this.shape = shape;
 	this.left  = left || null;
 	this.top   = top  || null;
@@ -77,6 +77,5 @@ Canvas2D.Position = Class.create( {
     }
 });
 
-Canvas2D.Position = 
-    Class.create( Canvas2D.Position,
-		  Canvas2D.Factory.extensions.all.EventHandling );
+ProtoJS.mix( Canvas2D.Factory.extensions.all.EventHandling,
+	     Canvas2D.Position.prototype );

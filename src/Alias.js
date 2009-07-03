@@ -1,4 +1,4 @@
-Canvas2D.Alias = Class.create( Canvas2D.Shape, {} );
+Canvas2D.Alias = Canvas2D.Shape.extend( {} );
 
 Canvas2D.Alias.mapper = {
     sheet : function(shape) { 
@@ -23,8 +23,8 @@ Canvas2D.Alias.mapper = {
     image : function(shape) {
 	var modifiers = shape.modifiers;
 	return function( construct, parent ) {
-	    modifiers.each(function(pair) {
-		construct.modifiers.set(pair.key, pair.value); 
+	    modifiers.iterate(function(key, value) {
+		construct.modifiers.set(key, value); 
 	    } );
 	    var alias = Canvas2D.Image.from(construct, parent);
 	    //alias.getType = function() { return shape.name; }

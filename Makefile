@@ -1,9 +1,8 @@
-PROTOTYPE-DIST=prototype-1.6.0.3.js
-PROTOTYPE-URL=http://www.prototypejs.org/assets/2008/9/29/${PROTOTYPE-DIST}
 EXCANVAS-AG=http://excanvas.svn.sourceforge.net/viewvc/excanvas/silverlight/excanvas.js
 EXCANVAS-URL=http://excanvas.svn.sourceforge.net/viewvc/excanvas/excanvas.js
 CANVASTEXT-URL=http://www.federated.com/~jim/canvastext/canvastext.js
 ADL-URL=http://git.thesoftwarefactory.be/pub/ADL.git
+PROTOJS-URL=../../ProtoJS
 TABBER-DIST=tabber.zip
 TABBER-URL=http://www.barelyfitz.com/projects/tabber/${TABBER-DIST}
 
@@ -50,7 +49,7 @@ SRCS=src/DepCheck.js \
      src/Defaults.js
 CSSSRCS=lib/tabber/example.css src/${APP}.css
 VERSION=$(shell git describe --tags | cut -d'-' -f1,2)
-LIBS=lib/${PROTOTYPE-DIST} \
+LIBS=lib/ProtoJS/build/ProtoJS.js \
      lib/excanvas.js lib/canvastext.js \
      lib/ADL/build/ADL.shared.js \
      lib/tabber/tabber.js
@@ -87,11 +86,7 @@ dist: dist/${DIST} dist/${DIST-SRC} dist/${DIST-EXT}
 
 update-libs:
 	@(cd lib/ADL; ${GIT-PULL}; ${MAKE} clean; ${MAKE})
-
-lib/${PROTOTYPE-DIST}:
-	@echo "*** importing $@"
-	@mkdir -p lib
-	@(cd lib; ${FETCH} ${PROTOTYPE-URL})
+	@(cd lib/ProtoJS; ${GIT-PULL}; ${MAKE} clean; ${MAKE})
 
 lib/excanvas.js: 
 	@echo "*** importing $@"
@@ -103,6 +98,11 @@ lib/canvastext.js:
 	@mkdir -p lib
 	@(cd lib; ${FETCH} ${CANVASTEXT-URL}; \
                   ${PATCH} <../patches/canvastext.diff )
+
+lib/ProtoJS/build/ProtoJS.js:
+	@echo "*** importing $@"
+	@(cd lib; ${GIT-CLONE} ${PROTOJS-URL})
+	@(cd lib/ProtoJS; ${MAKE})
 
 lib/ADL/build/ADL.shared.js:
 	@echo "*** importing $@"

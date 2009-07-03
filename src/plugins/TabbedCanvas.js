@@ -1,5 +1,5 @@
-Canvas2D.Book.plugins.TabbedCanvas = Class.create( {
-    initialize: function(book) {
+Canvas2D.Book.plugins.TabbedCanvas = Class.extend( {
+    init: function(book) {
 	this.book = book;
     },
 
@@ -24,7 +24,7 @@ Canvas2D.Book.plugins.TabbedCanvas = Class.create( {
 	about.style.width = (parseInt(width)-4)  + "px";
 
 	var libraries = "";
-	Canvas2D.extensions.each(function(library) {
+	Canvas2D.extensions.iterate(function(library) {
 	    libraries += "\n<hr>\n";
 	    libraries += "<b>Library: " +
 		library.name + " " + library.version + "</b> " + 

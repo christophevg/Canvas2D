@@ -1,5 +1,5 @@
-Canvas2D.Sheet = Class.create( {
-    initialize: function initialize(props) {
+Canvas2D.Sheet = Class.extend( {
+    init: function init(props) {
 	props = props || {};
 
 	this.name  = props.name  || "default";   // name of the sheet
@@ -20,24 +20,24 @@ Canvas2D.Sheet = Class.create( {
     wireCanvasDelegation: function wireCanvasDelegation() {
 	if( !this.canvas ) { return; }
 
-	Canvas2D.Sheet.Operations.each(function(operation) {
+	Canvas2D.Sheet.Operations.iterate(function(operation) {
 	    this[operation] = function() {
 		this.transferProperties();
 		return this.canvas[operation].apply(this.canvas, arguments);
-	    }.bind(this);
-	}.bind(this) );
+	    }.scope(this);
+	}.scope(this) );
     },
 
     setupProperties: function setupProperties() {
-	Canvas2D.Sheet.Properties.each( function(prop) {
+	Canvas2D.Sheet.Properties.iterate( function(prop) {
 	    this[prop] = Canvas2D.Sheet.Defaults[prop] || this.canvas[prop];
-	}.bind(this) );
+	}.scope(this) );
     },
     
     transferProperties : function() {
-	Canvas2D.Sheet.Properties.each(function(prop) {
+	Canvas2D.Sheet.Properties.iterate(function(prop) {
 	    this.canvas[prop] = this[prop];
-	}.bind(this) );
+	}.scope(this) );
     },
 
     makeDirty: function() {
@@ -78,8 +78,8 @@ Canvas2D.Sheet = Class.create( {
 
     add: function(shape) {
 	var position = new Canvas2D.Position( shape, this.newLeft, this.newTop);
-	shape   .on( "change", this.makeDirty.bind(this) );
-	position.on( "change", this.makeDirty.bind(this) );
+	shape   .on( "change", this.makeDirty.scope(this) );
+	position.on( "change", this.makeDirty.scope(this) );
 
 	this.newLeft = null;
 	this.newTop = null;
@@ -109,8 +109,7 @@ Canvas2D.Sheet = Class.create( {
 		{
 		    // adding and removing
 		    if( this.selectedShapes.contains(position) ) {
-			this.selectedShapes = 
-			    this.selectedShapes.without(position);
+			this.selectedShapes.remove(position);
 		    } else {
 			this.selectedShapes.push(position);
 		    }
@@ -141,7 +140,7 @@ Canvas2D.Sheet = Class.create( {
 		this.fireEvent( "shapeSelected", this.positions[s] );
 	    }
 	}
-	this.selectedShapes = newSelection.uniq();
+	this.selectedShapes = newSelection.unique();
     },
 
     handleMouseDown: function(pos) {
@@ -153,11 +152,11 @@ Canvas2D.Sheet = Class.create( {
 
     handleMouseUp: function(pos) {
 	if( !this.isDynamic() ) { return; }
-	this.selectedShapes.each(function(position) {
+	this.selectedShapes.iterate(function(position) {
 	    this.fireEvent( "shapesMoved",
 			    "Shape moved to " + 
 			    position.left + ", " + position.top );
-	}.bind(this) );
+	}.scope(this) );
 	this.showSelection   = false;
 	this.makeDirty();
     },
@@ -182,9 +181,9 @@ Canvas2D.Sheet = Class.create( {
     },
 
     moveCurrentSelection: function(dx, dy) {
-	this.selectedShapes.each(function(position) {	
+	this.selectedShapes.iterate(function(position) {	
 	    position.move(dx, dy);
-	}.bind(this) );
+	}.scope(this) );
     },
 
     handleKeyDown: function(key) {
@@ -221,33 +220,33 @@ Canvas2D.Sheet = Class.create( {
     },
 
     addSelectionMarkers: function() {
-	this.selectedShapes.each( function(shape) {
+	this.selectedShapes.iterate( function(shape) {
 	    var box = shape.getBox();
 	    this.canvas.fillStyle = "rgba( 200, 200, 255, 1 )";
 	    [[ box.left, box.top    ], [ box.right, box.top    ],
-	     [ box.left, box.bottom ], [ box.right, box.bottom ]].each( 
+	     [ box.left, box.bottom ], [ box.right, box.bottom ]].iterate( 
 		 function(corner) {
 		     this.canvas.beginPath();
 		     this.canvas.arc( corner[0],  corner[1], 5, 0, 
 				      Math.PI*2, true );
 		     this.canvas.fill();	
-		 }.bind(this) );
-	}.bind(this) );
+		 }.scope(this) );
+	}.scope(this) );
     },
 
     render: function() {
 	var delayed = [];
-	this.positions.each( function(shape) { 
+	this.positions.iterate( function(shape) { 
 	    if( shape.delayRender() ) {
 		delayed.push(shape);
 	    } else {
 		shape.render(this); 
 	    }
-	}.bind(this) );
+	}.scope(this) );
 
-	delayed.each( function(shape) { 
+	delayed.iterate( function(shape) { 
 	    shape.render(this); 
-	}.bind(this) );
+	}.scope(this) );
 
 	this.addSelectionOverlay();
 	this.addSelectionMarkers();
@@ -257,7 +256,7 @@ Canvas2D.Sheet = Class.create( {
 	var s = "";
 	s += "Sheet "  + this.name;
 	s += " +" + this.style + " {\n";
-	this.positions.each(function(shape) { 
+	this.positions.iterate(function(shape) { 
 	    var t = shape.toADL("  ");
 	    if( t ) { s += t + "\n"; }
 	} );
@@ -267,8 +266,8 @@ Canvas2D.Sheet = Class.create( {
 } );
 
 // add-in some common functionality
-Canvas2D.Sheet = Class.create( Canvas2D.Sheet, 
-			       Canvas2D.Factory.extensions.all.EventHandling );
+ProtoJS.mix( Canvas2D.Factory.extensions.all.EventHandling,
+	     Canvas2D.Sheet.prototype );
 
 Canvas2D.Sheet.Properties = 
     [ "globalAlpha", "globalCompositeOperation",
@@ -301,10 +300,10 @@ Canvas2D.Sheet.from = function(construct, book) {
 	style = styleModifier.value.value.toLowerCase();
     }
     
-    construct.modifiers.each(function(pair) {
-	if( pair.key.toLowerCase() == "static" 
-	    || pair.key.toLowerCase() == "dynamic" ) {
-	    style = pair.key.toLowerCase();
+    construct.modifiers.iterate(function(key, value) {
+	if( key.toLowerCase() == "static" 
+	    || key.toLowerCase() == "dynamic" ) {
+	    style = key.toLowerCase();
 	}
     });
 

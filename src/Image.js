@@ -1,4 +1,4 @@
-Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
+Canvas2D.Image = Canvas2D.Rectangle.extend( {
     getSource : function() { return this.src;   },
     getImage  : function() { return this.image; },
 
@@ -6,7 +6,7 @@ Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
 	if( this.getSource() ) {
 	    this.image = 
 		Canvas2D.ImageManager.load( this.getSource(), 
-					    this.updateSize.bind(this) );
+					    this.updateSize.scope(this) );
 	}
     },
 
@@ -19,8 +19,8 @@ Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
 	sheet.drawImage(this.getImage(), left, top);
     },
 
-    asConstruct: function($super) {
-	var construct = $super();
+    asConstruct: function() {
+	var construct = this._super();
 	construct.addModifiers( [ "source" ] );
 	return construct;
     }
@@ -28,10 +28,8 @@ Canvas2D.Image = Class.create( Canvas2D.Rectangle, {
 
 Canvas2D.Image.from = function(construct, canvas) {
     var props = { name: construct.name };
-    construct.modifiers.each(function(pair) {
-	var key   = pair.key;
-	var value = pair.value.value.value;
-	props[key] = value;
+    construct.modifiers.iterate(function(key, value) {
+	props[key] = value.value.value;
     } );
     
     var left, top;
