@@ -1,4 +1,4 @@
-Canvas2D.Stack = Class.create( Canvas2D.CompositeShape, {
+Canvas2D.Stack = Canvas2D.CompositeShape.extend( {
     decorate: function decorate(sheet, left, top) {
 	if( this.getBorderWidth() > 0 ) {
 	    sheet.useCrispLines = this.getUseCrispLines();
@@ -12,7 +12,7 @@ Canvas2D.Stack = Class.create( Canvas2D.CompositeShape, {
 
     getWidth: function getWidth() {
 	var width = 0;
-	this.children.each( function(child) {
+	this.children.iterate( function(child) {
 	    var w = child.getWidth() + this.getChildPadding() * 2;
 	    if( this.getOrientation() == "we" ||
 		this.getOrientation() == "ew" ) 
@@ -21,13 +21,13 @@ Canvas2D.Stack = Class.create( Canvas2D.CompositeShape, {
 	    } else {
 		if( w > width ) { width = w; }
 	    }
-	}.bind(this) );
+	}.scope(this) );
 	return width;
     },
 
     getHeight: function getHeight() {
 	var height = 0;
-	this.children.each( function(child) {
+	this.children.iterate( function(child) {
 	    var h = child.getHeight() + this.getChildPadding() * 2;
 	    if( this.getOrientation() == "we" ||
 		this.getOrientation() == "ew" ) 
@@ -36,7 +36,7 @@ Canvas2D.Stack = Class.create( Canvas2D.CompositeShape, {
 	    } else {
 		height += h;
 	    }
-	}.bind(this) );
+	}.scope(this) );
 	return height;
     },
 
@@ -64,18 +64,18 @@ Canvas2D.Stack = Class.create( Canvas2D.CompositeShape, {
 	}
     },
 
-    getChildren: function getChildren($super) {
+    getChildren: function getChildren() {
 	if( this.getOrientation() == "sn" ||
 	    this.getOrientation() == "ew" ) 
 	{
-	    return $super().reverse();
+	    return this._super().reverse();
 	} else {
-	    return $super();
+	    return this._super();
 	}
     },
 
-    asConstruct: function($super) {
-	var construct = $super();
+    asConstruct: function() {
+	var construct = this._super();
 	// TODO
 	return construct;
     }
@@ -83,10 +83,9 @@ Canvas2D.Stack = Class.create( Canvas2D.CompositeShape, {
 
 Canvas2D.Stack.from = function( construct, parent ) {
     var props = { name: construct.name };
-    construct.modifiers.each(function(pair) {
-	var key   = pair.key;
-	var value = ( typeof pair.value.value != "undefined" ? 
-		      pair.value.value.value : "" );
+    construct.modifiers.iterate(function(key, value) {
+	value = ( typeof value.value != "undefined" ? 
+		  value.value.value : "" );
 	props[key] = value;
     } );
 

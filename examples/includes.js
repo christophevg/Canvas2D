@@ -7,14 +7,18 @@ var scripts = [
     
     "../src/DepCheck.js", 
     "../src/SanityChecks.js", 
+
     "../src/Common.js", 
+
     "../src/Canvas2D.js", 
     "../src/Factory.js", 
     "../src/Keyboard.js", 
     "../src/ImageManager.js", 
+
     "../src/Manager.js", 
     "../src/ADLVisitor.js", 
     "../src/Book.js", 
+
     "../src/Shape.js", 
     "../src/Sheet.js", 
     "../src/Position.js", 
@@ -26,6 +30,10 @@ var scripts = [
     "../src/Image.js", 
     "../src/Alias.js", 
     "../src/Arrow.js",
+
+    "../src/CompositeShape.js", 
+    "../src/Stack.js", 
+
     "../src/plugins/TabbedCanvas.js", 
     "../src/plugins/AutoLayout.js", 
     "../src/KickStart.js", 

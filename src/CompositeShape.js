@@ -1,4 +1,4 @@
-Canvas2D.CompositeShape = Class.create( Canvas2D.Shape, {
+Canvas2D.CompositeShape = Canvas2D.Shape.extend( {
     postInitialize: function postInitialize() {
 	this.children = [];
     },
@@ -6,12 +6,12 @@ Canvas2D.CompositeShape = Class.create( Canvas2D.Shape, {
     draw: function(sheet, left, top) {
 	this.prepareChildren(sheet);
 	this.decorate(sheet, left, top);
-	this.getChildren().each( function(child) {
+	this.getChildren().iterate( function(child) {
 	    this.decorateChild(sheet, left, top, child);
 	    child.render(sheet, left, top );
 	    var pos = this.nextPosition(left, top, child);
 	    left = pos.left; top = pos.top;
-	}.bind(this) );
+	}.scope(this) );
     },
 
     getChildren: function getChildren() {
@@ -19,7 +19,7 @@ Canvas2D.CompositeShape = Class.create( Canvas2D.Shape, {
     },
 
     prepareChildren: function prepareChildren(sheet) {
-	this.children.each( function(child) { 
+	this.children.iterate( function(child) { 
 	    child.prepare(sheet);
 	} );
     },
@@ -36,7 +36,6 @@ Canvas2D.CompositeShape = Class.create( Canvas2D.Shape, {
     prepareChild: function(child) {},
 
     hit: function(x,y) { 
-	
 	return false;
     },
 
