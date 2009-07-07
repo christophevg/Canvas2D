@@ -8,29 +8,61 @@
   <body>
     <h1>Composite Shapes</h1>
     <div class="box">
-      <h2>Stack</h2>
+      <h2>Generic CompositeShape</h2>
       <canvas class="Canvas2D" id="myDiagram" width="300" height="250"></canvas>
     </div>
-    <pre id="myDiagramSource" style="display:none;">  
+    <div class="box">
+      <pre id="myDiagramSource">
 sheet mySheet +style="dynamic" {
-  [@10,10] stack masterStack +childPadding=0 +childSpacing=0 {
-    stack stack1 +borderWidth=1 +borderColor="red" 
+  [@10,10] group myGroup +composition="vertical-stack" {
+      text text11 := "1. some text";
+      text text12 := "1. some more text";
+  }
+  [@10,50] group myGroup2 +composition="horizontal-stack" {
+      text text21 := "2. some text";
+      text text22 := "2. some more text";
+  }
+  [@10,90] group myGroup3 +composition="horizontal-stack" {
+    group mySubGroup1 +composition="vertical-stack" {
+      text text31 := "3. some text";
+      text text32 := "3. some more text";
+    }
+    group myGroup +composition="vertical-stack" {
+      text text41 := "4. some text";
+      text text42 := "4. some more text";
+    }
+  }
+}
+      </pre>  
+    </div>
+    <br clear="both"/>
+    <div class="box">
+      <h2>Rectangle CompositeShape</h2>
+      <canvas class="Canvas2D" id="myDiagram2" 
+	      width="300" height="250"></canvas>
+    </div>
+    <div class="box">
+      <pre id="myDiagram2Source">
+sheet mySheet +style="dynamic" {
+  [@10,10] group myGroup +composition="vertical-stack" {
+    rectangle myHeader +borderWidth=1 +lineColor="red" 
                  +fillColor="rgba(255,255,200,1)" {
       text text11 := "1. some text";
       text text12 := "1. some more text";
     }
-    stack stack2 +borderWidth=1 +borderColor="red" 
+    rectangle myBody +borderWidth=1 +lineColor="red" 
                  +fillColor="rgba(255,255,200,1)" {
       text text21 := "2. some text";
       text text22 := "2. some more text";
     }
-    stack stack3 +borderWidth=1 +borderColor="red" 
+    rectangle myFooter +borderWidth=1 +lineColor="red" 
                  +fillColor="rgba(255,255,200,1)" {
       text text31 := "3. some text";
       text text32 := "3. some more text";
     }
   }
 }
-    </pre>  
+      </pre>  
+    </div>
   </body>
 </html>

@@ -1,4 +1,4 @@
-Canvas2D.Rectangle = Canvas2D.Shape.extend( {
+Canvas2D.Rectangle = Canvas2D.CompositeShape.extend( {
     draw: function(sheet, left, top) {
 	sheet.useCrispLines = this.getUseCrispLines();
 	sheet.lineWidth     = this.getLineWidth();
@@ -7,6 +7,7 @@ Canvas2D.Rectangle = Canvas2D.Shape.extend( {
 
 	sheet.fillRect( left, top, this.getWidth(), this.getHeight() );
 	sheet.strokeRect( left, top, this.getWidth(), this.getHeight() );
+	this._super(sheet, left, top);
     },
 
     hit: function(x,y) { 
@@ -78,6 +79,7 @@ Canvas2D.Rectangle.MANIFEST = {
     name         : "rectangle",
     aliasses     : [ "box" ],
     properties   : [ "lineColor", "fillColor", "width", "height", "lineWidth" ],
+    propertyPath : [ Canvas2D.CompositeShape ],
     libraries    : [ "Canvas2D" ]
 };
 

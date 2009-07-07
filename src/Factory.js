@@ -613,8 +613,7 @@ Canvas2D.Factory.setup = function(element) {
     } else if( ProtoJS.Browser.Gecko )  {
 	if( ctx.strokeText && ctx.fillText && ctx.measureText ) {
 	    // post 1.9 gecko suports HTML5 interface (>= FF 3.5)
-	    ProtoJS.mix( Canvas2D.Factory.extensions.HTML5CanvasText, ctx,
-			 true );
+	    ctx = Canvas2D.Factory.extensions.HTML5CanvasText.__extend__(ctx);
 	} else {
 	    // pre 1.9 gecko suports own interface (<= FF 3.1)
 	    ProtoJS.mix(Canvas2D.Factory.extensions.GeckoCanvasText, ctx,

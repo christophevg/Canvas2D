@@ -35,7 +35,7 @@ Canvas2D.Shape = Class.extend( {
     },
 
     getProperty: function getProperty( prop ) {
-	if( typeof this[prop] == "undefined" ) {
+	if( typeof this[prop] == "undefined" ) { 
 	    var propName = prop.substr(0,1).toUpperCase() + prop.substr(1);
 	    var getterName = "get"+propName;
 	    return this[getterName]();

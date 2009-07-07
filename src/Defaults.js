@@ -91,13 +91,7 @@ Canvas2D.Arrow.Defaults = {
 
 };
 
-Canvas2D.CompositeShape.Defaults = {};
+Canvas2D.CompositeShape.Defaults = {
 
-Canvas2D.Stack.Defaults = {
-    borderColor : "black",
-    borderWidth : 0,
-    fillColor   : "white",
-    orientation : "ns",
-    childPadding : 5,
-    childSpacing : 0
 };
+
