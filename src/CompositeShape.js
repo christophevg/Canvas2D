@@ -1,7 +1,22 @@
 Canvas2D.Compositors = {
     "vertical-stack": Class.extend( {
-	nextPosition: function(left, top, child) {
-	    return { left: left, top: top+child.getHeight() };
+	init: function init(args) {
+	    this.align = args.contains("center") ? "center" :
+		args.contains("right") ? "right" : "left";
+	    this.left = 0;
+	    this.top = 0;
+	},
+
+	getPosition: function(child, children) {
+	    var dleft = 0;
+	    if( this.align == "center" ) {
+		dleft = ( this.getWidth(children) - child.getWidth() ) / 2;
+	    } else if( this.align == "right" ) {
+		dleft = this.getWidth(children) - child.getWidth();
+	    }
+	    var top = this.top;
+	    this.top += child.getHeight();
+	    return { left: this.left + dleft, top: top };
 	},
 
 	getWidth: function getWidth(children) {
@@ -26,8 +41,23 @@ Canvas2D.Compositors = {
     }),
 
     "horizontal-stack": Class.extend( {
-	nextPosition: function(left, top, child) {
-	    return { left: left+child.getWidth(), top: top };
+	init: function init(args) {
+	    this.align = args.contains("top") ? "top" :
+		args.contains("bottom") ? "bottom" : "center";
+	    this.left = 0;
+	    this.top = 0;
+	},
+	
+	getPosition: function(child, children) {
+	    var dtop = 0;
+	    if( this.align == "center" ) {
+		dtop = ( this.getHeight(children) - child.getHeight() ) / 2;
+	    } else if( this.align == "bottom" ) {
+		dtop = this.getHeight(children) - child.getHeight();
+	    }
+	    var left = this.left;
+	    this.left += child.getWidth();
+	    return { left: left, top: this.top + dtop };
 	},
 
 	getWidth: function getWidth(children) {
@@ -62,19 +92,19 @@ Canvas2D.CompositeShape = Canvas2D.Shape.extend( {
 
     preprocess: function preprocess(props) {
 	props.composition = props["composition"] || "vertical-stack";
-	props.composition = new Canvas2D.Compositors[props.composition]();
+	var args = [];
+	if( props.composition.contains( ":" ) ) {
+	    args = props.composition.split(":");
+	    props.composition = args.shift();
+	}
+	props.composition = new Canvas2D.Compositors[props.composition](args);
 	return props;
     },
 
     draw: function(sheet, left, top) {
-	// temp
-	//console.log( left + ", " + top + " : " + this.getWidth() + " x " + this.getHeight() );
-	//sheet.strokeRect( left, top, this.getWidth(), this.getHeight() );
-
 	this.getChildren().iterate( function(child) {
-	    child.render(sheet, left, top );
-	    var pos = this.composition.nextPosition(left, top, child);
-	    left = pos.left; top = pos.top;
+	    var d = this.composition.getPosition(child, this.getChildren());
+	    child.render(sheet, left + d.left, top + d.top );
 	}.scope(this) );
     },
 
