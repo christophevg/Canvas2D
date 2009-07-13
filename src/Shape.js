@@ -24,6 +24,14 @@ Canvas2D.Shape = Class.extend( {
 	this.postInitialize();
     },
 
+    setParent: function setParent(parent) {
+	this.parent = parent;
+    },
+
+    getParent: function getParent() {
+	return this.parent;
+    },
+
     prepare: function prepare(sheet) {},
     
     setProperties : function(props) {

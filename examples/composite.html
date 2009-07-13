@@ -45,21 +45,42 @@ sheet mySheet +style="dynamic" {
       <pre id="myDiagram2Source">
 sheet mySheet +style="dynamic" {
   [@10,10] group myGroup +composition="vertical-stack" {
-    rectangle myHeader +borderWidth=1 +lineColor="red" 
-                       +fillColor="rgba(255,255,200,1)" 
+    rectangle myHeader +lineWidth=1 +padding=10 +grow=true
+                       +lineColor="red" +fillColor="rgba(255,255,200,1)" 
                        +composition="vertical-stack:center" {
       text text11 := "1. some text";
       text text12 := "1. some more text";
     }
-    rectangle myBody +borderWidth=1 +lineColor="red" 
+    rectangle myBody +lineWidth=1 +padding=10 +lineColor="red"
                  +fillColor="rgba(255,255,200,1)" {
       text text21 := "2. some text";
       text text22 := "2. some more text";
     }
-    rectangle myFooter +borderWidth=1 +lineColor="red" 
-                 +fillColor="rgba(255,255,200,1)" {
+    rectangle myFooter +lineWidth=1 +grow=true
+                       +lineColor="red" +fillColor="rgba(255,255,200,1)"
+                       +composition="vertical-stack:right" {
       text text31 := "3. some text";
-      text text32 := "3. some more text";
+      text text32 := "3. some other interesting text";
+    }
+  }
+
+  [@10,145] group group2 +composition="horizontal-stack" {
+    rectangle head +lineWidth=1 +lineColor="red" 
+                   +grow=true +composition="vertical-stack" {
+      text t1 := "abc";
+      text t2 := "def";
+    }
+    rectangle body +lineWidth=1 +lineColor="red" 
+                   +composition="vertical-stack" {
+      text t3  := "1";
+      text t4a := "2";
+      text t4b := "3";
+      text t4c := "4";
+    }
+    rectangle tail +lineWidth=1 +lineColor="red" 
+                   +composition="vertical-stack:center" {
+      text t5 := "xxxxxx";
+      text t6 := "yyy";
     }
   }
 }

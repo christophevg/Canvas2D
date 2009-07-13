@@ -1,82 +1,108 @@
 Canvas2D.Compositors = {
     "vertical-stack": Class.extend( {
-	init: function init(args) {
+	init: function init(args, shape) {
 	    this.align = args.contains("center") ? "center" :
 		args.contains("right") ? "right" : "left";
 	    this.left = 0;
 	    this.top = 0;
+	    this.shape = shape;
 	},
 
-	getPosition: function(child, children) {
-	    var dleft = 0;
+	getPadding: function getPadding() {
+	    return parseInt(this.shape.padding ? this.shape.padding : 0);
+	},
+
+	getPosition: function(child) {
+	    var dleft = this.getPadding();
+	    var width = this.shape.grow ? this.shape.getParent().getWidth() 
+		: this.getWidth();
 	    if( this.align == "center" ) {
-		dleft = ( this.getWidth(children) - child.getWidth() ) / 2;
+		dleft = ( width - child.getWidth() ) / 2;
 	    } else if( this.align == "right" ) {
-		dleft = this.getWidth(children) - child.getWidth();
+		dleft = width -  child.getWidth() - this.getPadding();
 	    }
 	    var top = this.top;
-	    this.top += child.getHeight();
-	    return { left: this.left + dleft, top: top };
+	    this.top += child.getHeight(); // for next child
+	    return { left: this.left + dleft, 
+		     top: top + this.getPadding() };
 	},
 
-	getWidth: function getWidth(children) {
+	getWidth: function getWidth() {
 	    // max width of all children
 	    var width = 0;
-	    children.iterate( function(child) {
+	    this.shape.getChildren().iterate( function(child) {
 		width = child.getWidth() > width ?
 		    child.getWidth() : width;
 	    });
-	    return width;
+	    return width + this.getPadding() * 2;
 	},
 
-	getHeight: function getHeight(children) {
+	getChildWidth: function getChildWidth() {
+	    return this.getWidth();
+	},
+
+	getHeight: function getHeight() {
 	    // sum of all children's height
 	    var height = 0;
-	    children.iterate( function(child) {
-		height += child.getHeight() > height ? 
-		    child.getHeight() : height;
+	    this.shape.getChildren().iterate( function(child) {
+		height += child.getHeight();
 	    });
-	    return height;
+	    return height + this.getPadding() * 2;
+	},
+
+	getChildHeight: function getChildHeight() {
+	    return null;
 	}
     }),
 
     "horizontal-stack": Class.extend( {
-	init: function init(args) {
+	init: function init(args, shape) {
 	    this.align = args.contains("top") ? "top" :
 		args.contains("bottom") ? "bottom" : "center";
 	    this.left = 0;
 	    this.top = 0;
+	    this.shape = shape;
 	},
 	
-	getPosition: function(child, children) {
+	getPosition: function(child) {
 	    var dtop = 0;
+	    var height = this.shape.grow ? this.shape.getParent().getHeight()
+		: this.getHeight();
 	    if( this.align == "center" ) {
-		dtop = ( this.getHeight(children) - child.getHeight() ) / 2;
+		dtop = ( height - child.getHeight() ) / 2;
 	    } else if( this.align == "bottom" ) {
-		dtop = this.getHeight(children) - child.getHeight();
+		dtop = height - child.getHeight();
 	    }
 	    var left = this.left;
-	    this.left += child.getWidth();
+	    this.left += child.getWidth(); // next child
 	    return { left: left, top: this.top + dtop };
 	},
 
-	getWidth: function getWidth(children) {
+	getWidth: function getWidth() {
 	    // sum of all children's width
 	    var width = 0;
-	    children.iterate( function(child) {
+	    this.shape.getChildren().iterate( function(child) {
 		width += child.getWidth();
 	    });
 	    return width;
 	},
 
-	getHeight: function getHeight(children) {
+	getChildWidth: function getChildWidth() {
+	    return null;
+	},
+
+	getHeight: function getHeight() {
 	    // max height of all children
 	    var height = 0;
-	    children.iterate( function(child) {
+	    this.shape.getChildren().iterate( function(child) {
 		height = child.getHeight() > height ? 
 		    child.getHeight() : height;
 	    });
 	    return height;
+	},
+
+	getChildHeight: function getChildHeight() {
+	    return this.getHeight();
 	}
     })
 };
@@ -97,7 +123,8 @@ Canvas2D.CompositeShape = Canvas2D.Shape.extend( {
 	    args = props.composition.split(":");
 	    props.composition = args.shift();
 	}
-	props.composition = new Canvas2D.Compositors[props.composition](args);
+	props.composition = 
+	    new Canvas2D.Compositors[props.composition](args, this);
 	return props;
     },
 
@@ -116,8 +143,16 @@ Canvas2D.CompositeShape = Canvas2D.Shape.extend( {
 
     prepare: function prepare(sheet) {
 	this.prepareChildren(sheet);
-	this.width  = this.composition.getWidth(this.getChildren());
-	this.height = this.composition.getHeight(this.getChildren());
+	this.width  = this.composition.getWidth();
+	this.height = this.composition.getHeight();
+    },
+
+    getChildWidth: function getChildWidth() {
+	return this.composition.getChildWidth();
+    },
+
+    getChildHeight: function getChildHeight() {
+	return this.composition.getChildHeight();
     },
 
     getChildren: function getChildren() {
@@ -125,8 +160,9 @@ Canvas2D.CompositeShape = Canvas2D.Shape.extend( {
     },
 
     add: function add(child) {
-	child.topDown = true;
+	child.topDown = true; // this forces text to draw from the top down
 	this.children.push(child);
+	child.setParent(this);
     },
 
     asConstruct: function($super) {
@@ -155,7 +191,7 @@ Canvas2D.CompositeShape.from = function( construct, sheet ) {
 Canvas2D.CompositeShape.MANIFEST = {
     name         : "compositeShape",
     aliasses     : [ "group" ],
-    properties   : [ "width", "height", "composition" ]
+    properties   : [ "width", "height", "composition", "padding" ]
 };
 
 Canvas2D.registerShape( Canvas2D.CompositeShape );
