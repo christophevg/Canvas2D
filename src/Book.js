@@ -155,10 +155,32 @@ Canvas2D.Book = Class.extend( {
 	if( this.rePublishNeeded && !this.wait ) {
 	    this.publishOnce();
 	    this.rePublishNeeded = false;
+	    this.afterPublish();
 	}
 	
 	// reshedule publish in 10ms
 	this.nextPublish = this.publish.scope(this).after(10);
+    },
+
+    afterPublish: function afterPublish() {
+	this.addWaterMark();
+	$H(this.plugins).iterate( function( name, plugin ) {
+	    if( plugin["afterPublish"] ) { plugin.afterPublish(this); }
+	}.scope(this) );
+    },
+
+    beforeRender: function beforeRender() {
+	$H(this.plugins).iterate( function( name, plugin ) {
+	    if( plugin["beforeRender"] ) { plugin.beforeRender(this); }
+	}.scope(this) );
+    },
+
+    afterRender: function afterRender() {
+	$H(this.plugins).iterate( function( plugin ) {
+	    if( plugin["afterRender"] ) { plugin.afterRender(this); }
+	}.scope(this) );
+
+	this.updateSource();
     },
 
     publishOnce : function() {
@@ -166,11 +188,10 @@ Canvas2D.Book = Class.extend( {
 	this.canvas.clear();
 
 	if( this.getCurrentSheet() ) {
+	    this.beforeRender();
 	    this.getCurrentSheet().render();
-	    this.updateSource();
+	    this.afterRender();
 	}
-
-	this.addWaterMark();
 
 	this.log( "Canvas2D::publish: RenderTime: " + timer.stop() + "ms" );
     }

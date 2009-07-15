@@ -27,6 +27,7 @@ var scripts = [
     "../src/Alias.js", 
     "../src/Arrow.js",
     "../src/plugins/TabbedCanvas.js", 
+    "../src/plugins/AutoLayout.js", 
     "../src/KickStart.js", 
     
     "../src/Defaults.js" 

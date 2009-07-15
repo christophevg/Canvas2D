@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="examples.css" />
+    <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
+
+    <script type="text/javascript" src="includes.js"></script>
+    <script>
+    function autoLayout() {
+	Canvas2D.KickStarter.manager.getBook("myDiagram").autoLayout(
+	    new ForceLayoutStrategy( {
+		max_repulsive_force_distance: 
+		  parseFloat(document.getElementById("repul").value),
+		k: parseFloat(document.getElementById("k").value),
+		c: parseFloat(document.getElementById("c").value),
+		max_movement: 
+		  parseFloat(document.getElementById("move").value),
+		max_iterations: 
+		  parseInt(document.getElementById("iter").value),
+		canContinue: function() { return true; } 
+	    } ) );
+    }
+    </script>
+  </head>
+  <body>
+    <h1>Auto-Layout Plugin</h1>
+    <div class="box" style="height:500px">
+      <h2>Spring/Force-based</h2>
+      <canvas class="Canvas2D Tabbed withSource withConsole withAbout" 
+	      id="myDiagram" width="300" height="250"></canvas>
+      max repulsive force dist.: <input type="text" value="120" id="repul"><br>
+      k : <input type="text" value="90" id="k"><br>
+      c : <input type="text" value="0.03" id="c"><br>
+      max movement : <input type="text" value="110" id="move"><br>
+      max iterations : <input type="text" value="50" id="iter"><br>
+      <input type="button" value="AutoLayout" onclick="autoLayout();">
+    </div>
+    <pre id="myDiagramSource" style="display:none;">  
+sheet mySheet +style="dynamic" {
+  /* define some shapes */
+  [@ 75, 55] rectangle rect1 +width=75 +height=75 +lineColor="green";  
+  [@ 50,175] rectangle rect2 +width=50 +height=50 +lineColor="red";  
+  [@200,100] rectangle rect3 +width=50 +height=50 +lineColor="blue";  
+  [@200, 25] rectangle rect4 +width=50 +height=50 +lineColor="yellow";  
+  [@125,175] rectangle rect5 +width=50 +height=50 +lineColor="red";  
+
+  /* connect them  */
+  connector conn1 +from="rect1" +to="rect2" +routing="vertical";  
+  connector conn2 +from="rect1" +to="rect3" +routing="horizontal";  
+  connector conn3 +from="rect1" +to="rect4" +routing="horizontal";  
+  connector conn4 +from="rect1" +to="rect5" +routing="vertical";  
+}
+    </pre>  
+  </body>
+</html>

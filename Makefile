@@ -45,6 +45,7 @@ SRCS=src/DepCheck.js \
      src/Alias.js \
      src/Arrow.js \
      src/plugins/TabbedCanvas.js \
+     src/plugins/AutoLayout.js \
      src/KickStart.js \
      src/Defaults.js
 CSSSRCS=lib/tabber/example.css src/${APP}.css
