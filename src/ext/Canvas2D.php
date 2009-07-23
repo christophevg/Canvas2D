@@ -15,11 +15,11 @@ $wgExtensionFunctions[] = 'Canvas2DInit';
 // Extension credits that will show up on Special:Version    
 $wgExtensionCredits['parserhook'][] = array(
 	'name'         => 'Canvas2D',
-	'version'      => '0.1.0',
+	'version'      => '0.1.1',
 	'author'       => 'Christophe VG <xtof@thesoftwarefactory.be>', 
 	'url'          => 'http://thesoftwarefactory.be/wiki/Canvas2D',
 	'description'  => 'Allows wiki editors to use a textual DSL, ' .
-	                  'which gets rendered shapes using the HTML5 '.
+	                  'which gets rendered into shapes on an HTML5 '.
 	                  'canvas element.'
 );
 
@@ -31,8 +31,8 @@ function Canvas2DInit() {
 
   if( !$wgOut->hasHeadItem("Canvas2D-JS") ) {
     $wgOut->addHeadItem('Canvas2D-JS', 
-			"<script src=\"$path/Canvas2D.standalone.min.js\">".
-			"</script>");
+			"<script src=\"$path/Canvas2D.standalone.min.js ".
+			"type=\"text/javascript\"></script>");
   }
   $wgOut->addHeadItem('Canvas2D-CSS', 
 		      "<link href=\"$path/Canvas2D.css\" ".
