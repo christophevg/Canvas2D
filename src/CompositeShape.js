@@ -142,9 +142,11 @@ Canvas2D.CompositeShape = Canvas2D.Shape.extend( {
     },
 
     prepare: function prepare(sheet) {
-	this.prepareChildren(sheet);
-	this.width  = this.composition.getWidth();
-	this.height = this.composition.getHeight();
+	if( this.hasChildren() ) {
+	    this.prepareChildren(sheet);
+	    this.width  = this.composition.getWidth();
+	    this.height = this.composition.getHeight();
+	}
     },
 
     getChildWidth: function getChildWidth() {
@@ -153,6 +155,10 @@ Canvas2D.CompositeShape = Canvas2D.Shape.extend( {
 
     getChildHeight: function getChildHeight() {
 	return this.composition.getChildHeight();
+    },
+
+    hasChildren: function hasChildren() {
+	return this.children.length > 0;
     },
 
     getChildren: function getChildren() {
@@ -165,8 +171,8 @@ Canvas2D.CompositeShape = Canvas2D.Shape.extend( {
 	child.setParent(this);
     },
 
-    asConstruct: function($super) {
-	var construct = $super();
+    asConstruct: function() {
+	var construct = this._super();
 	// TODO
 	return construct;
     }
