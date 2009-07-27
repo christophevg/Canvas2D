@@ -32,18 +32,7 @@ Canvas2D.Image.from = function(construct, canvas) {
 	props[key] = value.value.value;
     } );
     
-    var left, top;
-    var image = new Canvas2D.Image(props);
-    if( construct.annotation ) {    
-	var pos = construct.annotation.data.split(",");
-	left = parseInt(pos[0]);
-	top  = parseInt(pos[1]);
-    } else {
-	left = this.offset * ( this.unknownIndex++ );
-	top = left;
-    }
-    canvas.at(left,top).put(image);
-    return image;
+    return new Canvas2D.Image(props);
 };
 
 Canvas2D.Image.MANIFEST = {

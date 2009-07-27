@@ -37,7 +37,7 @@ sheet mySheet +style="dynamic" {
     </div>
     <br clear="both"/>
     <div class="box">
-      <h2>Rectangle CompositeShape</h2>
+      <h2>Vertical Stacking</h2>
       <canvas class="Canvas2D" id="myDiagram2" 
 	      width="300" height="250"></canvas>
     </div>
@@ -45,7 +45,7 @@ sheet mySheet +style="dynamic" {
       <pre id="myDiagram2Source">
 sheet mySheet +style="dynamic" {
   [@10,10] group myGroup +composition="vertical-stack" {
-    rectangle myHeader +lineWidth=1 +padding=10 +grow=true
+    rectangle myHeader +lineWidth=1 +padding=10 +grows=true
                        +lineColor="red" +fillColor="rgba(255,255,200,1)" 
                        +composition="vertical-stack:center" {
       text text11 := "1. some text";
@@ -56,17 +56,28 @@ sheet mySheet +style="dynamic" {
       text text21 := "2. some text";
       text text22 := "2. some more text";
     }
-    rectangle myFooter +lineWidth=1 +grow=true
+    rectangle myFooter +lineWidth=1 +grows=true
                        +lineColor="red" +fillColor="rgba(255,255,200,1)"
                        +composition="vertical-stack:right" {
       text text31 := "3. some text";
       text text32 := "3. some other interesting text";
     }
   }
-
-  [@10,145] group group2 +composition="horizontal-stack" {
+}
+      </pre>  
+    </div>
+    <br clear="both"/>
+    <div class="box">
+      <h2>Horizontal Stacking</h2>
+      <canvas class="Canvas2D" id="myDiagram3" 
+	      width="300" height="250"></canvas>
+    </div>
+    <div class="box">
+      <pre id="myDiagram3Source">
+sheet mySheet +style="dynamic" {
+  [@10,10] group group2 +composition="horizontal-stack" {
     rectangle head +lineWidth=1 +lineColor="red" 
-                   +grow=true +composition="vertical-stack" {
+                   +grows=true +composition="vertical-stack" {
       text t1 := "abc";
       text t2 := "def";
     }

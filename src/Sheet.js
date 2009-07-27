@@ -90,8 +90,7 @@ Canvas2D.Sheet = Class.extend( {
 	this.shapesMap[shape.getName()] = shape;
 	this.positionsMap[shape.getName()] = position;
 
-	this.fireEvent( "newShape",
-			"added new shape" + 
+	this.fireEvent( "newShape", "added new shape" + 
 			( position.getLeft() != null ? 
 			  "@" + position.getLeft() + "," 
 			  + position.getTop() : "" ) );
@@ -312,9 +311,7 @@ Canvas2D.Sheet.from = function(construct, book) {
 	}
     });
 
-    var sheet = new Canvas2D.Sheet({ name: construct.name, style: style } );
-    book.addSheet(sheet);
-    return sheet;
+    return new Canvas2D.Sheet({ name: construct.name, style: style } );
 };
 
 Canvas2D.Sheet.MANIFEST = {

@@ -259,15 +259,12 @@ Canvas2D.Connector.from = function(construct, sheet) {
 	    }
 	}
     });
-    var conn = new Canvas2D.Connector( 
-	{ 
-	    from : sheet.shapesMap[from], 
-	    to: sheet.shapesMap[to],
-	    name: construct.name, 
-	    routing: routing 
-	} );
-    sheet.put(conn);
-    return conn;
+    return new Canvas2D.Connector( { 
+	from : sheet.shapesMap[from], 
+	to: sheet.shapesMap[to],
+	name: construct.name, 
+	routing: routing 
+    } );
 };
 
 Canvas2D.Connector.MANIFEST = {

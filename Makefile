@@ -30,6 +30,7 @@ SRCS=src/DepCheck.js \
      src/Common.js \
      src/Canvas2D.js \
      src/Factory.js \
+     src/Keyboard.js \
      src/ImageManager.js \
      src/Manager.js \
      src/ADLVisitor.js \
@@ -37,12 +38,15 @@ SRCS=src/DepCheck.js \
      src/Shape.js \
      src/Sheet.js \
      src/Position.js \
-     src/Rectangle.js src/Connector.js \
+     src/Connector.js \
      src/Line.js \
      src/LinePath.js \
+     src/Alias.js \
+     src/CompositeShape.js \
+     src/Compositor.Stack.js \
+     src/Rectangle.js \
      src/Text.js \
      src/Image.js \
-     src/Alias.js \
      src/Arrow.js \
      src/plugins/TabbedCanvas.js \
      src/plugins/AutoLayout.js \

@@ -28,6 +28,7 @@ var scripts = [
     "../src/Alias.js", 
 
     "../src/CompositeShape.js", 
+    "../src/Compositor.Stack.js", 
     "../src/Rectangle.js", 
     "../src/Text.js", 
     "../src/Image.js", 

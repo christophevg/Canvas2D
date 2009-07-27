@@ -94,7 +94,7 @@ Canvas2D.Arrow.from = function( construct, sheet ) {
 Canvas2D.Arrow.MANIFEST = {
     name         : "arrow",
     aliasses     : [ "pointer" ],
-    properties   : [ "arrowHeadWidth", "arrowHeadHeight" ],
+    properties   : [ "width", "height", "arrowHeadWidth", "arrowHeadHeight" ],
     propertyPath : [ Canvas2D.Rectangle ],
     libraries    : [ "Canvas2D" ]
 };

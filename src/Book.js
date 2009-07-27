@@ -38,7 +38,7 @@ Canvas2D.Book = Class.extend( {
 	this.setupPlugins();
     },
 
-    add: function( sheet) {
+    add: function( sheet ) {
 	return this.addSheet(sheet);
     },
     
