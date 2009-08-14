@@ -1,8 +1,6 @@
 Canvas2D.ShapeCounter = 0;
 
 Canvas2D.Shape = Class.extend( {
-    getClass : function getClass() { return this.__CLASS__; },
-
     init: function initialize( props ) {
 	props = props || {};
 
@@ -26,6 +24,25 @@ Canvas2D.Shape = Class.extend( {
 	this.postInitialize();
     },
     
+    setProperties : function(props) {
+	this.getPropertyList().iterate(function propertyListIterator(prop) {
+	    this[prop] = props[prop] != null ? props[prop] : null;
+	}.scope(this) );
+	// support for default
+	if( !this.name ) { this.name = "__shape__" + Canvas2D.ShapeCounter++; }
+    },
+
+    getProperty: function getProperty( prop ) {
+	if( typeof this[prop] == "undefined" ) {
+	    var propName = prop.substr(0,1).toUpperCase() + prop.substr(1);
+	    var getterName = "get"+propName;
+	    return this[getterName]();
+	} else {
+	    return this[prop] != null ? 
+		this[prop] : this.getPropertyDefault(prop);
+	}
+    },
+
     getPropertyDefault: function getPropertyDefault(prop) {
 	var retVal = null;
 	this.getClassHierarchy().reverse()
@@ -39,33 +56,8 @@ Canvas2D.Shape = Class.extend( {
 	return retVal;
     },
 
-    setProperties : function(props) {
-	this.getPropertyList().iterate(function propertyListIterator(prop) {
-	    this[prop] = props[prop] != null ? props[prop] : null;
-	}.scope(this) );
-	// support for default
-	if( !this.name ) { this.name = "__shape__" + Canvas2D.ShapeCounter++; }
-    },
-
-    getProperties: function() {
-	var props = {};
-	var me = this;
-	this.getPropertyList().iterate(function propertyListIterator(prop) {
-	    props[prop] = me[prop];
-	} );
-	props.type = this.getType();
-	return props;
-    },
-
-    getProperty: function getProperty( prop ) {
-	if( typeof this[prop] == "undefined" ) {
-	    var propName = prop.substr(0,1).toUpperCase() + prop.substr(1);
-	    var getterName = "get"+propName;
-	    return this[getterName]();
-	} else {
-	    return this[prop] != null ? 
-		this[prop] : this.getPropertyDefault(prop);
-	}
+    toADL: function(prefix) {
+	return this.constructToString(this.asConstruct(), prefix);
     },
 
     asConstruct: function() {
@@ -120,10 +112,6 @@ Canvas2D.Shape = Class.extend( {
 	    string += ";";
 	}
 	return string;
-    },
-
-    toADL: function(prefix) {
-	return this.constructToString(this.asConstruct(), prefix);
     },
 
     delayRender: function() {

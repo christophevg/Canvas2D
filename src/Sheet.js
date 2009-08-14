@@ -9,6 +9,8 @@ Canvas2D.Sheet = Class.extend( {
 	this.dirty = false;
 
 	if(props.canvas) { this.setCanvas(props.canvas); }
+
+	Canvas2D.Keyboard.on( "keyup", this.handleKeyDown.scope(this) );
     },
 
     setCanvas: function setCanvas(canvas) {
@@ -176,7 +178,10 @@ Canvas2D.Sheet = Class.extend( {
 
     selectAllShapes: function() {
 	// FIXME: only selectable shapes (so no connectors)
-	this.selectedShapes = this.positions.clone();
+	this.selectedShapes = [];
+	this.positions.iterate( function(position) { 
+	    this.selectedShapes.push(position) 
+	}.scope(this) );
 	this.makeDirty();
     },
 
@@ -197,7 +202,7 @@ Canvas2D.Sheet = Class.extend( {
 	}
 	if( ( Canvas2D.Keyboard.keyDown(91) ||    // cmd 
 	      Canvas2D.Keyboard.keyDown(17) ) &&  // ctrl +
-	    key == 65 &&                                   // a
+	    key == 65 &&                          // a
 	    this.canvas.mouseOver )
 	{
 	    this.selectAllShapes();

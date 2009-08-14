@@ -33,7 +33,7 @@ Canvas2D.Alias.mapper = {
     }
 }
 
-    Canvas2D.Alias.from = function( construct, parent ) {
+Canvas2D.Alias.from = function( construct, parent ) {
     Canvas2D.registerShape( { 
 	prototype : {},
 	MANIFEST : { 

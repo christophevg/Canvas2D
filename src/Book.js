@@ -81,9 +81,7 @@ Canvas2D.Book = Class.extend( {
     },
 
     clear : function() {
-	// FIXME
 	this.sheets.length = 0;
-	// this.sheets.clear();
     },
 
     start : function() {
@@ -162,6 +160,19 @@ Canvas2D.Book = Class.extend( {
 	this.nextPublish = this.publish.scope(this).after(10);
     },
 
+    publishOnce : function() {
+	var timer = new Timer();
+	this.canvas.clear();
+
+	if( this.getCurrentSheet() ) {
+	    this.beforeRender();
+	    this.getCurrentSheet().render();
+	    this.afterRender();
+	}
+
+	this.log( "Canvas2D::publish: RenderTime: " + timer.stop() + "ms" );
+    },
+
     afterPublish: function afterPublish() {
 	this.addWaterMark();
 	$H(this.plugins).iterate( function( name, plugin ) {
@@ -181,19 +192,6 @@ Canvas2D.Book = Class.extend( {
 	}.scope(this) );
 
 	this.updateSource();
-    },
-
-    publishOnce : function() {
-	var timer = new Timer();
-	this.canvas.clear();
-
-	if( this.getCurrentSheet() ) {
-	    this.beforeRender();
-	    this.getCurrentSheet().render();
-	    this.afterRender();
-	}
-
-	this.log( "Canvas2D::publish: RenderTime: " + timer.stop() + "ms" );
     }
 
 } );

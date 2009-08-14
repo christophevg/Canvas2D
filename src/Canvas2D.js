@@ -26,6 +26,7 @@ var Canvas2D = {
     registerShape: function registerShape(shape) {
 	// let's store a reference to the class in the prototype itself
 	shape.prototype.__CLASS__ = shape;
+	shape.prototype.getClass = function getClass() { return this.__CLASS__; }
 
 	// mixin static methods for dealing with manifests
 	Canvas2D.Shape.manifestHandling.iterate( function(key, value) {

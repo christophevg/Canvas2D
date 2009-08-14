@@ -13,7 +13,7 @@ function min(a,b) {
 Array.prototype.contains = function(substring) {
     return this.indexOf(substring) > -1;
 };
-    
+
 /**
  * Provides the size specified in the given font specifier
  * @param {DOMString} font a CSS font specifier
