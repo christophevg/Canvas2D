@@ -3,6 +3,17 @@ Canvas2D.CompositeShape = Canvas2D.Shape.extend( {
 	return this.getChildren().length > 0;
     },
 
+    hit: function(x,y) {
+	return ( this.getWidth() >= x && this.getHeight() >= y );
+    },
+
+    hitArea: function(left, top, right, bottom) {
+	return ! ( 0 > right
+		   || this.getWidth() < left
+		   || 0 > bottom
+		   || this.getHeight() < top );
+    },
+
     getWidth: function getWidth(withoutGrowth) {
 	if( this.grows 
 	    && this.getParent().composition.widthGrows() 
