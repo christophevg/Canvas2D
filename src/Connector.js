@@ -65,7 +65,7 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
 	var connector = null;
 	if( this.getBegin() ) { connector = this.getBegin()[port]; }
 	
-	this.draw_connector(sheet, connector, left, top );
+	this._draw_connector(sheet, connector, left, top );
     },
 
     draw_end_connector: function start_connector(sheet, shape, port, left, top) {
@@ -75,10 +75,25 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
 	var connector = null;
 	if( this.getEnd() ) { connector = this.getEnd()[port]; }
 
-	this.draw_connector(sheet, connector, left, top );
+	this._draw_connector(sheet, connector, left, top );
+    },
+
+    draw_connector: function(sheet, shape, port, left, top ) {
+	left = left || shape.getPort(port).left;
+	top  = top  || shape.getPort(port).top;
+	
+	var connector = null;
+	if( shape == this.getFrom(sheet) && this.getBegin() ) {
+            connector = this.getBegin()[port];
+	}
+	if( shape == this.getTo(sheet) && this.getEnd() ) {
+            connector = this.getEnd()[port];
+	}	
+
+	this._draw_connector(sheet, connector, left, top );
     },
     
-    draw_connector: function(sheet, connector, left, top) {
+    _draw_connector: function(sheet, connector, left, top) {
 	sheet.moveTo(left, top);
 	if( connector ) {
 	    var oldStyle = sheet.lineStyle;
@@ -131,7 +146,7 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
     },
 
     _vertical_tree: function( sheet, top, bottom ) {
-	this.draw_start_connector(sheet, top, "s");
+	this.draw_connector(sheet, top, "s");
 
 	var src = top.getPort("s");
 	var trg = bottom.getPort("n");
@@ -139,12 +154,12 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
 
 	sheet.lineTo(src.left, src.top + dy1);
 	sheet.lineTo(trg.left, src.top + dy1);
-	this.draw_end_connector( sheet, bottom, "n" );
+	this.draw_connector( sheet, bottom, "n" );
 	sheet.lineTo(trg.left, src.top + dy1);
     },
 
     _vertical_corner: function(sheet, top, bottom) {
-	this.draw_start_connector( sheet, top, "s" );
+	this.draw_connector( sheet, top, "s" );
 
 	var src = top.getPort("s");
 	var trgPort = src.left < bottom.getPort("w").left ? "w" : "e";
@@ -152,7 +167,7 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
 	
 	sheet.lineTo( src.left, trg.top );
 	
-	this.draw_end_connector( sheet, bottom, trgPort );
+	this.draw_connector( sheet, bottom, trgPort );
 	sheet.lineTo(src.left, trg.top);
     },
 
@@ -168,9 +183,9 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
 	    ( ( from.getPort(fromPort).top - to.getPort(toPort).top ) / 2 );
 	var dx = (to.getPort(toPort).left - from.getPort(fromPort).left ) / 2;
 
-	this.draw_start_connector( sheet, from, fromPort, null, y );
+	this.draw_connector( sheet, from, fromPort, null, y );
 	sheet.lineTo( from.getPort(fromPort).left+dx, y);
-	this.draw_end_connector( sheet, to,   toPort,   null, y );
+	this.draw_connector( sheet, to,   toPort,   null, y );
 	sheet.lineTo( from.getPort(fromPort).left+dx, y);
     },
 
@@ -198,7 +213,7 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
     },
 
     _horizontal_tree: function( sheet, left, right ) {
-	this.draw_start_connector(sheet, left, "e");
+	this.draw_connector(sheet, left, "e");
 
 	var src = left.getPort("e");
 	var trg = right.getPort("w");
@@ -207,12 +222,12 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
 	sheet.lineTo(src.left + dx1, src.top);
 	sheet.lineTo(src.left + dx1, trg.top);
 
-	this.draw_end_connector( sheet, right, "w" );
+	this.draw_connector( sheet, right, "w" );
 	sheet.lineTo(src.left + dx1, trg.top);
     },
 
     _horizontal_corner: function(sheet, left, right) {
-	this.draw_start_connector( sheet, right, "w" );
+	this.draw_connector( sheet, right, "w" );
 
 	var src = right.getPort("w");
 	var trgPort = src.top < left.getPort("n").top ? "n" : "s";
@@ -220,7 +235,7 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
 	
 	sheet.lineTo( trg.left, src.top );
 	
-	this.draw_end_connector( sheet, left, trgPort );
+	this.draw_connector( sheet, left, trgPort );
 	sheet.lineTo(trg.left, src.top);
     },
 
@@ -236,10 +251,10 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
 	    ( ( from.getPort(fromPort).left - to.getPort(toPort).left ) / 2 );
 	var dy = (to.getPort(toPort).top - from.getPort(fromPort).top ) / 2;
 
-	this.draw_start_connector( sheet, from, fromPort, x );
+	this.draw_connector( sheet, from, fromPort, x );
 	sheet.lineTo( x, from.getPort(fromPort).top+dy);
 
-	this.draw_end_connector( sheet, to,   toPort,   x );
+	this.draw_connector( sheet, to,   toPort,   x );
 	sheet.lineTo( x, from.getPort(fromPort).top+dy);
     },
 
