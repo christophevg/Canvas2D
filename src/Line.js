@@ -12,6 +12,8 @@ Canvas2D.Line = Canvas2D.Shape.extend( {
 	sheet.moveTo(left, top);
 	sheet.lineTo(left + this.getDx(), top + this.getDy());
 	sheet.stroke();
+	// set lineStyle back to default
+	sheet.lineStyle = "solid";
 
 	sheet.closePath();
     },
