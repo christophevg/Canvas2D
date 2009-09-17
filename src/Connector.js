@@ -1,4 +1,10 @@
 Canvas2D.Connector = Canvas2D.Shape.extend( {
+    preprocess: function preprocess(props) {
+	props = this._super(props);
+	if( props.from == props.to ) { props.routing = "recursive"; }
+	return props;
+    },
+
     getFrom  : function(sheet) { 
 	return sheet ? sheet.getPosition(this.from) : this.from; 
     },
@@ -276,8 +282,6 @@ Canvas2D.Connector.from = function(construct, sheet) {
 	    }
 	}
     });
-
-    if( from == to ) { routing = "recursive"; }
 
     return new Canvas2D.Connector( { 
 	from : sheet.shapesMap[from], 
