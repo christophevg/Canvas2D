@@ -280,7 +280,7 @@ Canvas2D.Sheet.Properties =
       "shadowOffsetX", "shadowOffsetY", "shadowBlur", "shadowColor", 
       "font", "textAlign", "textBaseline",
 
-      "useCrispLines", "textDecoration" ];
+      "lineStyle", "useCrispLines", "textDecoration" ];
 
 Canvas2D.Sheet.Operations = 
     [ "save", "restore", 
