@@ -492,7 +492,6 @@ Canvas2D.Factory.extensions.HTML5CanvasText = {
 
 	var $superFillText = ctx["fillText"];
 	ctx["fillText"] = function fillText(text, x, y, maxWidth) {
-            x = this.adjustToAlignment(x, text);
 	    maxWidth = maxWidth  || this.measureText(text);
             $superFillText.apply(this, arguments);
             this.decorateText(text, x, y, maxWidth);
@@ -500,7 +499,6 @@ Canvas2D.Factory.extensions.HTML5CanvasText = {
 
 	var $superStrokeText = ctx["strokeText"];
 	ctx["strokeText"] = function strokeText(text, x, y, maxWidth) {
-            x = this.adjustToAlignment(x, text);
 	    maxWidth = maxWidth  || this.measureText(text);
             $superStrokeText.apply(this, text, x, y, maxWidth);
             this.decorateText(text, x, y, maxWidth);
@@ -613,7 +611,7 @@ Canvas2D.Factory.setup = function(element) {
     } else if( ProtoJS.Browser.Gecko )  {
 	if( ctx.strokeText && ctx.fillText && ctx.measureText ) {
 	    // post 1.9 gecko suports HTML5 interface (>= FF 3.5)
-	    ProtoJS.mix(Canvas2D.Factory.extensions.HTML5CanvasText, ctx, true);
+	    ctx = Canvas2D.Factory.extensions.HTML5CanvasText.__extend__(ctx);
 	} else {
 	    // pre 1.9 gecko suports own interface (<= FF 3.1)
 	    ProtoJS.mix(Canvas2D.Factory.extensions.GeckoCanvasText, ctx,
