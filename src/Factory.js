@@ -457,7 +457,7 @@ Canvas2D.Factory.extensions.CanvasText = {
 	
     	this.save();
 	// CanvasText implementation is stroke-based. Just in case the
-	// fillStyle is set in stead of strokStyle
+	// fillStyle is set in stead of strokeStyle
 	this.strokeStyle = this.fillStyle;
 	x = this.adjustToAlignment(x, text);
 	CanvasTextFunctions.draw(this, this.font, getFontSize(this.font), 
