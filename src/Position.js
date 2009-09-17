@@ -15,6 +15,9 @@ Canvas2D.Position = Class.extend( {
 
     getLeft: function() { return this.left; },
     getTop : function() { return this.top;  },
+
+    getWidth : function() { return this.shape.getWidth();  },
+    getHeight: function() { return this.shape.getHeight(); },
     
     getCenter: function() { 
 	var center = this.shape.getCenter();

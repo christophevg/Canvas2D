@@ -17,12 +17,29 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
 	
 	sheet.beginPath();
 	switch( this.getRouting() ) {
+	case "recursive":           this._recursive (sheet); break;
 	case "vertical":            this._vertical  (sheet); break;
 	case "horizontal":          this._horizontal(sheet); break;
 	case "direct":     default: this._direct    (sheet);
 	}
 	sheet.closePath();
 	sheet.stroke();
+    },
+
+    _recursive: function _recursive(sheet) {
+	shape = this.getFrom(sheet);
+	start = shape.getPort("e");
+	end   = shape.getPort("n");
+	dw    = parseInt(shape.getWidth() / 4);
+	dh    = parseInt(shape.getHeight() / 4);
+	d     = 30;
+
+	this.draw_connector(sheet, shape, "e", start.left, start.top - dh);
+	sheet.lineTo(start.left + d, start.top - dh );
+	sheet.lineTo(start.left + d, end.top - d );
+	sheet.lineTo(end.left + dw, end.top - d );
+	this.draw_connector(sheet, shape, "n", end.left + dw, end.top );
+	sheet.lineTo(end.left + dw, end.top - d);
     },
 
     _direct: function(sheet) {
@@ -259,6 +276,9 @@ Canvas2D.Connector.from = function(construct, sheet) {
 	    }
 	}
     });
+
+    if( from == to ) { routing = "recursive"; }
+
     return new Canvas2D.Connector( { 
 	from : sheet.shapesMap[from], 
 	to: sheet.shapesMap[to],
