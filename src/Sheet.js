@@ -295,7 +295,7 @@ Canvas2D.Sheet.Operations =
       "fillText","fillText","strokeText","strokeText","measureText",
       "drawImage","createImageData","getImageData","putImageData",
 
-      "getFontSize" ];
+      "getFontSize", "fillStrokeRect" ];
 
 Canvas2D.Sheet.from = function(construct, book) {
     var style = "static";
