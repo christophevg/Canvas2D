@@ -267,6 +267,7 @@ Canvas2D.Factory.extensions.all.TextDecorationSupport = {
 
 	this.save();
 	this.useCrispLines = true;
+	this.strokeStyle = "black"; // TODO: this fixes red FF underlining
 	this.textDecoration.toLowerCase().split(" ")
 	                                 .iterate(function(decoration) {
 	    var decorator = null;
@@ -494,6 +495,7 @@ Canvas2D.Factory.extensions.HTML5CanvasText = {
 	ctx["fillText"] = function fillText(text, x, y, maxWidth) {
 	    maxWidth = maxWidth  || this.measureText(text);
             $superFillText.apply(this, arguments);
+	    x = this.adjustToAlignment( x, text );	    
             this.decorateText(text, x, y, maxWidth);
 	}
 
@@ -501,6 +503,7 @@ Canvas2D.Factory.extensions.HTML5CanvasText = {
 	ctx["strokeText"] = function strokeText(text, x, y, maxWidth) {
 	    maxWidth = maxWidth  || this.measureText(text);
             $superStrokeText.apply(this, text, x, y, maxWidth);
+	    x = this.adjustToAlignment( x, text );
             this.decorateText(text, x, y, maxWidth);
 	}
 
