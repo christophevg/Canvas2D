@@ -100,6 +100,7 @@ Canvas2D.Shape = Class.extend( {
     },
 
     constructToString: function(construct, prefix) {
+	if(construct == null) { return ""; }
 	var string = "";
 	construct.annotations.iterate(function(annotation) {
 	    string += prefix + "[@" + annotation + "]\n";
@@ -108,8 +109,10 @@ Canvas2D.Shape = Class.extend( {
 	construct.supers.iterate(function(zuper) { string += " : " + zuper; });
 	$H(construct.modifiers).iterate( 
 	    function modifierIterator( key, value ) {
-		string += " +" + key;
-		if( value ) { string += "=" + value; }
+		if( typeof value != "function" ) {
+		    string += " +" + key;
+		    if( value ) { string += "=" + value; }
+		}
 	    } );
 	if( construct.children.length > 0 ) {
 	    string += " {\n";
