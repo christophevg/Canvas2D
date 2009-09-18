@@ -87,7 +87,7 @@ Canvas2D.Sheet = Class.extend( {
 	this.newTop = null;
 
 	this.positions.push(position);
-	this.shapesMap[shape.getName()] = shape;
+	this.shapesMap[shape.getName().replace(/<.*$/,'')] = shape;
 	this.positionsMap[shape.getName()] = position;
 
 	this.fireEvent( "newShape", "added new shape" + 
