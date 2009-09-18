@@ -113,6 +113,7 @@ Canvas2D.Book = Class.extend( {
 	this.canvas.font = "6pt Sans-Serif";
 	this.canvas.textAlign = "left";
 	this.canvas.useCrispLines = false;
+	this.canvas.lineStyle = "solid";
 	this.canvas.fillText( "Canvas2D" + extensions + " / Christophe VG",
 				3, (this.canvas.canvas.width * -1) + 7 ); 
 	this.canvas.restore();

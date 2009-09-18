@@ -16,6 +16,7 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
     delayRender: function() { return true; },
     
     draw: function(sheet, left, top) {
+	sheet.save();
 	sheet.useCrispLines = this.getUseCrispLines();
 	sheet.strokeStyle   = this.getLineColor();
 	sheet.lineWidth     = this.getLineWidth();
@@ -30,6 +31,7 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
 	}
 	sheet.closePath();
 	sheet.stroke();
+	sheet.restore();
     },
 
     _recursive: function _recursive(sheet) {
