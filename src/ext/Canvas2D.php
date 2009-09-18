@@ -31,7 +31,7 @@ function Canvas2DInit() {
 
   if( !$wgOut->hasHeadItem("Canvas2D-JS") ) {
     $wgOut->addHeadItem('Canvas2D-JS', 
-			"<script src=\"$path/Canvas2D.standalone.min.js ".
+			"<script src=\"$path/Canvas2D.standalone.min.js\" ".
 			"type=\"text/javascript\"></script>");
   }
   $wgOut->addHeadItem('Canvas2D-CSS', 
