@@ -10,6 +10,18 @@ function min(a,b) {
     return a < b ? a : b;
 }
 
+// IE misses indexOf ... and so do we ;-)
+if(!Array.indexOf) {
+    Array.prototype.indexOf = function(obj){
+	for(var i=0; i<this.length; i++){
+	    if(this[i]==obj){
+	        return i;
+	    }
+	}
+	return -1;
+    }
+}
+
 Array.prototype.contains = function(substring) {
     return this.indexOf(substring) > -1;
 };

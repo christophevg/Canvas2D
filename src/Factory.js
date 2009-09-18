@@ -584,7 +584,7 @@ Canvas2D.Factory.setup = function(element) {
     }
 
     unless( element && element.nodeType &&
-	    element.nodeType == Node.ELEMENT_NODE,
+	    element.nodeType == 1,
 	    function() {
 		throw( "CanvasBase:initialize: expected HTMLElement" );
 	    } );
