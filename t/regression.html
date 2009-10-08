@@ -38,7 +38,7 @@ function setBrowser() {
   <td>
     <canvas class="Canvas2D" id="myDiagram" width="300" height="250"></canvas>
     <pre id="myDiagramSource" style="display:none;">  
-Sheet mySheet {
++dynamic Sheet mySheet {
   /* define some shapes */
   [@ 75, 55] Rectangle rect1 +width=75 +height=75 +lineColor="green" 
                              +label="green" +labelPos="top";
@@ -54,7 +54,11 @@ Sheet mySheet {
   Connector conn1 +from="rect1" +to="rect2" +routing="vertical";  
   Connector conn2 +from="rect1" +to="rect3" +routing="horizontal";  
   Connector conn3 +from="rect1" +to="rect4" +routing="horizontal";  
-  Connector conn4 +from="rect1" +to="rect5" +routing="vertical";  
+  Connector conn4 +from="rect1" +to="rect5"  
+                                +lineColor="blue"
+                                +lineWidth=5
+                                +routing="vertical"
+                                +lineStyle="dashed";  
 }
     </pre>  
   </td>
