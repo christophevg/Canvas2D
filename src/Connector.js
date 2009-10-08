@@ -288,8 +288,8 @@ Canvas2D.Connector.from = function(construct, sheet) {
     if( value.value == null ) {
       if( key.contains("-") ) {
         var parts = key.split( "-" );
-        props["from"] = parts[0];
-        props["to"]   = parts[1];
+        props["from"] = sheet.shapesMap[parts[0]];
+        props["to"]   = sheet.shapesMap[parts[1]];
       } else {
         props["routing"] = key;
       }
