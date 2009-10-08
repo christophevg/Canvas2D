@@ -38,8 +38,8 @@ Canvas2D.Shape.Defaults = {
 Canvas2D.Rectangle.Defaults = {
     useCrispLines  : true,
     lineWidth      : 1,
-    lineColor      : "rgba(0,0,0,0)",
-    fillColor      : "rgba(0,0,0,0)",
+    lineColor      : "rgba(0,0,0,100)",     // solid black
+    fillColor      : "rgba(255,255,255,0)", // empty white ;-)
     labelPos       : "center",
     labelColor     : "black",
     width          : 50,
