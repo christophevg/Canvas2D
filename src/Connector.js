@@ -24,23 +24,66 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
 
     sheet.beginPath();
     switch( this.getRouting() ) {
+      case "custom":              this._custom    (sheet); break;
       case "recursive":           this._recursive (sheet); break;
       case "vertical":            this._vertical  (sheet); break;
       case "horizontal":          this._horizontal(sheet); break;
       case "direct":     default: this._direct    (sheet);
     }
-    sheet.closePath();
     sheet.stroke();
+    sheet.closePath();
     sheet.restore();
   },
 
+  _custom: function _custom(sheet) {
+    var beginShape = this.getFrom(sheet);
+    var endShape   = this.getTo(sheet);
+    var start      = beginShape.getPort(this.getRouteBegin());
+    var end        = endShape.getPort(this.getRouteEnd());
+    end   = this._draw_end_connector(sheet, end)
+    start = this._draw_start_connector(sheet, start)
+    switch( this.getRouteStyle() ) {
+      case "corner":          this._draw_corner(sheet, start, end); break;
+      case "tree"  :          this._draw_tree  (sheet, start, end); break;
+      case "direct": default: this._draw_direct(sheet, start, end);
+    }
+  },
+  
+  _draw_direct : function _draw_direct(sheet, start, end) {
+    sheet.lineTo(end.left, end.top);
+  },
+  
+  _draw_corner : function _draw_corner( sheet, start, end ) {
+    var direction = this.getRouteBegin().substring(0,1);
+    if( direction == "n" || direction == "s" ) {
+      sheet.lineTo( start.left, end.top );
+    } else {
+      sheet.lineTo( end.left, start.top );
+    }
+    sheet.lineTo( end.left, end.top   );
+  },
+
+  _draw_tree: function _draw_tree( sheet, start, end ) {
+    var direction = this.getRouteBegin().substring(0,1);
+    var dx = end.left - start.left;
+    var dy = end.top  - start.top;
+    if( direction == "n" || direction == "s" ) {
+      sheet.lineTo( start.left, start.top + dy/2);
+      sheet.lineTo( end.left  , start.top + dy/2);
+    } else {
+      sheet.lineTo( start.left + dx/2, start.top );
+      sheet.lineTo( start.left + dx/2, end.top   );
+    }    
+    sheet.lineTo( end.left  , end.top);
+  },
+
   _recursive: function _recursive(sheet) {
-    shape = this.getFrom(sheet);
-    start = shape.getPort("e");
-    end   = shape.getPort("n");
-    dw    = parseInt(shape.getWidth() / 4);
-    dh    = parseInt(shape.getHeight() / 4);
-    d     = 30;
+    var shape = this.getFrom(sheet);
+    var start = shape.getPort("e");
+    var end   = shape.getPort("n");
+    var dw    = parseInt(shape.getWidth() / 4);
+    var dh    = parseInt(shape.getHeight() / 4);
+    var d     = 30;
 
     this.draw_start_connector(sheet, shape, "e", start.left, start.top - dh);
     sheet.lineTo(start.left + d, start.top - dh );
@@ -48,6 +91,32 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
     sheet.lineTo(end.left + dw, end.top - d );
     this.draw_end_connector(sheet, shape, "n", end.left + dw, end.top );
     sheet.lineTo(end.left + dw, end.top - d);
+  },
+
+  _draw_start_connector: function draw_start_connector(sheet, pos) {
+    var connector = null;
+    var dir       = this.getRouteBegin();
+
+    if( this.getBegin() ) { 
+      var connectors = this.getBegin();
+      connector = connectors[dir] ? 
+        connectors[dir] : connectors[dir.substring(0,1)];
+    }
+
+    return this._draw_connector(sheet, connector, pos.left, pos.top );
+  },
+
+  _draw_end_connector: function draw_start_connector(sheet, pos) {
+    var connector = null;
+    var dir       = this.getRouteEnd();
+
+    if( this.getEnd() ) { 
+      var connectors = this.getEnd();
+      connector = connectors[dir] ? 
+        connectors[dir] : connectors[dir.substring(0,1)];
+    }
+
+    return this._draw_connector(sheet, connector, pos.left, pos.top );
   },
 
   _direct: function(sheet) {
@@ -60,14 +129,16 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
     sheet.lineTo(to.left,   to.top);
   },
 
-  draw_start_connector: function start_connector(sheet, shape, port, left, top) {
+  draw_start_connector: function draw_start_connector(sheet, shape, port, 
+                                                      left, top) 
+  {
     left = left || shape.getPort(port).left;
     top  = top  || shape.getPort(port).top;
 
     var connector = null;
     if( this.getBegin() ) { connector = this.getBegin()[port]; }
 
-    this._draw_connector(sheet, connector, left, top );
+    return this._draw_connector(sheet, connector, left, top );
   },
 
   draw_end_connector: function start_connector(sheet, shape, port, left, top) {
@@ -77,7 +148,7 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
     var connector = null;
     if( this.getEnd() ) { connector = this.getEnd()[port]; }
 
-    this._draw_connector(sheet, connector, left, top );
+    return this._draw_connector(sheet, connector, left, top );
   },
 
   draw_connector: function(sheet, shape, port, left, top ) {
@@ -92,7 +163,7 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
       connector = this.getEnd()[port];
     }	
 
-    this._draw_connector(sheet, connector, left, top );
+    return this._draw_connector(sheet, connector, left, top );
   },
 
   _draw_connector: function(sheet, connector, left, top) {
@@ -115,7 +186,9 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
       sheet.beginPath();
       sheet.lineStyle = oldStyle;
       sheet.moveTo(left + connector.end[0], top + connector.end[1]);
+      return { left: left + connector.end[0], top: top + connector.end[1] };
     }
+    return { left: left, top: top };
   },
 
   initialBranchLength: function(top, bottom) {
@@ -292,10 +365,24 @@ Canvas2D.Connector.from = function(construct, sheet) {
         props["to"]   = sheet.shapesMap[parts[1]];
       } else {
         props["routing"] = key;
+        if( key == "custom" && construct.annotation && 
+            construct.annotation.data &&
+            construct.annotation.data.contains(":") &&
+            construct.annotation.data.contains("-") ) 
+            {
+              var parts = construct.annotation.data.split(":");
+              props["routeStyle"] = parts[0];
+              var ends = parts[1].split("-");
+              props["routeBegin"] = ends[0];
+              props["routeEnd"]   = ends[1];
+            }
       }
     } else {
       props[key] = ( key == "from" || key == "to" ) ? 
         sheet.shapesMap[value.value.value] : value.value.value;
+      if( key == "begin" || key == "end" ) {
+        props[key] = Canvas2D.CustomConnectors[props[key]];
+      }
     }
   });
 
@@ -305,9 +392,15 @@ Canvas2D.Connector.from = function(construct, sheet) {
 Canvas2D.Connector.MANIFEST = {
   name         : "connector",
   aliasses     : [ "link" ],
-  properties   : [ "routing", "lineColor", "lineStyle", "lineWidth", 
-                   "from", "to", "begin", "end" ],
+  properties   : [ "lineColor", "lineStyle", "lineWidth", 
+                   "from", "to", "begin", "end",
+                   "routing", "routeStyle", "routeBegin", "routeEnd" ],
   libraries    : [ "Canvas2D" ]
 };
 
 Canvas2D.registerShape( Canvas2D.Connector );
+
+Canvas2D.CustomConnectors = {};
+Canvas2D.registerConnector = function registerConnector( name, connector ) {
+  Canvas2D.CustomConnectors[name] = connector;
+}

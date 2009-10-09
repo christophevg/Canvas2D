@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="examples.css" />
+    <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
+
+    <script type="text/javascript" src="includes.js"></script>
+    <script>
+    Canvas2D.registerConnector( "Triangle", 
+      {n:{lines:[[ -5, -10],[ +5,-10],[  0,  0]],end:[ 0,-10]},
+       e:{lines:[[+10,  +5],[+10, -5],[  0,  0]],end:[10,  0]},
+       s:{lines:[[ +5, +10],[ -5,+10],[  0,  0]],end:[ 0, 10]},
+       w:{lines:[[-10,  -5],[-10, +5],[  0,  0]],end:[-10, 0]}});
+    </script>
+  </head>
+  <body>
+    <h1>Custom Routing</h1>
+    <div class="box">
+      <h2>All Custom Routing Types</h2>
+      <canvas id="diagram" class="Canvas2D" width="300" height="250"></canvas>
+    </div>
+    <div class="box">
+      <h2>Original Source</h2>
+      <textarea id="diagramSource" cols="80" style="height:285px">  
++dynamic Sheet CustomConnectors {
+  [@ 30, 10] Rectangle r1 +geo="50x50";
+  [@120, 10] Rectangle r2 +geo="50x50";
+  [@210, 10] Rectangle r3 +geo="50x50";
+
+  [@ 75,100] Rectangle r4 +geo="50x50";
+  [@165,100] Rectangle r5 +geo="50x50";
+
+  [@ 30,190] Rectangle r6 +geo="50x50";
+  [@120,190] Rectangle r7 +geo="50x50";
+  [@240,160] Rectangle r8 +geo="50x50";
+
+  [@corner:ene-n]   +custom Connector c1  +r1-r4 +end="Triangle";
+  [@corner:wnw-nnw] +custom Connector c2  +r4-r6 +end="Triangle";
+  [@corner:n-wsw]   +custom Connector c3  +r6-r4 +end="Triangle";
+  [@corner:ene-ssw] +custom Connector c4  +r4-r2 +end="Triangle";
+  [@corner:ene-n]   +custom Connector c5  +r2-r5 +end="Triangle";
+  [@corner:wnw-n]   +custom Connector c6  +r5-r7 +end="Triangle";
+  [@corner:s-w]     +custom Connector c7  +r4-r7 +end="Triangle";
+
+  [@direct:ese-wsw] +custom Connector c8  +r7-r8 +end="Triangle";
+  [@direct:nne-sse] +custom Connector c9  +r8-r3 +end="Triangle";
+
+  [@tree:ssw-nne]   +custom Connector c10 +r5-r7 +end="Triangle";
+  [@tree:ese-wnw]   +custom Connector c11 +r5-r8 +end="Triangle";
+}
+      </textarea>  
+    </div>
+  </body>
+</html>
