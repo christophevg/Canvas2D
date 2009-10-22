@@ -133,14 +133,18 @@ Canvas2D.Book = Class.extend( {
   load: function(source) {    
     var parser = new ADL.Parser();
     var tree;
+    this.errors = "";
     if( ( tree = parser.parse( source ) ) ) {
       this.clear();
       this.freeze();
       tree.getRoot().accept(new Canvas2D.ADLVisitor(), this );
       this.thaw();
       this.rePublish();
+      return true;
     } else {
       this.log( parser.errors );
+      this.errors = parser.errors;
+      return false;
     }
   },
 
