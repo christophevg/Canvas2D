@@ -1,5 +1,5 @@
 EXCANVAS-AG=http://excanvas.svn.sourceforge.net/viewvc/excanvas/silverlight/excanvas.js
-EXCANVAS-URL=http://excanvas.svn.sourceforge.net/viewvc/excanvas/excanvas.js
+EXCANVAS-URL=http://explorercanvas.googlecode.com/svn/trunk/excanvas.js
 CANVASTEXT-URL=http://www.federated.com/~jim/canvastext/canvastext.js
 ADL-URL=http://git.thesoftwarefactory.be/pub/ADL.git
 PROTOJS-URL=http://git.thesoftwarefactory.be/pub/ProtoJS.git

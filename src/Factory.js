@@ -604,12 +604,18 @@ Canvas2D.Factory.setup = function(element) {
     } else if( ProtoJS.Browser.WebKit ) { 
 	ProtoJS.mix( Canvas2D.Factory.extensions.CanvasText, ctx, true );
 	
-    } else if( ProtoJS.Browser.IE ) { 
-	ProtoJS.mix( Canvas2D.Factory.extensions.CanvasText, ctx, true );
-	Canvas2D.Book.prototype.addWaterMark = function() { };
-
-    } else if( ProtoJS.Browser.Opera ) { 
-	ProtoJS.mix( Canvas2D.Factory.extensions.CanvasText, ctx, true );
+  } else if( ProtoJS.Browser.IE ) { 
+    if( ctx.strokeText && ctx.fillText && ctx.measureText ) {
+      // as of April 2009 explorercanvas has text functions
+      ctx = Canvas2D.Factory.extensions.HTML5CanvasText.__extend__(ctx);
+    } else {
+      // before that time we still needed to rely on linedrawn text
+      ProtoJS.mix( Canvas2D.Factory.extensions.CanvasText, ctx, true );
+      // which is slow, so we disable the additional watermark text
+      Canvas2D.Book.prototype.addWaterMark = function() { };
+    }	
+  } else if( ProtoJS.Browser.Opera ) { 
+    ProtoJS.mix( Canvas2D.Factory.extensions.CanvasText, ctx, true );
 
     } else if( ProtoJS.Browser.Gecko )  {
 	if( ctx.strokeText && ctx.fillText && ctx.measureText ) {
