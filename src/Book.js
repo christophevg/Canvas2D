@@ -137,13 +137,23 @@ Canvas2D.Book = Class.extend( {
     if( ( tree = parser.parse( source ) ) ) {
       this.clear();
       this.freeze();
-      tree.getRoot().accept(new Canvas2D.ADLVisitor(), this );
+      var visitor = new Canvas2D.ADLVisitor();
+      tree.getRoot().accept(visitor, this );
       this.thaw();
       this.rePublish();
+      if( visitor.errors.length > 0 ) {
+        this.errors = "ADLVisitor reported errors:"
+        visitor.errors.iterate( function(error) {
+          this.log(error);
+          this.errors += "\n   - " + error;
+        }.scope(this));
+      }
+      this.fireEvent("sourceLoaded");
       return true;
     } else {
       this.log( parser.errors );
       this.errors = parser.errors;
+      this.fireEvent("sourceLoaded");
       return false;
     }
   },

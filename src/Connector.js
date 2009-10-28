@@ -15,7 +15,13 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
 
   delayRender: function() { return true; },
 
+  isValid: function() {
+    return this.to != null && this.from != null;
+  },
+
   draw: function(sheet, left, top) {
+    if( !this.isValid() ) { return };
+    
     sheet.save();
     sheet.useCrispLines = this.getUseCrispLines();
     sheet.strokeStyle   = this.getLineColor();
