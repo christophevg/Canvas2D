@@ -73,7 +73,7 @@ Canvas2D.Shape = Class.extend( {
     asConstruct: function() {
 	var construct =  
 	    { __SHAPE__   : this,
-	      annotations : [],
+	      annotation  : { data: null },
 	      type        : this.getType(),
 	      name        : this.getName(),
 	      supers      : [],
@@ -102,9 +102,9 @@ Canvas2D.Shape = Class.extend( {
     constructToString: function(construct, prefix) {
 	if(construct == null) { return ""; }
 	var string = "";
-	construct.annotations.iterate(function(annotation) {
-	    string += prefix + "[@" + annotation + "]\n";
-	} );
+	if( construct.annotation.data ) {
+	  string += prefix + "[@" + construct.annotation.data + "]\n";
+	}
 	string += prefix + construct.type + " " + construct.name;
 	construct.supers.iterate(function(zuper) { string += " : " + zuper; });
 	$H(construct.modifiers).iterate( 

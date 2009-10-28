@@ -349,12 +349,19 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
 
     if( this.getFrom() && this.getTo() ) {
       construct.modifiers[this.getFrom().getName() + "-" +
-      this.getTo().getName()] = null;
+                          this.getTo().getName()] = null;
+    }
+
+    construct.modifiers[this.getRouting()] = null;
+    if( this.getRouting() == "custom" ) {
+      construct.annotation.data = this.getRouteStyle() + ":" +
+                                  this.getRouteBegin() + "-" +
+                                  this.getRouteEnd();
     }
 
     construct.addModifiers( [ "lineColor", "lineStyle",
-    "lineWidth", "begin",
-    "end", "routing" ] );
+                              "lineWidth", "begin",
+                              "end" ] );
 
     return construct;
   }
