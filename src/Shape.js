@@ -102,7 +102,7 @@ Canvas2D.Shape = Class.extend( {
     constructToString: function(construct, prefix) {
 	if(construct == null) { return ""; }
 	var string = "";
-	if( construct.annotation.data ) {
+	if( construct.annotation && construct.annotation.data ) {
 	  string += prefix + "[@" + construct.annotation.data + "]\n";
 	}
 	string += prefix + construct.type + " " + construct.name;
