@@ -6,8 +6,8 @@
  *
  * License: http://thesoftwarefactory.be/wiki/BSD_License
  *
- * This factory takes a standard HTML5 Canvas element and adds (clearly
- * missing) features, tries to overcome the differences between
+ * This factory takes a standard HTML5 Canvas element, adds (clearly
+ * missing) features and tries to overcome the differences between
  * browsers implementations.
  *
  * The Factory extensions sub-namespace, contains sets of functionality
@@ -595,39 +595,29 @@ Canvas2D.Factory.setup = function(element) {
 	throw( "Canvas2D: element is no HTML5 Canvas." );
     }
 
-    // Browser Specific Configuration
-    if( ProtoJS.Browser.MobileSafari ) { 
-	ProtoJS.mix( Canvas2D.Factory.extensions.CanvasText, ctx, true );
-	ProtoJS.mix( Canvas2D.Factory.extensions.TouchEvents, ctx, true );
-	ctx.setupTouchEventHandlers();
-
-    } else if( ProtoJS.Browser.WebKit ) { 
-	ProtoJS.mix( Canvas2D.Factory.extensions.CanvasText, ctx, true );
-	
-  } else if( ProtoJS.Browser.IE ) { 
+    // TextFunctions are problematic ;-)
+    // it took a while before all major browser supported the text functions
     if( ctx.strokeText && ctx.fillText && ctx.measureText ) {
-      // as of April 2009 explorercanvas has text functions
+      // standard native functions are present, extend them a bit further
       ctx = Canvas2D.Factory.extensions.HTML5CanvasText.__extend__(ctx);
+    } else if( ctx.mozMeasureText && ctx.mozPathText ) {
+      // pre 1.9 gecko suports own interface (<= FF 3.1)
+      ProtoJS.mix(Canvas2D.Factory.extensions.GeckoCanvasText, ctx, true );
     } else {
-      // before that time we still needed to rely on linedrawn text
+      // browser has no native text functions, use CanvasText to simulate it
       ProtoJS.mix( Canvas2D.Factory.extensions.CanvasText, ctx, true );
-      // which is slow, so we disable the additional watermark text
-      Canvas2D.Book.prototype.addWaterMark = function() { };
+      if( ProtoJS.Browser.IE ) {
+        // IE already uses an emulation layer (explorercanvas)
+        // which is slow, so we disable the additional watermark text
+        Canvas2D.Book.prototype.addWaterMark = function() { };
+      }
     }	
-  } else if( ProtoJS.Browser.Opera ) { 
-    ProtoJS.mix( Canvas2D.Factory.extensions.CanvasText, ctx, true );
 
-    } else if( ProtoJS.Browser.Gecko )  {
-	if( ctx.strokeText && ctx.fillText && ctx.measureText ) {
-	    // post 1.9 gecko suports HTML5 interface (>= FF 3.5)
-	    ctx = Canvas2D.Factory.extensions.HTML5CanvasText.__extend__(ctx);
-	} else {
-	    // pre 1.9 gecko suports own interface (<= FF 3.1)
-	    ProtoJS.mix(Canvas2D.Factory.extensions.GeckoCanvasText, ctx,
-			true );
-	}
-
-    } else { throw( "Canvas2D: Unknown or Unsupported Browser." ); }
+    // Additional Browser Specific Configuration
+    if( ProtoJS.Browser.MobileSafari ) { 
+      ProtoJS.mix( Canvas2D.Factory.extensions.TouchEvents, ctx, true );
+      ctx.setupTouchEventHandlers();
+    }
 
     // mixin some functions that clearly are missing ;-)
     $H(Canvas2D.Factory.extensions.all).values().iterate(function(ext) {
