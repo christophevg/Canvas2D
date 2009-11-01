@@ -11,7 +11,11 @@ Canvas2D.ADLVisitor = Class.extend( {
       return parent;
     } else if( Canvas2D.shapes.get(constructType) ) {
       var shape = Canvas2D.shapes.get(constructType).from(construct, parent);
-      if( shape ) { // e.g. Alias returns no shape
+      if( shape.errors ) {
+        shape.errors.iterate( function( error ) {
+          this.errors.push( error );
+        }.scope(this) );
+      } else if( shape ) {
         var left, top;
         if( construct.annotation ) {    
           var pos = construct.annotation.data.split(",");
@@ -21,7 +25,6 @@ Canvas2D.ADLVisitor = Class.extend( {
         } else {
           parent.add( shape );
         }
-
         construct.childrenAccept(this, shape);
       }
       return construct;

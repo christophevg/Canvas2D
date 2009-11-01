@@ -399,7 +399,18 @@ Canvas2D.Connector.from = function(construct, sheet) {
     }
   });
 
-  return new Canvas2D.Connector( props );
+  errors = [];
+  if( !props['from'] ) {
+      errors.push( "Missing FROM connection-end on " + construct.name );
+  }
+  if( !props['to'] ) {
+    errors.push( "Missing TO connection-end on " + construct.name   );
+  }
+  if( errors.length > 0 ) {
+    return { errors: errors };
+  } else {
+    return new Canvas2D.Connector( props );
+  }
 };
 
 Canvas2D.Connector.MANIFEST = {
