@@ -400,17 +400,33 @@ Canvas2D.Connector.from = function(construct, sheet) {
   });
 
   errors = [];
+  warnings = [];
   if( !props['from'] ) {
       errors.push( "Missing FROM connection-end on " + construct.name );
   }
   if( !props['to'] ) {
     errors.push( "Missing TO connection-end on " + construct.name   );
   }
-  if( errors.length > 0 ) {
-    return { errors: errors };
-  } else {
-    return new Canvas2D.Connector( props );
+  if( !["vertical","horizontal","direct","custom"].has(props["routing"]) ){
+    warnings.push( "unknown routing: " + props["routing"] + 
+                   ", defaulting to direct." );
   }
+  
+  var result = {};
+  
+  if( warnings.length > 0 ) {
+    result.warnings = warnings;
+  }
+
+  if( errors.length > 0 ) {
+    result.errors = errors;
+  } else {
+    var elem = new Canvas2D.Connector( props );
+    elem.warnings = result.warnings;
+    result = elem;
+  }
+
+  return result;
 };
 
 Canvas2D.Connector.MANIFEST = {

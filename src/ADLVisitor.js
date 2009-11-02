@@ -16,7 +16,12 @@ Canvas2D.ADLVisitor = Class.extend( {
           shape.errors.iterate( function( error ) {
             this.errors.push( error );
           }.scope(this) );
-        } else if( shape ) {
+        } else {
+          if( shape.warnings ) {
+            shape.warnings.iterate( function( error ) {
+              this.errors.push( error );
+            }.scope(this) );
+          }
           var left, top;
           if( construct.annotation ) {
             var pos = construct.annotation.data.split(",");
