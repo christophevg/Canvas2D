@@ -181,6 +181,8 @@ Canvas2D.Sheet = Class.extend( {
     if( !this.showSelection && this.selectedShapes.length > 0 ) {
       this.moveCurrentSelection(pos.dx, pos.dy);
     } else {
+      // we've lost our currentPos somewhere (probably a new sheet load)
+      if( !this.currentPos ) { this.currentPos = pos; }
       this.showSelection = true;
       this.hitArea( this.currentPos.x, this.currentPos.y, pos.x, pos.y );
       this.selectionPos  = pos;
