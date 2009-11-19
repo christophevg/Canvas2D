@@ -502,7 +502,7 @@ Canvas2D.Factory.extensions.HTML5CanvasText = {
 	var $superStrokeText = ctx["strokeText"];
 	ctx["strokeText"] = function strokeText(text, x, y, maxWidth) {
 	    maxWidth = maxWidth  || this.measureText(text);
-            $superStrokeText.apply(this, text, x, y, maxWidth);
+            $superStrokeText.apply(this, arguments);
 	    x = this.adjustToAlignment( x, text );
             this.decorateText(text, x, y, maxWidth);
 	}
