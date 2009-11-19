@@ -291,7 +291,8 @@ Canvas2D.Sheet.Properties =
   [ "globalAlpha", "globalCompositeOperation",
     "strokeStyle", "fillStyle", "lineWidth", 
     "lineCap", "lineJoin", "miterLimit", 
-    "shadowOffsetX", "shadowOffsetY", "shadowBlur", "shadowColor", 
+// Transfer of these properties seems problematic ;-) TO BE INVESTIGATED
+//    "shadowOffsetX", "shadowOffsetY", "shadowBlur", "shadowColor",
     "font", "textAlign", "textBaseline",
     "lineStyle", "useCrispLines", "textDecoration" ];
 
