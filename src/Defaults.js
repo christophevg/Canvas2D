@@ -20,7 +20,8 @@ Canvas2D.Sheet.Defaults = {
     font           : "10pt Sans-Serif", 
     textAlign      : "left", 
     textBaseline   : "alphabetic",
-    textDecoration : "none" 
+    textDecoration : "none",
+    shadowColor    : "rgba(0,0,0,0.0)",
 };
 
 // Shapes start here ...
