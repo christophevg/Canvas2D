@@ -21,7 +21,7 @@ Canvas2D.Sheet.Defaults = {
     textAlign      : "left", 
     textBaseline   : "alphabetic",
     textDecoration : "none",
-    shadowColor    : "rgba(0,0,0,0.0)",
+    shadowColor    : "rgba(0,0,0,0.0)"
 };
 
 // Shapes start here ...
