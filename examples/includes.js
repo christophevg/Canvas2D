@@ -41,43 +41,14 @@ var scripts = [
     "../src/Defaults.js" 
 ];
 
-function addScript(url, callback) {
-    var e = document.createElement("script");
-    e.src = url;
-    e.type="text/javascript";
-    // schedule next script
-    // most browsers
-    e.onload = callback;
-    // IE 6 & 7
-    e.onreadystatechange = function() {
-	if (this.readyState == 'complete') {
-	    callback();
-	}
-    }	
-    document.getElementsByTagName("head")[0].appendChild(e); 
-}
-
-var count = 0;
-
-function loadScripts() {
-    if( count < scripts.length ) {
-	addScript( scripts[count], loadScripts );
-	count++;
-    } else {
-	if( typeof startIt == "function" ) { startIt(); }
-	else if( typeof drawIt == "function" ) { drawIt(); }
-//	else { window.onload(); }
-    }
-}
-
 function addScript(url) {
-    document.writeln( "<script type=\"text/javascript\" src=\"" + url + "\"></script>" );
+  document.writeln( "<script type=\"text/javascript\" src=\"" + url + "\"></script>" );
 }
 
 function loadScripts() {
-    for( var i=0; i<scripts.length; i++ ) {
-	addScript(scripts[i]);
-    }
+  for( var i=0; i<scripts.length; i++ ) {
+    addScript(scripts[i]);
+  }
 }
 
 loadScripts();
