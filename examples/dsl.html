@@ -35,17 +35,21 @@ Sheet mySheet +style="dynamic" {
       <input type="button" value="drawIt" onclick="drawIt();"/>
     </div>
   
-    <script>  
+    <script>
+      var manager, book;
+      
       function drawIt() {
           book.load(document.getElementById("src").value);
       }
 
-      var manager = new Canvas2D.Manager();
-      var book = manager.setupBook("myTabbedDiagram");
-      book.makeTabbed( [ "source", "console", "about" ]);
-      drawIt();
+      Canvas2D.on( "ready", function() {
+        manager = new Canvas2D.Manager();
+        book = manager.setupBook("myTabbedDiagram");
+        book.makeTabbed( [ "source", "console", "about" ]);
+        drawIt();
       
-      manager.startAll();
+        manager.startAll();
+      } );
     </script>  
 
   </body>

@@ -20,46 +20,50 @@
       <canvas id="myTabbedDiagram"  width="300" height="250"></canvas>
     </div>
     <script>
-      function drawRect(book, dyna, withTabs) {
-        if( withTabs ) { book.makeTabbed( [ "about", "console", "source" ] ); }
-        with( book.addSheet() ) {
-          freeze();
-          var rect1 = at(75, 55)
-              .put(new Canvas2D.Rectangle({ width:75, height:75,
-                                            lineColor:"green"}));
-          var rect2 = at(50, 175)
-              .put(new Canvas2D.Rectangle({ width:50, height:50,
-                                            lineColor:"red"  }));
-          var rect3 = at(200, 100)
-              .put(new Canvas2D.Rectangle({ width:50, height:50,
-                                            lineColor:"blue" }));
-          var rect4 = at(200, 25) 
-              .put(new Canvas2D.Rectangle({ width:50, height:50,
-                                            lineColor:"yellow"}));
-          var rect5 = at(125, 175)
-              .put(new Canvas2D.Rectangle({ width:50, height:50,
-                                            lineColor:"red"   }));
+    var manager, book;
+    
+    function drawRect(book, dyna, withTabs) {
+      if( withTabs ) { book.makeTabbed( [ "about", "console", "source" ] ); }
+      with( book.addSheet() ) {
+        freeze();
+        var rect1 = at(75, 55)
+            .put(new Canvas2D.Rectangle({ width:75, height:75,
+                                          lineColor:"green"}));
+        var rect2 = at(50, 175)
+            .put(new Canvas2D.Rectangle({ width:50, height:50,
+                                          lineColor:"red"  }));
+        var rect3 = at(200, 100)
+            .put(new Canvas2D.Rectangle({ width:50, height:50,
+                                          lineColor:"blue" }));
+        var rect4 = at(200, 25) 
+            .put(new Canvas2D.Rectangle({ width:50, height:50,
+                                          lineColor:"yellow"}));
+        var rect5 = at(125, 175)
+            .put(new Canvas2D.Rectangle({ width:50, height:50,
+                                          lineColor:"red"   }));
 
-          var conn1 = put(new Canvas2D.Connector( { from: rect1, to: rect2, 
-                                                    routing: "vertical" } ));
-          var conn2 = put(new Canvas2D.Connector( { from: rect1, to: rect3, 
-                                                    routing: "horizontal"} ));
-          var conn3 = put(new Canvas2D.Connector( { from: rect1, to: rect4, 
-                                                    routing: "horizontal"}));
-          var conn4 = put(new Canvas2D.Connector( { from: rect1, to: rect5, 
-                                                    routing: "vertical"} ));
-          if( dyna ) { makeDynamic(); }
-          thaw();
-        }
+        var conn1 = put(new Canvas2D.Connector( { from: rect1, to: rect2, 
+                                                  routing: "vertical" } ));
+        var conn2 = put(new Canvas2D.Connector( { from: rect1, to: rect3, 
+                                                  routing: "horizontal"} ));
+        var conn3 = put(new Canvas2D.Connector( { from: rect1, to: rect4, 
+                                                  routing: "horizontal"}));
+        var conn4 = put(new Canvas2D.Connector( { from: rect1, to: rect5, 
+                                                  routing: "vertical"} ));
+        if( dyna ) { makeDynamic(); }
+        thaw();
       }
+    }
 
-      var manager = new Canvas2D.Manager();
+    Canvas2D.on( "ready", function() {
+      manager = new Canvas2D.Manager();
 
       drawRect(manager.setupBook("myStaticDiagram"),  false, false );
       drawRect(manager.setupBook("myDynamicDiagram"), true,  false );
       drawRect(manager.setupBook("myTabbedDiagram"),  true,  true  );
-      
+
       manager.startAll();
+    } );
     </script>
   </body>
 </html>
