@@ -14,18 +14,28 @@ Canvas2D.Book = Class.extend( {
 
     this.canvas.on( "mousedown", function(data) {
       this.fireEvent("mousedown");
-      this.getCurrentSheet().handleMouseDown(data);
+      var sheet;
+      if(sheet = this.getCurrentSheet() ) {
+        sheet.handleMouseDown(data);
+      }
     }.scope(this) );
 
     this.canvas.on( "mouseup", function(data) {
       this.fireEvent("mouseup");
-      this.getCurrentSheet().handleMouseUp(data);
+      var sheet;
+      if(sheet = this.getCurrentSheet() ) {
+        sheet.handleMouseUp(data);
+      }
     }.scope(this) );
 
     this.canvas.on( "mousedrag", function(data) {
       this.fireEvent("mousedrag");
-      this.getCurrentSheet().handleMouseDrag(data);
+      var sheet;
+      if(sheet = this.getCurrentSheet()) {
+        sheet.handleMouseDrag(data);
+      }
     }.scope(this) );
+
 
     // look for a console and sources for this book
     this.console   = document.getElementById( element.id + "Console"   );
