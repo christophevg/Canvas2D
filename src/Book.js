@@ -130,16 +130,6 @@ Canvas2D.Book = Class.extend( {
     this.canvas.restore();
   },
 
-  updateSource: function(source) {
-    if( this.generated && this.getCurrentSheet() ) {
-      var newSource = this.getCurrentSheet().toADL();
-      if( newSource != this.generated.value ) {
-        this.generated.value = newSource;
-        this.fireEvent( "sourceUpdated", newSource );
-      }
-    }
-  },
-
   load: function(source) {    
     var parser = new ADL.Parser();
     var tree;
@@ -222,7 +212,18 @@ Canvas2D.Book = Class.extend( {
       if( plugin["afterRender"] ) { plugin.afterRender(this); }
     }.scope(this) );
 
-    this.updateSource();
+    this.updateExternalSource();
+  },
+
+  updateExternalSource: function updateExternalSource() {
+    if( this.getCurrentSheet() ) {
+      var newSource = this.getCurrentSheet().toADL();
+      // this should be moved to Widget
+      if( this.generated && newSource != this.generated.value ) {
+        this.generated.value = newSource;
+      }
+      this.fireEvent( "sourceUpdated", newSource );
+    }
   }
 
 } );
