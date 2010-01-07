@@ -338,16 +338,18 @@ Canvas2D.Factory.extensions.all.MouseEvents = {
 	return top;
     },
 
-    getXY: function getXY(event) {
-	if( event == null ) { event = window.event; }
-	if( event == null ) { return null;          }
-	if( event.pageX || event.pageY ) {
-            return { x: event.pageX - this.getLeft(), 
-		     y: event.pageY - this.getTop()  };
-	}
-	return null;
-    },
-
+  getXY: function getXY(e) {
+    var x,y;
+    if( ProtoJS.Browser.IE ) {
+      x = event.clientX + document.body.scrollLeft;
+      y = event.clientY + document.body.scrollTop;
+    } else {
+      x = e.pageX;
+      y = e.pageY;
+    }
+    return { x: x - this.getLeft(), y: y - this.getTop() };
+  },
+  
     handleMouseDown: function handleMouseDown(event) {
 	this.mousepressed = true;
 	var pos = this.getXY(event);
