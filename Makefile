@@ -1,6 +1,6 @@
 EXCANVAS-AG=http://excanvas.svn.sourceforge.net/viewvc/excanvas/silverlight/excanvas.js
 EXCANVAS-URL=http://explorercanvas.googlecode.com/svn/trunk/excanvas.js
-CANVASTEXT-URL=http://www.federated.com/~jim/canvastext/canvastext.js
+CANVASTEXT-URL=../local/canvastext.js
 ADL-URL=http://git.thesoftwarefactory.be/pub/ADL.git
 PROTOJS-URL=http://git.thesoftwarefactory.be/pub/ProtoJS.git
 TABBER-DIST=tabber.zip
@@ -99,10 +99,9 @@ lib/excanvas.js:
 	@(cd lib; ${FETCH} ${EXCANVAS-URL})
 
 lib/canvastext.js:
-	@echo "*** importing $@"
+	@echo "*** importing cached $@"
 	@mkdir -p lib
-	@(cd lib; ${FETCH} ${CANVASTEXT-URL}; \
-                  ${PATCH} <../patches/canvastext.diff )
+	@(cd lib; cp ${CANVASTEXT-URL} .; )
 
 lib/ProtoJS/build/ProtoJS.js:
 	@echo "*** importing $@"
