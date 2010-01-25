@@ -20,7 +20,7 @@ Canvas2D.KickStart.Starter = Class.extend( {
 	    var classes = htmlCanvas.className;
 	    if( classes.contains(this.getTag()) ) {
 		var name = htmlCanvas.id;
-		var book = this.makeInstance(name); 
+		var book = this.makeInstance(htmlCanvas);
 		if( classes.contains("Tabbed") ) {
 		    var tabs = [];
 		    if(classes.contains("withSource" )){ tabs.push("source" ); }
