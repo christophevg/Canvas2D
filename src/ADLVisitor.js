@@ -23,7 +23,7 @@ Canvas2D.ADLVisitor = Class.extend( {
             }.scope(this) );
           }
           var left, top;
-          if( construct.annotation ) {
+          if( construct.annotation && parent.at ) {
             var pos = construct.annotation.data.split(",");
             left = parseInt(pos[0]);
             top  = parseInt(pos[1]);
