@@ -25,7 +25,8 @@ APP=Canvas2D
 TARGETS=build/${APP}.shared.min.js \
         build/${APP}.standalone.min.js \
         build/${APP}.css 
-SRCS=src/DepCheck.js \
+SRCS=src/IEFixes.js \
+     src/DepCheck.js \
      src/SanityChecks.js \
      src/Common.js \
      src/Canvas2D.js \
