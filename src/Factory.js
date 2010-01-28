@@ -316,6 +316,8 @@ Canvas2D.Factory.extensions.all.MouseEvents = {
 		      this.handleMouseUp.scope(this));
 	ProtoJS.Event.observe(document, 'mousemove', 
 		      this.handleMouseMove.scope(this));
+	ProtoJS.Event.observe(this.canvas, 'dblclick',
+		      this.handleDoubleClick.scope(this));
     },
 
     getLeft: function getLeft() {
@@ -382,6 +384,12 @@ Canvas2D.Factory.extensions.all.MouseEvents = {
 				       dx: pos.x - this.mousePos.x,
 				       dy: pos.y - this.mousePos.y } );
 	this.mousePos = pos;
+    },
+
+    handleDoubleClick: function handleDoubleClick(event) {
+      var pos = this.getXY(event);
+      this.fireEvent( "dblclick", pos );
+      this.mousePos = pos;
     }
 };
 
