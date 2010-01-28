@@ -367,16 +367,17 @@ Canvas2D.Factory.extensions.all.MouseEvents = {
     },
 
     handleMouseMove: function handleMouseMove(event) {
-	if( this.mousepressed ) { this.handleMouseDrag(event); }
-	var pos = this.getXY(event);
-	if( pos ) {
-	    this.mouseOver = 
-		( pos.x >= 0 && pos.x <= this.canvas.width )
-		&&  
-		( pos.y >= 0 && pos.y <= this.canvas.height );
-	}
+	    if( this.mousepressed ) { this.handleMouseDrag(event); }
+	    var pos = this.getXY(event);
+	    if( pos ) {
+        var mouseWasOver = this.mouseOver;
+	      this.mouseOver = ( pos.x >= 0 && pos.x <= this.canvas.width )
+	                   &&  ( pos.y >= 0 && pos.y <= this.canvas.height );
+		    if(this.mouseOver && !mouseWasOver) { this.fireEvent( "mouseEnter" );}
+	      if(!this.mouseOver && mouseWasOver) { this.fireEvent( "mouseLeave" );}
+	    }
     },
-
+    
     handleMouseDrag: function handleMouseDrag(event) {
 	var pos = this.getXY(event);
 	this.fireEvent( "mousedrag", { x: pos.x, 
