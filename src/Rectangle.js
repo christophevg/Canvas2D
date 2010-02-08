@@ -32,8 +32,12 @@ Canvas2D.Rectangle = Canvas2D.CompositeShape.extend( {
                       ssw: { left: 0.25, top: 1   },
                       sw:  { left: 0,    top: 1   },
                       wsw: { left: 0,    top: 0.75},
-                      w  : { left: 0,    top: 0.5},
+                      w  : { left: 0,    top: 0.5 },
                       wnw: { left: 0,    top: 0.25} };
+    
+    if (!modifiers[side]) {
+	return { left: 0, top: 0 };
+    }
     
     return { left: modifiers[side].left * this.getWidth(),
              top:  modifiers[side].top  * this.getHeight() };
