@@ -108,6 +108,9 @@ Canvas2D.Sheet = Class.extend( {
     ( position.getLeft() != null ? 
     "@" + position.getLeft() + "," 
     + position.getTop() : "" ) );
+
+    this.makeDirty();
+
     return shape;
   },
 
