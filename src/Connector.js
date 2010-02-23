@@ -68,15 +68,24 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
                    "w" : { left: -5, top: -5, align: "right" },
                    "s" : { left: +5, top: +10, align: "left"  } };
 
-    var dir = this.getRouteBegin().substring(0,1);
-    this.beginLabelPos = { left: start.left + offset[dir].left,
-                           top:  start.top  + offset[dir].top };
-    this.beginLabelAlign = offset[dir].align;
+    var dir;
+    if( this.getRouteBegin() ) {
+      dir = this.getRouteBegin().substring(0,1);
+      this.beginLabelPos = { left: start.left + offset[dir].left,
+                             top:  start.top  + offset[dir].top };
+      this.beginLabelAlign = offset[dir].align;
+    } else {
+      console.log( "WARNING: missing routeBegin on " + this.name );
+    }
 
-    dir = this.getRouteEnd().substring(0,1);
-    this.endLabelPos = { left: end.left + offset[dir].left,
-                         top:  end.top  + offset[dir].top };
-    this.endLabelAlign = offset[dir].align;
+    if( this.getRouteEnd() ) {
+      dir = this.getRouteEnd().substring(0,1);
+      this.endLabelPos = { left: end.left + offset[dir].left,
+                           top:  end.top  + offset[dir].top };
+      this.endLabelAlign = offset[dir].align;
+    } else {
+      console.log( "WARNING: missing routeBegin on " + this.name );
+    }
     
     // draw connectors
     end   = this._draw_end_connector(sheet, end)
@@ -307,6 +316,7 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
       this.routeStyle = "straight";
       this.routeBegin = from.getPort("e").left < 
                           to.getPort("w").left ? "e" : "w";
+      this.routeEnd   = this.routeBegin == "e" ? "w" : "e";
     }
     this._custom(sheet);
   },
@@ -333,6 +343,7 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
       this.routeStyle = "straight";
       this.routeBegin = from.getPort("s").top < 
                           to.getPort("n").top ? "s" : "n";
+      this.routeEnd   = this.routeBegin == "n" ? "s" : "n";
     }
     this._custom(sheet);
   },
