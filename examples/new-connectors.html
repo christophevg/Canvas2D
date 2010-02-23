@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="examples.css" />
+    <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
+
+    <script type="text/javascript" src="includes.js"></script>
+  </head>
+  <body>
+    <h1>New Connector Routing Algorithm</h1>
+    <p>
+      This is a test/example for the new implementation of the connector 
+      routing algorithm.
+    </p>
+    <div class="box">
+      <h2>Direct</h2>
+      <canvas id="myDiagram"  class="Canvas2D" width="300" height="250"></canvas>
+    </div>
+  
+    <pre id="myDiagramSource" style="display:none">
+Sheet default +dynamic {
+  [@114, 57] rectangle shape0 +geo="75x75" +lineColor="green";
+  [@ 23,156] rectangle shape1 +geo="50x50" +lineColor="blue";
+  [@ 23, 22] rectangle shape2 +geo="50x50" +lineColor="red";
+  [@196,156] rectangle shape3 +geo="50x50" +lineColor="yellow";
+
+  connector direct     +shape0-shape1 +direct;
+  connector vertical   +shape0-shape2 +vertical;
+  connector horizontal +shape0-shape3 +horizontal;
+  connector recursive  +shape0-shape0 +recursive;
+}    
+    </pre>
+    
+    <div class="box">
+      <h2>Generated</h2>
+      <textarea id="myDiagramGenerated" style="height:250" cols="65"></textarea>
+    </div>
+
+  </body>
+</html>

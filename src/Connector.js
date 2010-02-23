@@ -46,17 +46,30 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
     var endShape   = this.getTo(sheet);
     var start      = beginShape.getPort(this.getRouteBegin());
     var end        = endShape.getPort(this.getRouteEnd());
+    // straight is a special case for direct
+    if( this.getRouteStyle() == "straight" ) {
+      if( this.getRouteBegin() == "e" || this.getRouteBegin() == "w" ) {
+        var y = start.top - ( ( start.top - end.top ) / 2 );
+        start.top = y;
+        end.top   = y;
+      } else {
+        var x = start.left - ( ( start.left - end.left ) / 2 );
+        start.left = x;
+        end.left   = x;
+      }
+    }
+    // draw connectors
     end   = this._draw_end_connector(sheet, end)
     start = this._draw_start_connector(sheet, start)
+    // choose drawing algorithm
     switch( this.getRouteStyle() ) {
-      case "corner":          this._draw_corner(sheet, start, end); break;
-      case "tree"  :          this._draw_tree  (sheet, start, end); break;
-      case "direct": default: this._draw_direct(sheet, start, end);
+      case "corner"    : this._draw_corner   (sheet, start, end); break;
+      case "tree"      : this._draw_tree     (sheet, start, end); break;
+      case "recursive" : this._draw_recursive(sheet, start, end); break;
+      case "straight"  :
+      case "direct"    :
+      default          : this._draw_direct   (sheet, start, end);
     }
-  },
-  
-  _draw_direct : function _draw_direct(sheet, start, end) {
-    sheet.lineTo(end.left, end.top);
   },
   
   _draw_corner : function _draw_corner( sheet, start, end ) {
@@ -83,20 +96,27 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
     sheet.lineTo( end.left  , end.top);
   },
 
-  _recursive: function _recursive(sheet) {
-    var shape = this.getFrom(sheet);
-    var start = shape.getPort("e");
-    var end   = shape.getPort("n");
-    var dw    = parseInt(shape.getWidth() / 4);
-    var dh    = parseInt(shape.getHeight() / 4);
-    var d     = 30;
+  _draw_direct : function _draw_direct(sheet, start, end) {
+    sheet.lineTo(end.left, end.top);
+  },
 
-    this.draw_start_connector(sheet, shape, "e", start.left, start.top - dh);
-    sheet.lineTo(start.left + d, start.top - dh );
-    sheet.lineTo(start.left + d, end.top - d );
-    sheet.lineTo(end.left + dw, end.top - d );
-    this.draw_end_connector(sheet, shape, "n", end.left + dw, end.top );
-    sheet.lineTo(end.left + dw, end.top - d);
+  _draw_recursive : function _draw_recursive(sheet, start, end) {
+    var e = 30;
+    var sl = start.left;
+    var st = start.top;
+    var el = end.left;
+    var et = end.top;
+    var mapping = { "e" : [ [ sl+e, st ], [ sl+e, et-e ], [ el, et-e ] ],
+                    "n" : [ [ sl, st-e ], [ el-e, st-e ], [ el-e, et ] ],
+                    "w" : [ [ sl-e, st ], [ sl-e, et+e ], [ el, et+e ] ],
+                    "s" : [ [ sl, st+e ], [ el+e, st+e ], [ el+e, et ] ] };
+    var d = mapping[this.getRouteBegin().substring(0,1)];
+
+    sheet.lineTo( d[0][0], d[0][1] );
+    sheet.lineTo( d[1][0], d[1][1] );
+    sheet.lineTo( d[2][0], d[2][1] );
+
+    sheet.lineTo( end.left, end.top );
   },
 
   _draw_start_connector: function draw_start_connector(sheet, pos) {
@@ -124,54 +144,7 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
 
     return this._draw_connector(sheet, connector, pos.left, pos.top );
   },
-
-  _direct: function(sheet) {
-    var from, to;
-    // TODO add connectors implementation
-    // TODO start at intersection with border of box
-    from = this.getFrom(sheet).getCenter();
-    to   = this.getTo(sheet).getCenter();
-    sheet.moveTo(from.left, from.top);
-    sheet.lineTo(to.left,   to.top);
-  },
-
-  draw_start_connector: function draw_start_connector(sheet, shape, port, 
-                                                      left, top) 
-  {
-    left = left || shape.getPort(port).left;
-    top  = top  || shape.getPort(port).top;
-
-    var connector = null;
-    if( this.getBegin() ) { connector = this.getBegin()[port]; }
-
-    return this._draw_connector(sheet, connector, left, top );
-  },
-
-  draw_end_connector: function start_connector(sheet, shape, port, left, top) {
-    left = left || shape.getPort(port).left;
-    top  = top  || shape.getPort(port).top;
-
-    var connector = null;
-    if( this.getEnd() ) { connector = this.getEnd()[port]; }
-
-    return this._draw_connector(sheet, connector, left, top );
-  },
-
-  draw_connector: function(sheet, shape, port, left, top ) {
-    left = left || shape.getPort(port).left;
-    top  = top  || shape.getPort(port).top;
-
-    var connector = null;
-    if( shape == this.getFrom(sheet) && this.getBegin() ) {
-      connector = this.getBegin()[port];
-    }
-    if( shape == this.getTo(sheet) && this.getEnd() ) {
-      connector = this.getEnd()[port];
-    }	
-
-    return this._draw_connector(sheet, connector, left, top );
-  },
-
+  
   _draw_connector: function(sheet, connector, left, top) {
     sheet.moveTo(left, top);
     if( connector ) {
@@ -197,146 +170,101 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
     return { left: left, top: top };
   },
 
+  _direct: function _direct(sheet) {
+    var from = this.getFrom(sheet).getCenter();
+    var to   = this.getTo(sheet).getCenter();
+
+    // top : left : [ from, to ]
+    var mapping = { "-1" : { "-1" : [ "nw", "se" ],
+                              "0" : [ "n" , "s"  ],
+                              "1" : [ "ne", "sw" ] },
+                    "0"  : { "-1" : [ "w" , "e"  ],
+                              "0" : [ "n",  "s"  ],
+                              "1" : [ "e",  "w"  ] },
+                    "1"  : { "-1" : [ "sw", "ne" ],
+                              "0" : [ "s",  "n"  ],
+                              "1" : [ "se", "nw" ] } };
+    var m = 100;                            
+    var top  = to.top - from.top;
+    top = Math.round( top / m ) * m;
+    if( top != 0 ) { top /= Math.abs(top); }
+    var left = to.left - from.left;
+    left = Math.round( left / m ) * m;
+    if( left != 0 ) { left /= Math.abs(left); }
+    var route = mapping[top][left];
+
+    // translate to new routing system
+    this.routeStyle = 'direct';
+    this.routeBegin = route[0];
+    this.routeEnd   = route[1];
+
+    // and call it
+    this._custom(sheet);
+  },
+  
+  _recursive: function _recursive(sheet) {
+    this.routeStyle = "recursive";
+    this.routeBegin = this.routeBegin || "ene";
+    var mapping = { "nnw" : "wnw", "ene" : "nne",  
+                    "wsw" : "ssw", "sse" : "ese" };
+    this.routeEnd   = mapping[this.routeBegin];
+    this._custom(sheet);
+  },
+
+  _vertical: function _vertical(sheet) {
+    var from    = this.getFrom(sheet);
+    var to      = this.getTo(sheet);
+    var reverse = from.getBox().top < to.getBox().top;
+    var dist1   = reverse ? to.getBox().top   - from.getBox().bottom
+                          : from.getBox().top - to.getBox().bottom;
+    var dist2   = reverse ? to.getCenter().top - from.getBox().bottom
+                          : from.getCenter().top - to.getBox().bottom;
+    
+    if( dist1 >= Canvas2D.Connector.Defaults.minTreeDist ) {
+      this.routeStyle = "tree";
+      this.routeBegin = reverse ? "s" : "n";
+      this.routeEnd   = reverse ? "n" : "s";
+    } else if( dist2 >= Canvas2D.Connector.Defaults.minCornerDist ) {  
+      this.routeStyle = "corner";
+      this.routeBegin = reverse ? "s" : "n";
+      this.routeEnd   = from.getPort(this.routeBegin).left < 
+                          to.getPort("w").left ? "w" : "e";
+    } else {
+      this.routeStyle = "straight";
+      this.routeBegin = from.getPort("e").left < 
+                          to.getPort("w").left ? "e" : "w";
+    }
+    this._custom(sheet);
+  },
+
+  _horizontal: function _horizontal(sheet) {
+    var from    = this.getFrom(sheet);
+    var to      = this.getTo(sheet);
+    var reverse = from.getBox().left < to.getBox().left;
+    var dist1   = reverse ? to.getBox().left   - from.getBox().right
+                          : from.getBox().left - to.getBox().right;
+    var dist2   = reverse ? to.getCenter().left - from.getBox().right
+                          : from.getCenter().left - to.getBox().right;
+    
+    if( dist1 >= Canvas2D.Connector.Defaults.minTreeDist ) {
+      this.routeStyle = "tree";
+      this.routeBegin = reverse ? "e" : "w";
+      this.routeEnd   = reverse ? "w" : "e";
+    } else if( dist2 >= Canvas2D.Connector.Defaults.minCornerDist ) {  
+      this.routeStyle = "corner";
+      this.routeBegin = reverse ? "e" : "w";
+      this.routeEnd   = from.getPort(this.routeBegin).top < 
+                          to.getPort("n").top ? "n" : "s";
+    } else {
+      this.routeStyle = "straight";
+      this.routeBegin = from.getPort("s").top < 
+                          to.getPort("n").top ? "s" : "n";
+    }
+    this._custom(sheet);
+  },
+  
   initialBranchLength: function(top, bottom) {
     return ( bottom - top ) / 2;
-  },
-
-  _vertical: function(sheet) {
-    var top, bottom;
-    if( this.getFrom(sheet).getBox().top < 
-    this.getTo(sheet).getBox().top ) 
-    {
-      top    = this.getFrom(sheet);  
-      bottom = this.getTo(sheet);
-    } else {
-      top    = this.getTo(sheet);    
-      bottom = this.getFrom(sheet);
-    }
-
-    if( bottom.getBox().top - top.getBox().bottom >= 
-    Canvas2D.Connector.Defaults.minTreeDist )
-    {
-      this._vertical_tree( sheet, top, bottom );
-    } else if( bottom.getCenter().top - top.getBox().bottom 
-      >= Canvas2D.Connector.Defaults.minCornerDist)
-    {  
-        this._vertical_corner( sheet, top, bottom );
-    } else {
-        this._vertical_line( sheet, this.getFrom(sheet), this.getTo(sheet));
-    }
-  },
-
-  _vertical_tree: function( sheet, top, bottom ) {
-    this.draw_connector(sheet, top, "s");
-
-    var src = top.getPort("s");
-    var trg = bottom.getPort("n");
-    var dy1 = this.initialBranchLength( src.top, trg.top );
-
-    sheet.lineTo(src.left, src.top + dy1);
-    sheet.lineTo(trg.left, src.top + dy1);
-    this.draw_connector( sheet, bottom, "n" );
-    sheet.lineTo(trg.left, src.top + dy1);
-  },
-
-  _vertical_corner: function(sheet, top, bottom) {
-    this.draw_connector( sheet, top, "s" );
-
-    var src = top.getPort("s");
-    var trgPort = src.left < bottom.getPort("w").left ? "w" : "e";
-    var trg = bottom.getPort(trgPort);
-
-    sheet.lineTo( src.left, trg.top );
-
-    this.draw_connector( sheet, bottom, trgPort );
-    sheet.lineTo(src.left, trg.top);
-  },
-
-  _vertical_line: function(sheet, from, to) {
-    var fromPort, toPort;
-    if( from.getBox().right < to.getBox().left ) {
-      fromPort = "e"; toPort = "w";
-    } else {
-      fromPort = "w"; toPort = "e";
-    }
-
-    var y = from.getPort(fromPort).top -
-    ( ( from.getPort(fromPort).top - to.getPort(toPort).top ) / 2 );
-    var dx = (to.getPort(toPort).left - from.getPort(fromPort).left ) / 2;
-
-    this.draw_connector( sheet, from, fromPort, null, y );
-    sheet.lineTo( from.getPort(fromPort).left+dx, y);
-    this.draw_connector( sheet, to,   toPort,   null, y );
-    sheet.lineTo( from.getPort(fromPort).left+dx, y);
-  },
-
-  _horizontal: function(sheet) {
-    var left, right;
-    if( this.getFrom(sheet).getBox().left <
-    this.getTo(sheet).getBox().left )
-    {
-      left  = this.getFrom(sheet); right = this.getTo(sheet);
-    } else {
-      left  = this.getTo(sheet);   right = this.getFrom(sheet);
-    }
-
-    if( right.getBox().left - left.getBox().right >= 
-    Canvas2D.Connector.Defaults.minTreeDist )
-    {
-      this._horizontal_tree( sheet, left, right );
-    } else if( right.getCenter().left - left.getBox().right 
-      >= Canvas2D.Connector.Defaults.minCornerDist)
-    {  
-      this._horizontal_corner( sheet, left, right );
-    } else {
-      this._horizontal_line(sheet, this.getFrom(sheet), this.getTo(sheet));
-    }
-  },
-
-  _horizontal_tree: function( sheet, left, right ) {
-    this.draw_connector(sheet, left, "e");
-
-    var src = left.getPort("e");
-    var trg = right.getPort("w");
-    var dx1 = this.initialBranchLength( src.left, trg.left );
-
-    sheet.lineTo(src.left + dx1, src.top);
-    sheet.lineTo(src.left + dx1, trg.top);
-
-    this.draw_connector( sheet, right, "w" );
-    sheet.lineTo(src.left + dx1, trg.top);
-  },
-
-  _horizontal_corner: function(sheet, left, right) {
-    this.draw_connector( sheet, right, "w" );
-
-    var src = right.getPort("w");
-    var trgPort = src.top < left.getPort("n").top ? "n" : "s";
-    var trg = left.getPort(trgPort);
-
-    sheet.lineTo( trg.left, src.top );
-
-    this.draw_connector( sheet, left, trgPort );
-    sheet.lineTo(trg.left, src.top);
-  },
-
-  _horizontal_line: function(sheet, from, to) {
-    var fromPort, toPort;
-    if( from.getBox().bottom < to.getBox().top ) {
-      fromPort = "s"; toPort = "n";
-    } else {
-      fromPort = "n"; toPort = "s";
-    }
-
-    var x = from.getPort(fromPort).left -
-    ( ( from.getPort(fromPort).left - to.getPort(toPort).left ) / 2 );
-    var dy = (to.getPort(toPort).top - from.getPort(fromPort).top ) / 2;
-
-    this.draw_connector( sheet, from, fromPort, x );
-    sheet.lineTo( x, from.getPort(fromPort).top+dy);
-
-    this.draw_connector( sheet, to,   toPort,   x );
-    sheet.lineTo( x, from.getPort(fromPort).top+dy);
   },
 
   hit: function(x,y) {
@@ -362,10 +290,11 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
     construct.addModifiers( [ "lineColor", "lineStyle",
                               "lineWidth", "begin",
                               "end" ] );
-
+    if( this.getRouting() == "recursive" && this.getRouteBegin() != "ene" ) {
+      construct.addModifiers( [ "routeBegin" ] );
+    }
     return construct;
   }
-
 } );
 
 Canvas2D.Connector.from = function(construct, sheet) {
