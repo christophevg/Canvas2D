@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="examples.css" />
+    <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
+
+    <script type="text/javascript" src="includes.js"></script>
+  </head>
+  <body>
+    <h1>ConnectorLabels</h1>
+    <div class="box">
+      <h2>Canvas</h2>
+      <canvas id="myDiagram"  class="Canvas2D" width="300" height="250"></canvas>
+    </div>
+  
+    <pre id="myDiagramSource" style="display:none">
+Sheet default +dynamic {
+  [@123, 49] rectangle shape0 +geo="75x75" +lineColor="green";
+  [@ 29,163] rectangle shape1 +geo="50x50" +lineColor="red";
+  [@211,133] rectangle shape2 +geo="50x50" +lineColor="red";
+
+  connector conn1 +shape0-shape1 +horizontal
+                  +beginLabel="begin" +endLabel="end" +centerLabel="center";
+  connector conn2 +shape0-shape2 +vertical +lineStyle="dashed"
+                  +beginLabel="begin" +endLabel="end" +centerLabel="center";
+  connector conn3 +shape0-shape0 +recursive
+                  +beginLabel="begin" +endLabel="end" +centerLabel="center";
+}
+    </pre>
+    
+    <div class="box">
+      <h2>Generated</h2>
+      <textarea id="myDiagramGenerated" style="height:250" cols="75"></textarea>
+    </div>
+
+  </body>
+</html>

@@ -5,21 +5,21 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
     return props;
   },
 
-  getFrom  : function(sheet) { 
+  getFrom  : function getFrom(sheet) { 
     return sheet ? sheet.getPosition(this.from) : this.from; 
   },
 
-  getTo    : function(sheet) { 
+  getTo    : function getTo(sheet) { 
     return sheet ? sheet.getPosition(this.to)   : this.to;   
   },
 
-  delayRender: function() { return true; },
+  delayRender: function delayRender() { return true; },
 
-  isValid: function() {
+  isValid: function isValid() {
     return this.to != null && this.from != null;
   },
 
-  draw: function(sheet, left, top) {
+  draw: function draw(sheet, left, top) {
     if( !this.isValid() ) { return };
     
     sheet.save();
@@ -38,9 +38,12 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
     }
     sheet.stroke();
     sheet.closePath();
+    
+    this.addLabels(sheet);
+    
     sheet.restore();
   },
-
+  
   _custom: function _custom(sheet) {
     var beginShape = this.getFrom(sheet);
     var endShape   = this.getTo(sheet);
@@ -58,26 +61,94 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
         end.left   = x;
       }
     }
+    
+    // label positions and alignment for begin and end
+    var offset = { "e" : { left: +5, top: -5, align: "left"  },
+                   "n" : { left: +5, top: -5, align: "left"  },
+                   "w" : { left: -5, top: -5, align: "right" },
+                   "s" : { left: +5, top: +10, align: "left"  } };
+
+    var dir = this.getRouteBegin().substring(0,1);
+    this.beginLabelPos = { left: start.left + offset[dir].left,
+                           top:  start.top  + offset[dir].top };
+    this.beginLabelAlign = offset[dir].align;
+
+    dir = this.getRouteEnd().substring(0,1);
+    this.endLabelPos = { left: end.left + offset[dir].left,
+                         top:  end.top  + offset[dir].top };
+    this.endLabelAlign = offset[dir].align;
+    
     // draw connectors
     end   = this._draw_end_connector(sheet, end)
     start = this._draw_start_connector(sheet, start)
-    // choose drawing algorithm
+
+    // choose special drawing algorithm
     switch( this.getRouteStyle() ) {
       case "corner"    : this._draw_corner   (sheet, start, end); break;
       case "tree"      : this._draw_tree     (sheet, start, end); break;
       case "recursive" : this._draw_recursive(sheet, start, end); break;
-      case "straight"  :
-      case "direct"    :
-      default          : this._draw_direct   (sheet, start, end);
+      default:
+        var l = start.left - (( start.left - end.left ) / 2 );
+        var t = start.top  - (( start.top  - end.top  ) / 2 );
+        if( start.top == end.top ) { t -= 5; }
+        this.centerLabelPos = { left: l, top: t };
+    }
+    sheet.lineTo( end.left, end.top );
+  },
+  
+  addLabels: function addLabels(sheet) {
+    if( this.getBeginLabel() && this.getBeginLabelPos() ) {
+      this.addLabel( sheet, this.getBeginLabel(), 
+                     this.getBeginLabelPos(), this.getBeginLabelAlign() );
+    }
+    if( this.getEndLabel() && this.getEndLabelPos() ) {
+      this.addLabel( sheet, this.getEndLabel(),
+                     this.getEndLabelPos(),   this.getEndLabelAlign() );
+    }
+    if( this.getCenterLabel() && this.getCenterLabelPos() ) {
+      this.addLabel(sheet, this.getCenterLabel(),
+                    this.getCenterLabelPos(), "center");
     }
   },
   
+  addLabel: function addLabel(sheet, label, pos, align) {
+    sheet.save();
+    sheet.textAlign = align || "left";
+    sheet.font = this.getLabelFont();
+    sheet.fillText(label, pos.left, pos.top);
+    sheet.restore();
+  },
+  
+  getBeginLabelPos: function getBeginLabelPos() { 
+    return this.beginLabelPos; 
+  },
+  
+  getEndLabelPos: function getEndLabelPos() { 
+    return this.endLabelPos; 
+  },
+  
+  getCenterLabelPos: function getCenterLabelPos() { 
+    return this.centerLabelPos; 
+  },
+  
+  getBeginLabelAlign: function getBeginLabelAlign() {
+    return this.beginLabelAlign || "left";    
+  },
+  
+  getEndLabelAlign: function getEndLabelAlign() {
+    return this.endLabelAlign || "left";
+  },
+  
   _draw_corner : function _draw_corner( sheet, start, end ) {
-    var direction = this.getRouteBegin().substring(0,1);
-    if( direction == "n" || direction == "s" ) {
+    var dir = this.getRouteBegin().substring(0,1);
+    if( dir == "n" || dir == "s" ) {
       sheet.lineTo( start.left, end.top );
+      this.centerLabelPos = { left: start.left, 
+                              top: end.top + ( dir == "n" ? -5 : 10 ) };
     } else {
       sheet.lineTo( end.left, start.top );
+      this.centerLabelPos = { left: end.left, 
+                              top: start.top + ( dir =="e" ? -5 : 10 ) };      
     }
     sheet.lineTo( end.left, end.top   );
   },
@@ -89,34 +160,37 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
     if( direction == "n" || direction == "s" ) {
       sheet.lineTo( start.left, start.top + dy/2);
       sheet.lineTo( end.left  , start.top + dy/2);
+      this.centerLabelPos = { left: start.left - ((start.left - end.left )/2),
+                              top: start.top + (dy/2) + 10 };
     } else {
       sheet.lineTo( start.left + dx/2, start.top );
       sheet.lineTo( start.left + dx/2, end.top   );
+      this.centerLabelPos = { left: start.left + (dx/2),
+                              top: start.top - ((start.top - end.top )/2) - 5 };
     }    
-    sheet.lineTo( end.left  , end.top);
-  },
-
-  _draw_direct : function _draw_direct(sheet, start, end) {
-    sheet.lineTo(end.left, end.top);
   },
 
   _draw_recursive : function _draw_recursive(sheet, start, end) {
     var e = 30;
-    var sl = start.left;
-    var st = start.top;
-    var el = end.left;
-    var et = end.top;
+    var sl = start.left;  var st = start.top;
+    var el = end.left;    var et = end.top;
     var mapping = { "e" : [ [ sl+e, st ], [ sl+e, et-e ], [ el, et-e ] ],
                     "n" : [ [ sl, st-e ], [ el-e, st-e ], [ el-e, et ] ],
                     "w" : [ [ sl-e, st ], [ sl-e, et+e ], [ el, et+e ] ],
                     "s" : [ [ sl, st+e ], [ el+e, st+e ], [ el+e, et ] ] };
-    var d = mapping[this.getRouteBegin().substring(0,1)];
+    var orientation = this.getRouteBegin().substring(0,1);
+    var d = mapping[orientation];
 
     sheet.lineTo( d[0][0], d[0][1] );
     sheet.lineTo( d[1][0], d[1][1] );
     sheet.lineTo( d[2][0], d[2][1] );
 
-    sheet.lineTo( end.left, end.top );
+    var offset = { "e" : { left: 0, top: -5 }, 
+                   "n" : { left: 0, top: -5 },
+                   "w" : { left: 0, top: +10 },
+                   "s" : { left: 0, top: +10 } };
+    this.centerLabelPos = { left: d[1][0] + offset[orientation].left, 
+                            top: d[1][1] + offset[orientation].top};
   },
 
   _draw_start_connector: function draw_start_connector(sheet, pos) {
@@ -145,7 +219,7 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
     return this._draw_connector(sheet, connector, pos.left, pos.top );
   },
   
-  _draw_connector: function(sheet, connector, left, top) {
+  _draw_connector: function _draw_connector(sheet, connector, left, top) {
     sheet.moveTo(left, top);
     if( connector ) {
       var oldStyle = sheet.lineStyle;
@@ -263,16 +337,16 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
     this._custom(sheet);
   },
   
-  initialBranchLength: function(top, bottom) {
+  initialBranchLength: function initialBranchLength(top, bottom) {
     return ( bottom - top ) / 2;
   },
 
-  hit: function(x,y) {
+  hit: function hit(x,y) {
     // connectors aren't selectable (for now ;-))
     return false;
   },
 
-  asConstruct: function() {
+  asConstruct: function asConstruct() {
     var construct = this._super();
 
     if( this.getFrom() && this.getTo() ) {
@@ -287,9 +361,10 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
                                   this.getRouteEnd();
     }
 
-    construct.addModifiers( [ "lineColor", "lineStyle",
-                              "lineWidth", "begin",
-                              "end" ] );
+    construct.addModifiers( [ "lineColor", "lineStyle", "lineWidth", 
+                              "begin", "end",
+                              "beginLabel", "centerLabel", "endLabel" ] );
+
     if( this.getRouting() == "recursive" && this.getRouteBegin() != "ene" ) {
       construct.addModifiers( [ "routeBegin" ] );
     }
@@ -297,7 +372,7 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
   }
 } );
 
-Canvas2D.Connector.from = function(construct, sheet) {
+Canvas2D.Connector.from = function from(construct, sheet) {
   var props = { name: construct.name };
   construct.modifiers.iterate(function(key, value) {
     if( value.value == null ) {
@@ -363,7 +438,8 @@ Canvas2D.Connector.MANIFEST = {
   aliasses     : [ "link" ],
   properties   : [ "lineColor", "lineStyle", "lineWidth", 
                    "from", "to", "begin", "end",
-                   "routing", "routeStyle", "routeBegin", "routeEnd" ],
+                   "routing", "routeStyle", "routeBegin", "routeEnd",
+                   "beginLabel", "centerLabel", "endLabel" ],
   libraries    : [ "Canvas2D" ]
 };
 
