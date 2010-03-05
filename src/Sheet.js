@@ -97,8 +97,10 @@ Canvas2D.Sheet = Class.extend( {
   add: function(shape) {
     var baseName = shape.getName().replace(/<.*$/,'');
     if( this.shapesMap[baseName] ) {
-      this.book.log( "WARNING: Shape with name '" + baseName + 
-                     "' already exists. Skipping." );
+      // TODO: this.book dependency should be enforced
+      var logger = this.book ? this.book : console;
+      logger.log( "WARNING: Shape with name '" + baseName + 
+                  "' already exists. Skipping." );
       return null;
     }
 
