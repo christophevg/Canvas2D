@@ -54,8 +54,8 @@ Canvas2D.Book = Class.extend( {
 
   addSheet : function( sheet ) {
     unless( sheet instanceof Canvas2D.Sheet, function() {
-      sheet = new Canvas2D.Sheet();
-    } );
+      sheet = new Canvas2D.Sheet( { book: this } );
+    }.scope(this) );
     sheet.setCanvas(this.canvas);
     sheet.on( "change", this.rePublish.scope(this) );
     sheet.on( "newShape", this.log.scope(this) );

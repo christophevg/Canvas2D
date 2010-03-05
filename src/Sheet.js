@@ -2,6 +2,8 @@ Canvas2D.Sheet = Class.extend( {
   init: function init(props) {
     props = props || {};
 
+    this.book = props.book;
+
     this.name  = props.name  || "default";   // name of the sheet
     this.style = props.style || "static";    // selected style
 
@@ -93,6 +95,13 @@ Canvas2D.Sheet = Class.extend( {
   },
 
   add: function(shape) {
+    var baseName = shape.getName().replace(/<.*$/,'');
+    if( this.shapesMap[baseName] ) {
+      this.book.log( "WARNING: Shape with name '" + baseName + 
+                     "' already exists. Skipping." );
+      return null;
+    }
+
     var position = new Canvas2D.Position( shape, this.newLeft, this.newTop);
     shape   .on( "change", this.makeDirty.scope(this) );
     position.on( "change", this.makeDirty.scope(this) );
@@ -101,7 +110,7 @@ Canvas2D.Sheet = Class.extend( {
     this.newTop = null;
 
     this.positions.push(position);
-    this.shapesMap[shape.getName().replace(/<.*$/,'')] = shape;
+    this.shapesMap[baseName] = shape;
     this.positionsMap[shape.getName()] = position;
 
     this.fireEvent( "newShape", "added new shape" + 
@@ -325,7 +334,8 @@ Canvas2D.Sheet.from = function(construct, book) {
     }
   });
 
-  return new Canvas2D.Sheet({ name: construct.name, style: style } );
+  return new Canvas2D.Sheet({ book: book, 
+                              name: construct.name, style: style } );
 };
 
 Canvas2D.Sheet.MANIFEST = {
