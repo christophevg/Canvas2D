@@ -36,6 +36,8 @@ var scripts = [
 
     "../src/plugins/TabbedCanvas.js", 
     "../src/plugins/AutoLayout.js", 
+    "../src/plugins/Watermark.js", 
+
     "../src/KickStart.js", 
     
     "../src/Defaults.js" 

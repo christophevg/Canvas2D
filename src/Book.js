@@ -75,11 +75,13 @@ Canvas2D.Book = Class.extend( {
     $H(Canvas2D.Book.plugins).iterate(function(key, value) {
       var plugin = new (value)(this);
       this.plugins[key] = plugin;
-      value.exposes.iterate(function(func) {
-        this[func] = function(arg1, arg2, arg3) { 
-          this.plugins[key][func](arg1, arg2, arg3);
-        };
-      }.scope(this) );
+      if( value['exposes'] ) {
+        value.exposes.iterate(function(func) {
+          this[func] = function(arg1, arg2, arg3) { 
+            this.plugins[key][func](arg1, arg2, arg3);
+          };
+        }.scope(this) );
+      }
     }.scope(this) );
   },
 
@@ -110,25 +112,6 @@ Canvas2D.Book = Class.extend( {
 
   freeze: function() { this.wait = true;  },
   thaw: function()   { this.wait = false; },
-
-  addWaterMark: function() {
-    this.canvas.save();
-    this.canvas.fillStyle = "rgba(125,125,125,1)";
-    this.canvas.textDecoration = "none";
-    this.canvas.rotate(Math.PI/2);
-    var extensions = "";
-    this.extensions.iterate(function(key, value) { 
-      extensions += " + " + key; 
-    });
-    this.canvas.font = "6pt Sans-Serif";
-    this.canvas.textAlign = "left";
-    this.canvas.useCrispLines = false;
-    this.canvas.lineStyle = "solid";
-    this.canvas.fillText( "Canvas2D" + extensions + " / Christophe VG",
-                          3, (this.canvas.canvas.width * -1) + 7 +
-                          ( ProtoJS.Browser.IE ? 4 : 0 ) ); // if styleborder
-    this.canvas.restore();
-  },
 
   load: function(source) {    
     var parser = new ADL.Parser();
@@ -195,7 +178,6 @@ Canvas2D.Book = Class.extend( {
   },
 
   afterPublish: function afterPublish() {
-    this.addWaterMark();
     $H(this.plugins).iterate( function( name, plugin ) {
       if( plugin["afterPublish"] ) { plugin.afterPublish(this); }
     }.scope(this) );
