@@ -135,11 +135,13 @@ Canvas2D.Shape = Class.extend( {
 	if( this.getLabel() && this.getHeight() != null && this.getCenter() ) {
 	    left += this.getCenter().left;
 	    
-	    switch( this.getLabelPos() ) {
-	    case "top":	            top  += - 5;   break;
-	    case "bottom":          top  += this.getHeight() + 11;  break;
-	    case "center": default: top  += this.getCenter().top + 2.5;
-	    }
+      switch( this.getLabelPos() ) {
+        case "top":	            top  += - 5;   break;
+        case "top-inner":       top  += + 16;  break;
+        case "bottom":          top  += this.getHeight() + 11; break;
+        case "bottom-inner":    top  += this.getHeight() - 8;  break;
+        case "center": default: top  += this.getCenter().top + 2.5;
+      }
 
 	    sheet.save();
 	    sheet.fillStyle     = this.getLabelColor();
