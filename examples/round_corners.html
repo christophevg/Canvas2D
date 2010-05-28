@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="examples.css" />
+    <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
+
+    <script type="text/javascript" src="includes.js"></script>
+  </head>
+  <body>
+    <h1>Rounded Corners</h1>
+    <p>
+      This exmaple shows how to add rounded corners to a standard rectangle.
+    </p>
+    <div class="box">
+      <h2>Rounded Corners</h2>
+      <canvas id="myBook" class="Canvas2D" width="300" height="250"></canvas>
+    </div>
+    <pre id="myBookSource" style="display:none;">
+      +dynamic sheet mySheet {
+        [@100,75]
+        rectangle myRounded +geo="100x100" +roundCorners 
+          +fillColor="rgb(255,240,175)" +lineColor="rgb(250,125,0)"
+          +label="Hello Roundings" +labelPos="top-inner" 
+          +labelColor="rgb(250,125,0)";
+      }
+    </pre>
+
+  </body>
+</html>

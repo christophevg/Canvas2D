@@ -1,16 +1,49 @@
 Canvas2D.Rectangle = Canvas2D.CompositeShape.extend( {
-  draw: function(sheet, left, top) {
+  draw: function draw(sheet, left, top) {
     sheet.useCrispLines = this.getUseCrispLines();
     sheet.lineWidth     = this.getLineWidth();
     sheet.strokeStyle   = this.getLineColor();
     sheet.fillStyle     = this.getFillColor();
-
     var width  = this.getWidth();
     var height = this.getHeight();
 
+    if( this.getRoundCorners() ) {
+      this._drawRoundCorners(sheet, left, top, width, height);
+    } else {
+      this._drawStraightCorners(sheet, left, top, width, height);
+    }
+    this._super(sheet, left, top);
+  },
+  
+  _drawRoundCorners: function _drawRoundCorners( sheet, left, top,
+                                                 width, height )
+  {
+    sheet.beginPath();
+    sheet.moveTo(left+20,top);
+
+    sheet.lineTo(left+width-20,top);
+    sheet.arcTo(left+width+0.5,top+0.5, left+width+0.5, top+20, 20);
+
+    sheet.lineTo(left+width,top+height-20);
+    sheet.arcTo(left+width+0.5, top+height+0.5, left+width-20, top+height+0.5, 20);
+
+    sheet.lineTo(left+20, top+height);
+    sheet.arcTo(left+0.5,top+height+0.5,left+0.5,top+height-20+0.5,20);
+
+    sheet.lineTo(left, top+20);
+    sheet.arcTo( left+0.5, top+0.5, left+20.5, top+0.5, 20);
+
+    sheet.closePath();
+
+    sheet.fill();
+    sheet.stroke();
+  },
+
+  _drawStraightCorners: function _drawStraightCorners( sheet, left, top, 
+                                                       width, height ) 
+  {
     sheet.fillRect( left, top, width, height );
     sheet.strokeRect( left, top, width, height );
-    this._super(sheet, left, top);
   },
 
   getCenter: function() {
@@ -47,10 +80,10 @@ Canvas2D.Rectangle = Canvas2D.CompositeShape.extend( {
     return this.getWidth() && this.getHeight() ?
     this.getWidth() + "x" + this.getHeight() : null;
   },
-
+  
   asConstruct: function() {
     var construct = this._super();
-    construct.addModifiers( [ "geo", "lineColor" ] );
+    construct.addModifiers( [ "geo", "lineColor", "roundCorners" ] );
     return construct;
   }
 } );
@@ -71,8 +104,12 @@ Canvas2D.Rectangle.from = function( construct, sheet ) {
     }
 
     if( "" + value == "" ) {
-      value = key;
-      key = "lineColor";
+      if( key == "roundCorners" ) {
+        value = true;
+      } else {
+        value = key;
+        key = "lineColor";
+      }
     }
 
     props[key] = value;
@@ -84,7 +121,7 @@ Canvas2D.Rectangle.from = function( construct, sheet ) {
 Canvas2D.Rectangle.MANIFEST = {
   name         : "rectangle",
   aliasses     : [ "box" ],
-  properties   : [ "lineWidth", "lineColor", "fillColor" ],
+  properties   : [ "lineWidth", "lineColor", "fillColor", "roundCorners" ],
   propertyPath : [ Canvas2D.CompositeShape ],
   libraries    : [ "Canvas2D" ]
 };
