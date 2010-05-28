@@ -20,6 +20,10 @@ Canvas2D.Sheet = Class.extend( {
     this.wireCanvasDelegation();
     this.setupProperties();
   },
+  
+  getHeight: function getHeight() {
+    return this.canvas.canvas.height;
+  },
 
   wireCanvasDelegation: function wireCanvasDelegation() {
     if( !this.canvas ) { return; }

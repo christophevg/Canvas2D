@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="examples.css" />
+    <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
+
+    <script type="text/javascript" src="includes.js"></script>
+  </head>
+  <body>
+    <h1>A Small Grapher</h1>
+    <p>
+      This exmaple shows how to create a utility based on Canvas2D to create a 
+      simple graph.
+    </p>
+    <div class="box">
+      <h2>Graph</h2>
+      <canvas id="myGraph" class="Canvas2D" width="400" height="40"></canvas>
+    </div>
+    
+    <script>
+      function graph( id, data, color ) {
+        with( Canvas2D.getBook(id).addSheet() ) {
+          data.iterate( function(height, count)  {
+            at( count*5+1, getHeight()-height );
+            put( new Canvas2D.Rectangle( { width: 3, height: height, 
+                                           fillColor: color,
+                                           lineColor: color } ) );
+          } );
+        }
+      }
+
+      Canvas2D.on("ready", function() {
+        var data = [17, 9, 13, 12, 3, 16, 5, 2, 4, 16, 8, 31, 18, 4, 3, 3, 10, 20, 36, 23, 9, 9, 29, 13, 15, 1, 2, 9, 7, 26, 3, 4, 6, 9, 5, 28, 11, 23, 13, 9, 7, 12, 15, 6, 8, 15, 3, 9, 0, 0, 1, 1, 0, 12, 15, 12, 20, 6, 9, 9, 0, 7, 3, 2, 14, 14, 0, 14, 13, 5, 5, 16, 2, 0, 8, 9, 11, 18, 0, 0, 0, 0, 4, 10, 4, 3, 15, 11, 10, 20, 13, 9, 30, 26, 20, 34, 15, 12, 24, 26, 11, 34, 12, 9, 23, 28, 8, 17, 20, 31, 14, 16, 6, 18, 18, 7, 9, 21, 4, 14, 13, 14, 17, 21, 29, 16, 43, 9, 40, 21, 26, 46, 28, 37, 41, 40, 11, 27, 22, 25, 29, 21, 37, 29]; 
+        graph("myGraph", data, '#ccc' ); 
+      } );
+    </script>
+
+  </body>
+</html>
