@@ -28,8 +28,8 @@
       <h2>Registered Libraries</h2>
       <ol>
 	<script>
-	  Canvas2D.libraries.iterate(function(library) {
-            document.writeln("<li>" + library.key + "</li>");
+	  Canvas2D.libraries.iterate(function(key, value) {
+            document.writeln("<li>" + key + "</li>");
           } );
 	</script>
       </ol>
