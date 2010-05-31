@@ -43,10 +43,15 @@ Canvas2D.Shape = Class.extend( {
 
   prepare: function prepare(sheet) {},
 
-  setProperties : function(props) {
+  setProperties : function setProperties(props) {
     this.getPropertyList().iterate(function propertyListIterator(prop) {
       this[prop] = props[prop] != null ? props[prop] : null;
     }.scope(this) );
+  },
+
+  setProperty : function setProperty(prop, value) {
+    this[prop] = value != null ? value : null;
+    this.fireEvent( 'change' );
   },
 
   getProperty: function getProperty( prop ) {
@@ -233,8 +238,7 @@ ProtoJS.mix( Canvas2D.Factory.extensions.all.EventHandling,
         this.allPropertiesCache = [];
         this.getClassHierarchy().iterate(
           function propertiesCacheFiller(shape){
-            this.allPropertiesCache = 
-            this.allPropertiesCache
+            this.allPropertiesCache = this.allPropertiesCache
             .concat(shape.getLocalProperties());
           }.scope(this)
         );
