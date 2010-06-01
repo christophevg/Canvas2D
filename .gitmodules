@@ -1,0 +1,6 @@
+[submodule "lib/ADL"]
+	path = lib/ADL
+	url = http://git.thesoftwarefactory.be/pub/ADL.git
+[submodule "lib/ProtoJS"]
+	path = lib/ProtoJS
+	url = http://git.thesoftwarefactory.be/pub/ProtoJS.git

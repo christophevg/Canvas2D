@@ -1,8 +1,5 @@
-EXCANVAS-AG=http://excanvas.svn.sourceforge.net/viewvc/excanvas/silverlight/excanvas.js
 EXCANVAS-URL=http://explorercanvas.googlecode.com/svn/trunk/excanvas.js
-CANVASTEXT-URL=../local/canvastext.js
-ADL-URL=http://git.thesoftwarefactory.be/pub/ADL.git
-PROTOJS-URL=http://git.thesoftwarefactory.be/pub/ProtoJS.git
+
 TABBER-DIST=tabber.zip
 TABBER-URL=http://www.barelyfitz.com/projects/tabber/${TABBER-DIST}
 
@@ -92,28 +89,13 @@ build: .check-deps ${TARGETS}
 dist: dist/${DIST} dist/${DIST-SRC} dist/${DIST-EXT}
 
 update-libs:
-	@(cd lib/ADL; ${GIT-PULL}; ${MAKE} clean; ${MAKE})
-	@(cd lib/ProtoJS; ${GIT-PULL}; ${MAKE} clean; ${MAKE})
+	@(cd lib/ADL; ${MAKE} clean; ${MAKE})
+	@(cd lib/ProtoJS; ${MAKE} clean; ${MAKE})
 
 lib/excanvas.js: 
 	@echo "*** importing $@"
 	@mkdir -p lib
 	@(cd lib; ${FETCH} ${EXCANVAS-URL})
-
-lib/canvastext.js:
-	@echo "*** importing cached $@"
-	@mkdir -p lib
-	@(cd lib; cp ${CANVASTEXT-URL} .; )
-
-lib/ProtoJS/build/ProtoJS.js:
-	@echo "*** importing $@"
-	@(cd lib; ${GIT-CLONE} ${PROTOJS-URL})
-	@(cd lib/ProtoJS; ${MAKE})
-
-lib/ADL/build/ADL.shared.js:
-	@echo "*** importing $@"
-	@(cd lib; ${GIT-CLONE} ${ADL-URL})
-	@(cd lib/ADL; ${MAKE})
 
 lib/tabber/tabber.js: lib/tabber
 lib/tabber/tabber.css: lib/tabber
