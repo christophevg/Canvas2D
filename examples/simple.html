@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="examples.css" />
+    <link rel="stylesheet" type="text/css" href="../build/Canvas2D.css" />
+
+    <script type="text/javascript" src="includes.js"></script>
+  </head>
+  <body>
+    <h1>Simple</h1>
+    <canvas id="mySheet" class="Canvas2D" width="300" height="250"></canvas>
+    <pre id="mySheetSource">
+      +dynamic sheet mySheet {
+        [@50,50]
+        rectangle rect1 +width=60 +height=60 +lineColor="yellow" 
+                        +lineWidth=10 +roundCorners;
+        [@75,75]
+        rectangle rect2 +geo="150x75" +lineColor="red" 
+                        +fillColor="rgba(125,125,255,0.5)";
+      }
+    </pre>
+    <script>
+      Canvas2D.on("ready", function() {
+        with( Canvas2D.getBook("mySheet").getCurrentSheet() ) {
+          at( 87, 87 ).put( new Canvas2D.Rectangle() );
+        }
+      } );
+    </script>
+    <textarea rows="17" cols="85" id="mySheetGenerated"></textarea>
+  </body>
+</html>

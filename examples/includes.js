@@ -17,6 +17,8 @@ var scripts = [
 
     "../src/Manager.js", 
     "../src/ADLVisitor.js", 
+    "../src/TypeFactory.js",
+    "../src/Types.js",
     "../src/Book.js", 
 
     "../src/Shape.js", 
@@ -37,6 +39,8 @@ var scripts = [
     "../src/plugins/TabbedCanvas.js", 
     "../src/plugins/AutoLayout.js", 
     "../src/plugins/Watermark.js", 
+
+    "../src/ShapeFactory.js",
 
     "../src/KickStart.js", 
     

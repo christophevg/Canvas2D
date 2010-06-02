@@ -32,6 +32,8 @@ SRCS=src/IEFixes.js \
      src/ImageManager.js \
      src/Manager.js \
      src/ADLVisitor.js \
+	 src/TypeFactory.js \
+	 src/Types.js \
      src/Book.js \
      src/Shape.js \
      src/Sheet.js \
@@ -40,8 +42,6 @@ SRCS=src/IEFixes.js \
      src/Line.js \
      src/LinePath.js \
      src/Alias.js \
-     src/CompositeShape.js \
-     src/Compositor.Stack.js \
      src/Rectangle.js \
      src/Text.js \
      src/Image.js \
@@ -49,6 +49,7 @@ SRCS=src/IEFixes.js \
      src/plugins/TabbedCanvas.js \
      src/plugins/AutoLayout.js \
      src/plugins/Watermark.js \
+	 src/ShapeFactory.js \
      src/KickStart.js \
      src/Defaults.js
 CSSSRCS=lib/tabber/example.css src/${APP}.css

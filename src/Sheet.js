@@ -1,18 +1,8 @@
-Canvas2D.Sheet = Class.extend( {
-  init: function init(props) {
-    props = props || {};
-
-    this.book = props.book;
-
-    this.name  = props.name  || "default";   // name of the sheet
-    this.style = props.style || "static";    // selected style
-
+Canvas2D.Sheet = Canvas2D.Shape.extend( {
+  afterInit: function init() {
     this.clear();
     this.dirty = false;
-
-    if(props.canvas) { this.setCanvas(props.canvas); }
-
-    Canvas2D.Keyboard.on( "keyup", this.handleKeyDown.scope(this) );
+    Canvas2D.Keyboard.on( "keydown", this.handleKeyDown.scope(this) );
   },
 
   setCanvas: function setCanvas(canvas) {
@@ -20,11 +10,11 @@ Canvas2D.Sheet = Class.extend( {
     this.wireCanvasDelegation();
     this.setupProperties();
   },
-  
+
   getHeight: function getHeight() {
     return this.canvas.canvas.height;
   },
-
+  
   wireCanvasDelegation: function wireCanvasDelegation() {
     if( !this.canvas ) { return; }
 
@@ -101,10 +91,9 @@ Canvas2D.Sheet = Class.extend( {
   add: function(shape) {
     var baseName = shape.getName().replace(/<.*$/,'');
     if( this.shapesMap[baseName] ) {
-      // TODO: this.book dependency should be enforced
       var logger = this.book ? this.book : console;
       logger.log( "WARNING: Shape with name '" + baseName + 
-                  "' already exists. Skipping." );
+      "' already exists. Skipping." );
       return null;
     }
 
@@ -232,10 +221,10 @@ Canvas2D.Sheet = Class.extend( {
         case 40: this.moveCurrentSelection(  0,  5 ); break; // down
       }
     }
-    if( ( Canvas2D.Keyboard.keyDown(91) ||    // cmd 
-    Canvas2D.Keyboard.keyDown(17) ) &&  // ctrl +
-    key == 65 &&                          // a
-    this.canvas.mouseOver )
+
+    // cmd | ctrl + a = select all
+    if( ( Canvas2D.Keyboard.keyDown(91) || Canvas2D.Keyboard.keyDown(17) ) 
+    && key == 65 && this.canvas.mouseOver )
     {
       this.selectAllShapes();
     }
@@ -248,11 +237,11 @@ Canvas2D.Sheet = Class.extend( {
       var dy = pos.y - this.currentPos.y;
 
       this.canvas.fillStyle = "rgba( 0, 0, 255, 0.1 )";
-      this.canvas.fillRect( pos.x <= this.currentPos.x ?  
-        pos.x : this.currentPos.x, 
-        pos.y <= this.currentPos.y ?
-        pos.y : this.currentPos.y,
-        Math.abs(dx), Math.abs(dy) );
+      this.canvas.fillRect( 
+        pos.x <= this.currentPos.x ?  pos.x : this.currentPos.x, 
+        pos.y <= this.currentPos.y ?  pos.y : this.currentPos.y,
+        Math.abs(dx), Math.abs(dy) 
+      );
     }
   },
 
@@ -266,7 +255,8 @@ Canvas2D.Sheet = Class.extend( {
           this.canvas.beginPath();
           this.canvas.arc( corner[0],  corner[1], 5, 0, Math.PI*2, true );
           this.canvas.fill();	
-        }.scope(this) );
+        }.scope(this) 
+      );
     }.scope(this) );
   },
 
@@ -280,9 +270,7 @@ Canvas2D.Sheet = Class.extend( {
       }
     }.scope(this) );
 
-    delayed.iterate( function(shape) { 
-      shape.render(this); 
-    }.scope(this) );
+    delayed.iterate( function(shape) { shape.render(this); }.scope(this) );
 
     this.addSelectionOverlay();
     this.addSelectionMarkers();
@@ -301,52 +289,38 @@ Canvas2D.Sheet = Class.extend( {
   }
 } );
 
-// add-in some common functionality
-ProtoJS.mix( Canvas2D.Factory.extensions.all.EventHandling, 
-             Canvas2D.Sheet.prototype );
+Canvas2D.Sheet.Properties = [ 
+"globalAlpha", "globalCompositeOperation",
+"strokeStyle", "fillStyle", "lineWidth", 
+"lineCap", "lineJoin", "miterLimit", 
+"shadowOffsetX", "shadowOffsetY", "shadowBlur", "shadowColor",
+"font", "textAlign", "textBaseline",
+"lineStyle", "useCrispLines", "textDecoration" 
+];
 
-Canvas2D.Sheet.Properties = 
-  [ "globalAlpha", "globalCompositeOperation",
-    "strokeStyle", "fillStyle", "lineWidth", 
-    "lineCap", "lineJoin", "miterLimit", 
-    "shadowOffsetX", "shadowOffsetY", "shadowBlur", "shadowColor",
-    "font", "textAlign", "textBaseline",
-    "lineStyle", "useCrispLines", "textDecoration" ];
-
-Canvas2D.Sheet.Operations = 
-  [ "save", "restore", 
-    "scale", "rotate", "translate", "transform", "setTransform",
-    "createRadialGradient", "createPattern",
-    "clearRect", "fillRect", "strokeRect",
-    "beginPath", "closePath", "moveTo", "lineTo",
-    "quadraticCurveTo", "bezierCurveTo", 
-    "arcTo", "rect", "arc",
-    "fill", "stroke", 
-    "clip","isPointInPath", 
-    "fillText","fillText","strokeText","strokeText","measureText",
-    "drawImage","createImageData","getImageData","putImageData",
-    "getFontSize", "fillStrokeRect" ];
-
-Canvas2D.Sheet.from = function(construct, book) {
-  var style = "static";
-  var styleModifier = construct.modifiers.get( "style" );
-  if( styleModifier ) {
-    style = styleModifier.value.value.toLowerCase();
-  }
-
-  construct.modifiers.iterate(function(key, value) {
-    if( key.toLowerCase() == "static" || key.toLowerCase() == "dynamic" ) {
-      style = key.toLowerCase();
-    }
-  });
-
-  return new Canvas2D.Sheet({ book: book, 
-                              name: construct.name, style: style } );
-};
+Canvas2D.Sheet.Operations = [ 
+"save", "restore", 
+"scale", "rotate", "translate", "transform", "setTransform",
+"createRadialGradient", "createPattern",
+"clearRect", "fillRect", "strokeRect",
+"beginPath", "closePath", "moveTo", "lineTo",
+"quadraticCurveTo", "bezierCurveTo", 
+"arcTo", "rect", "arc",
+"fill", "stroke", 
+"clip","isPointInPath", 
+"fillText","fillText","strokeText","strokeText","measureText",
+"drawImage","createImageData","getImageData","putImageData",
+"getFontSize", "fillStrokeRect" 
+];
 
 Canvas2D.Sheet.MANIFEST = {
   name      : "sheet",
-  properties : [],
+  properties : {
+    book  : Canvas2D.Types.Parent,
+    style : Canvas2D.Types.Selection( 
+      { values: [ "static", "dynamic" ], asKey: true } 
+    )
+  },
   libraries : [ "Canvas2D" ]
 };
 
