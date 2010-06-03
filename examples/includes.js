@@ -1,9 +1,9 @@
 var scripts = [ 
     "../lib/ProtoJS/build/ProtoJS.js",
+    "../lib/ADL/build/ADL.shared.js",
     "../lib/excanvas.js",
     "../lib/canvastext.js",
-    "../lib/tabber/tabber.js",
-    "../lib/ADL/build/ADL.shared.js",
+    "../lib/tabber.js",
     
     "../src/Common.js", 
 
@@ -11,18 +11,15 @@ var scripts = [
     "../src/Factory.js", 
     "../src/Keyboard.js", 
     "../src/ImageManager.js", 
-
     "../src/Manager.js", 
     "../src/ADLVisitor.js", 
     "../src/TypeFactory.js",
     "../src/Types.js",
     "../src/Book.js", 
-
     "../src/Shape.js", 
     "../src/Sheet.js", 
     "../src/Position.js", 
     "../src/Connector.js", 
-
     "../src/ShapeFactory.js",
     "../src/KickStart.js",
 

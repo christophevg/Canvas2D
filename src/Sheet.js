@@ -157,7 +157,7 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
             this.selectedShapes = [];
           } 
         } else {
-          this.selectShape(hit, this.isMultiSelecting());
+          this.selectShape(hit, !this.isMultiSelecting());
         }
       } else {
         this.selectShape(hit, true);
@@ -238,6 +238,7 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
       if( hit && this.hasSelectedShapes() && this.selectedShapes.contains(hit) ) {
         this.startDraggingSelection();
       } else if( hit && this.hasSelectedShapes() && !this.selectedShapes.contains(hit) ) {
+        if( !this.isMultiSelecting() ) { this.selectedShapes = []; }
         this.hit(pos);
         this.startDraggingSelection();
       } else if( hit && !this.hasSelectedShapes() ) {
