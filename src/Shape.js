@@ -224,19 +224,17 @@ Canvas2D.Shape = Class.extend( {
   },
 
   hitArea: function(left, top, right, bottom) {
-    return ! ( 0 > right
-      || this.getWidth() < left
-      || 0 > bottom
-      || this.getHeight() < top 
+    return ! ( 0 > right     ||
+      this.getWidth() < left ||
+      0 > bottom             ||
+      this.getHeight() < top 
     );
   },
 
   // the remaining methods are not applicable for abstract shapes
   beforeInit : function beforeInit(props)      { return props; },
   afterInit  : function afterInidt()           { },
-  draw       : function draw(sheet, left, top) { },
-  getCenter  : function getCenter()            { return null;  },
-  getPort    : function getPort(side)          { return null;  }
+  draw       : function draw(sheet, left, top) { }
 } );
 
 // add-in some common functionality
@@ -301,11 +299,11 @@ Canvas2D.Shape.manifestHandling = $H( {
         }.scope(this)
       );
     }
-    return this.allPropertiesCache
+    return this.allPropertiesCache;
   },
 
   getLocalPropertiesConfig: function getLocalPropertiesConfig() {
-    return $H(this.getManifest().properties)
+    return $H(this.getManifest().properties);
   },
 
   getPropertiesConfig: function getPropertiesConfig() {
@@ -317,7 +315,7 @@ Canvas2D.Shape.manifestHandling = $H( {
             function(prop, config) {
               this.allPropertiesConfigCache.set(prop,config); 
             }.scope(this)
-          )
+          );
         }.scope(this)
       );
     }

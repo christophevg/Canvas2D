@@ -6,7 +6,7 @@ Canvas2D.Book.plugins.TabbedCanvas = Class.extend( {
   makeTab: function(name, height, content) {
     var tab = document.createElement("div");
     tab.className = "tabbertab";
-    tab.style.height = ( 4 + parseInt(height) ) + "px";
+    tab.style.height = ( 4 + parseInt(height,10) ) + "px";
     var head = document.createElement("h2");
     var txt = document.createTextNode(name);
     head.appendChild(txt);
@@ -21,7 +21,7 @@ Canvas2D.Book.plugins.TabbedCanvas = Class.extend( {
     var about  = document.createElement("div");
     about.style.overflow = "auto";
     about.style.height   = height + "px";
-    about.style.width    = (parseInt(width)-4)  + "px";
+    about.style.width    = (parseInt(width,10)-4)  + "px";
 
     var libraries = "";
     Canvas2D.extensions.iterate(function(library) {
@@ -53,7 +53,7 @@ Canvas2D.Book.plugins.TabbedCanvas = Class.extend( {
     this.book.console.style.border = "2px solid #ccc";
     this.book.console.style.overflow = "auto";
     this.book.console.style.height = height + "px";
-    this.book.console.style.width  = ( parseInt(width) - 4 )  + "px";
+    this.book.console.style.width  = ( parseInt(width,10) - 4 )  + "px";
     return this.makeTab("Console", height, this.book.console );
   },
 
@@ -66,7 +66,7 @@ Canvas2D.Book.plugins.TabbedCanvas = Class.extend( {
     this.book.generated.style.border = "2px solid #ccc";
     this.book.generated.style.overflow = "auto";
     this.book.generated.style.height = height + "px";
-    this.book.generated.style.width  = ( parseInt(width) - 4 )  + "px";
+    this.book.generated.style.width  = ( parseInt(width,10) - 4 )  + "px";
     return this.makeTab("Source", height, this.book.generated );
   },
 
@@ -75,8 +75,8 @@ Canvas2D.Book.plugins.TabbedCanvas = Class.extend( {
 
     this.tabber = document.createElement("div");
     this.tabber.className    = "tabber";
-    this.tabber.style.width  = (parseInt(source.width)  + 17) + "px";
-    this.tabber.style.height = (parseInt(source.height) + 37) + "px";
+    this.tabber.style.width  = (parseInt(source.width,10)  + 17) + "px";
+    this.tabber.style.height = (parseInt(source.height,10) + 37) + "px";
     source.parentNode.replaceChild(this.tabber, source);	
 
     var tab1 = document.createElement("div");

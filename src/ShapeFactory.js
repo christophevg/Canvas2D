@@ -17,9 +17,9 @@ Canvas2D.ShapeFactory = {
           type.extract(props, prop, construct, parent);
         }
       );
-// console.log( "constructing " + shape.getType() + " using :" ); console.log( props );
+      // console.log( "constructing " + shape.getType() + " using :" ); console.log( props );
 
       return new shape(props);
     }
   }
-}
+};

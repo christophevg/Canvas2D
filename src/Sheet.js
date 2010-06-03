@@ -14,7 +14,7 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
   getHeight: function getHeight() {
     return this.canvas.canvas.height;
   },
-  
+
   wireCanvasDelegation: function wireCanvasDelegation() {
     if( !this.canvas ) { return; }
 
@@ -110,8 +110,8 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
 
     this.fireEvent( "newShape", "added new shape" + 
     ( position.getLeft() != null ? 
-    "@" + position.getLeft() + "," 
-    + position.getTop() : "" ) );
+    "@" + position.getLeft() + "," +
+    position.getTop() : "" ) );
 
     this.makeDirty();
 
@@ -154,8 +154,8 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
   hitArea: function( left, top, right, bottom ) {
     var newSelection =  
     ( Canvas2D.Keyboard.keyDown(91) || // cmd
-    Canvas2D.Keyboard.keyDown(17) ) // ctrl
-    ? this.selectedShapes : [];
+    Canvas2D.Keyboard.keyDown(17) ) ? // ctrl
+    this.selectedShapes : [];
     for( var s = this.positions.length-1; s>=0; s-- ) {
       if( this.positions[s].hitArea(left, top, right, bottom) ) {
         newSelection.push( this.positions[s] );
@@ -201,7 +201,7 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
     // FIXME: only selectable shapes (so no connectors)
     this.selectedShapes = [];
     this.positions.iterate( function(position) { 
-      this.selectedShapes.push(position) 
+      this.selectedShapes.push(position);
     }.scope(this) );
     this.makeDirty();
   },
@@ -223,8 +223,8 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
     }
 
     // cmd | ctrl + a = select all
-    if( ( Canvas2D.Keyboard.keyDown(91) || Canvas2D.Keyboard.keyDown(17) ) 
-    && key == 65 && this.canvas.mouseOver )
+    if( ( Canvas2D.Keyboard.keyDown(91) || Canvas2D.Keyboard.keyDown(17) ) &&
+    key == 65 && this.canvas.mouseOver )
     {
       this.selectAllShapes();
     }

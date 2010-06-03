@@ -8,7 +8,7 @@ Canvas2D.TypeFactory = {
     validate: function validate(value) { return false; },
     extract : function extract(props, prop, construct, parent) {
       if( this.extractFrom == ADL.Modifier ) {
-         this._extractModifier(props, prop, construct);
+        this._extractModifier(props, prop, construct);
       } else if( this.extractFrom == "name" ) {
         props[prop] = construct.name;
       } else if( this.extractFrom == "parent" ) {
@@ -58,7 +58,7 @@ Canvas2D.TypeFactory = {
   createType: function(specifics) {
     var newType = this._createSimpleType(specifics);
     if( newType._construct ) {
-      return function(data) { newType._construct(data); return newType; }
+      return function(data) { newType._construct(data); return newType; };
     }
     return newType;
   },

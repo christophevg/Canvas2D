@@ -11,7 +11,8 @@ Canvas2D.ADLVisitor = Class.extend( {
       return parent;
     } 
 
-    if( shape = Canvas2D.ShapeFactory.createShape(construct, parent) ) {
+    var shape = Canvas2D.ShapeFactory.createShape(construct, parent);
+    if( shape ) {
 
       if( shape.errors ) {
         shape.errors.iterate( function( error ) {
@@ -26,8 +27,8 @@ Canvas2D.ADLVisitor = Class.extend( {
         var left, top;
         if( construct.annotation && parent.at ) {
           var pos = construct.annotation.data.split(",");
-          left = parseInt(pos[0]);
-          top  = parseInt(pos[1]);
+          left = parseInt(pos[0],10);
+          top  = parseInt(pos[1],10);
           parent.at(left,top).add( shape );
         } else {
           parent.add( shape );

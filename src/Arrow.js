@@ -1,102 +1,105 @@
 Canvas2D.Arrow = Canvas2D.Rectangle.extend( {
-    draw: function(sheet, left, top) {
-	// rect
-	sheet.useCrispLines = this.getUseCrispLines();
-	sheet.lineWidth     = this.getLineWidth();
-	sheet.strokeStyle   = this.getLineColor();
-	sheet.fillStyle     = this.getFillColor();
+  draw: function(sheet, left, top) {
+    // rect
+    sheet.useCrispLines = this.getUseCrispLines();
+    sheet.lineWidth     = this.getLineWidth();
+    sheet.strokeStyle   = this.getLineColor();
+    sheet.fillStyle     = this.getFillColor();
 
-	sheet.fillRect( left, 
-		top, 
-		this.getWidth() - this.getArrowHeadWidth(), 
-		this.getHeight() );
-	sheet.strokeRect( left, 
-		top, 
-		this.getWidth() - this.getArrowHeadWidth(), 
-		this.getHeight() );
+    sheet.fillRect( left, 
+      top, 
+      this.getWidth() - this.getArrowHeadWidth(), 
+      this.getHeight() 
+    );
+    sheet.strokeRect( left, 
+      top, 
+      this.getWidth() - this.getArrowHeadWidth(), 
+      this.getHeight() 
+    );
 
-	// arrow head
-	sheet.beginPath();
+    // arrow head
+    sheet.beginPath();
 
-	sheet.moveTo(left + this.getWidth() - this.getArrowHeadWidth(), top);
-	
-	sheet.lineTo(left + this.getWidth() - this.getArrowHeadWidth(), 
-		top + (this.getHeight() / 2) - (this.getArrowHeadHeight() / 2));
-	sheet.lineTo(left + this.getWidth(), 
-		top + (this.getHeight() / 2));
-	sheet.lineTo(left + this.getWidth() - this.getArrowHeadWidth(), 
-		top + (this.getHeight() / 2) + (this.getArrowHeadHeight() / 2));
-	
-	sheet.closePath();
+    sheet.moveTo(left + this.getWidth() - this.getArrowHeadWidth(), top);
 
-	sheet.stroke();
-	sheet.fill();
-    },
+    sheet.lineTo(left + this.getWidth() - this.getArrowHeadWidth(), 
+    top + (this.getHeight() / 2) - (this.getArrowHeadHeight() / 2));
+    sheet.lineTo(left + this.getWidth(), 
+    top + (this.getHeight() / 2));
+    sheet.lineTo(left + this.getWidth() - this.getArrowHeadWidth(), 
+    top + (this.getHeight() / 2) + (this.getArrowHeadHeight() / 2));
 
-    hit: function(x,y) {
-	// FIXME
-	return ( this.getWidth() >= x && this.getHeight() >= y ); 
-    },
+    sheet.closePath();
 
-    hitArea: function(left, top, right, bottom) {
-	// FIXME
-	return ! ( 0 > right 
-		   || this.getWidth() < left
-		   || 0 > bottom
-		   || this.getHeight() < top );
-    },
+    sheet.stroke();
+    sheet.fill();
+  },
 
-    getCenter: function() {
-	// FIXME
-	return { left: this.getWidth()  / 2, top:  this.getHeight() / 2 };
-    },
+  hit: function(x,y) {
+    // FIXME
+    return ( this.getWidth() >= x && this.getHeight() >= y ); 
+  },
 
-    getPort: function(side) {
-	// FIXME
-	switch(side) {
-	case "n": case "north":  
-	    return { top : 0,                left: this.getWidth() / 2 }; break;
-	case "s": case "south":  
-	    return { top : this.getHeight(), left: this.getWidth() / 2 }; break;
-	case "e": case "east":
-	    return { top : this.getHeight() / 2, left: this.getWidth() }; break;
-	case "w": case "west":
-	    return { top : this.getHeight() / 2, left: 0               }; break;
-	}
+  hitArea: function(left, top, right, bottom) {
+    // FIXME
+    return ! ( 0 > right      ||
+      this.getWidth() < left  ||
+      0 > bottom              ||
+      this.getHeight() < top 
+    );
+  },
+
+  getCenter: function() {
+    // FIXME
+    return { left: this.getWidth()  / 2, top:  this.getHeight() / 2 };
+  },
+
+  getPort: function(side) {
+    // FIXME
+    switch(side) {
+      case "n": case "north":  
+      return { top : 0,                left: this.getWidth() / 2 };
+      case "s": case "south":  
+      return { top : this.getHeight(), left: this.getWidth() / 2 };
+      case "e": case "east":
+      return { top : this.getHeight() / 2, left: this.getWidth() };
+      case "w": case "west":
+      return { top : this.getHeight() / 2, left: 0               };
     }
+  }
 } );
 
 Canvas2D.Arrow.from = function( construct, sheet ) {
-    var props = { name: construct.name };
-    construct.modifiers.iterate(function(key, value) {
-	value = ( value.value ? value.value.value : "" );
+  var props = { name: construct.name };
+  construct.modifiers.iterate(function(key, value) {
+    value = ( value.value ? value.value.value : "" );
 
-	if( key == "width" || key == "height" ) {
-	    value = parseInt(value);
-	}
+    if( key == "width" || key == "height" ) {
+      value = parseInt(value,10);
+    }
 
-	if( key == "geo" ) {
-	    props["width"]   = parseInt(value.split("x")[0]);
-	    props["height"]  = parseInt(value.split("x")[1]);
-	}
+    if( key == "geo" ) {
+      props.width   = parseInt(value.split("x")[0],10);
+      props.height  = parseInt(value.split("x")[1],10);
+    }
 
-	if( "" + value == "" ) {
-	    value = key;
-	    key = "lineColor";
-	}
+    if( "" + value == "" ) {
+      value = key;
+      key = "lineColor";
+    }
 
-	props[key] = value;
-    } );
+    props[key] = value;
+  } );
 
-    return new Canvas2D.Arrow(props);
+  return new Canvas2D.Arrow(props);
 };
 
 Canvas2D.Arrow.MANIFEST = {
-    name         : "arrow",
-    aliasses     : [ "pointer" ],
-    properties   : [ "width", "height", "arrowHeadWidth", "arrowHeadHeight" ],
-    propertyPath : [ Canvas2D.Rectangle ],
-    libraries    : [ "Canvas2D" ]
+  name         : "arrow",
+  aliasses     : [ "pointer" ],
+  properties   : [ "width", "height", "arrowHeadWidth", "arrowHeadHeight" ],
+  propertyPath : [ Canvas2D.Rectangle ],
+  libraries    : [ "Canvas2D" ]
 };
 
 Canvas2D.registerShape( Canvas2D.Arrow );

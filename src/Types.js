@@ -8,7 +8,7 @@ Canvas2D.Types = {
         if( ! this._shapeCounter[name] ) {
           this._shapeCounter[name] = 0;
         }
-        name += this._shapeCounter[name]++
+        name += this._shapeCounter[name]++;
         return name;
       },
       extractFrom: "name"
@@ -56,11 +56,11 @@ Canvas2D.Types = {
       validate: function validateColor(value) {
         return [ "aqua", "black", "blue", "fuchsia", "gray", "green", "lime", 
         "maroon", "navy", "olive", "purple", "red", "silver", "teal", 
-        "white", "yellow" ].contains(value)
-        || value.match(/#[a-fA-F0-9]{3}/)
-        || value.match(/#[a-fA-F0-9]{6}/)
-        || value.match(/rgb\([0-9]+,[0-9]+,[0-9]+\)/)
-        || value.match(/rgba\([0-9]+,[0-9]+,[0-9]+,[0-9\.]+\)/);
+        "white", "yellow" ].contains(value)        ||
+        value.match(/#[a-fA-F0-9]{3}/)             ||
+        value.match(/#[a-fA-F0-9]{6}/)             || 
+        value.match(/rgb\([0-9]+,[0-9]+,[0-9]+\)/) || 
+        value.match(/rgba\([0-9]+,[0-9]+,[0-9]+,[0-9\.]+\)/);
       }
     }
   ),
@@ -77,11 +77,11 @@ Canvas2D.Types = {
   Switch : Canvas2D.TypeFactory.createType(
     {
       sanitize: function sanitizeSwitch(value) {
-        if( [ true, "true", "yes", "on" ].contains(value) 
-            || typeof value == "undefined" ) { return true; }
+        if( [ true, "true", "yes", "on" ].contains(value) ||
+        typeof value == "undefined" ) { return true; }
         return false;
       },
-      
+
       validate: function validateSwitch(value) {
         return [ true, false, "true", "false", "yes", "no", "on", "off" ]
         .contains(value) || typeof value == "undefined";
@@ -138,8 +138,9 @@ Canvas2D.Types = {
               retval = retval.replace( match, this.getProperty(prop) );
             }.scope(this) );
             return retval;
-          }
-        }(this._regexp, this._props);
+          };
+        }
+        (this._regexp, this._props);
       }
     }
   )

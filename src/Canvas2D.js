@@ -14,8 +14,8 @@ var Canvas2D = {
     var canvas = document.getElementById(canvasId);
     if(canvas) {
       var manager = new Canvas2D.Manager();
-      var canvas  = manager.setupBook(canvasId);
-      var sheet   = canvas.addSheet();
+      var book    = manager.setupBook(canvasId);
+      var sheet   = book.addSheet();
       manager.startAll();
       return sheet;
     }
@@ -26,7 +26,7 @@ var Canvas2D = {
   registerShape: function registerShape(shape) {
     // let's store a reference to the class in the prototype itself
     shape.prototype.__CLASS__ = shape;
-    shape.prototype.getClass = function getClass() { return this.__CLASS__; }
+    shape.prototype.getClass = function getClass() { return this.__CLASS__; };
 
     // mixin static methods for dealing with manifests
     Canvas2D.Shape.manifestHandling.iterate( function(key, value) {

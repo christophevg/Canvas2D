@@ -76,6 +76,12 @@ all: prepare ${TARGETS}
 
 dist: prepare ${DIST_TARGETS}
 
+lint: ${SRCS}
+	@echo "*** checking source correctness using JSLint"
+	@for f in ${SRCS}; do \
+	  ${RHINO} lib/jslint-check.js $$f; \
+	done
+
 prepare: init check-deps 
 
 init:

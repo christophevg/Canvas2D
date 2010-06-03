@@ -5,7 +5,8 @@ Canvas2D.Book = Class.extend( {
       element.nodeType == Node.ELEMENT_NODE, 
       function(){
         element = document.getElementById(element);
-    } );
+      } 
+    );
 
     this.canvas = Canvas2D.Factory.setup(element);
 
@@ -14,24 +15,24 @@ Canvas2D.Book = Class.extend( {
 
     this.canvas.on( "mousedown", function(data) {
       this.fireEvent("mousedown");
-      var sheet;
-      if(sheet = this.getCurrentSheet() ) {
+      var sheet = this.getCurrentSheet();
+      if( sheet )  {
         sheet.handleMouseDown(data);
       }
     }.scope(this) );
 
     this.canvas.on( "mouseup", function(data) {
       this.fireEvent("mouseup");
-      var sheet;
-      if(sheet = this.getCurrentSheet() ) {
+      var sheet = this.getCurrentSheet();
+      if( sheet ) {
         sheet.handleMouseUp(data);
       }
     }.scope(this) );
 
     this.canvas.on( "mousedrag", function(data) {
       this.fireEvent("mousedrag");
-      var sheet;
-      if(sheet = this.getCurrentSheet()) {
+      var sheet = this.getCurrentSheet();
+      if( sheet ) {
         sheet.handleMouseDrag(data);
       }
     }.scope(this) );
@@ -75,7 +76,7 @@ Canvas2D.Book = Class.extend( {
     $H(Canvas2D.Book.plugins).iterate(function(key, value) {
       var plugin = new (value)(this);
       this.plugins[key] = plugin;
-      if( value['exposes'] ) {
+      if( value.exposes ) {
         value.exposes.iterate(function(func) {
           this[func] = function(arg1, arg2, arg3) { 
             this.plugins[key][func](arg1, arg2, arg3);
@@ -87,8 +88,8 @@ Canvas2D.Book = Class.extend( {
 
   log: function( msg ) {
     if( this.console ) { 
-      this.console.value = "[" + (new Date).toLocaleString() + "] " 
-      + msg + "\n" + this.console.value;
+      this.console.value = "[" + (new Date()).toLocaleString() + "] " +
+      msg + "\n" + this.console.value;
     }
   },
 
@@ -125,7 +126,7 @@ Canvas2D.Book = Class.extend( {
       this.thaw();
       this.rePublish();
       if( visitor.errors.length > 0 ) {
-        this.errors = "ADLVisitor reported errors:"
+        this.errors = "ADLVisitor reported errors:";
         visitor.errors.iterate( function(error) {
           this.log(error);
           this.errors += "\n   - " + error;
@@ -179,19 +180,19 @@ Canvas2D.Book = Class.extend( {
 
   afterPublish: function afterPublish() {
     $H(this.plugins).iterate( function( name, plugin ) {
-      if( plugin["afterPublish"] ) { plugin.afterPublish(this); }
+      if( plugin.afterPublish ) { plugin.afterPublish(this); }
     }.scope(this) );
   },
 
   beforeRender: function beforeRender() {
     $H(this.plugins).iterate( function( name, plugin ) {
-      if( plugin["beforeRender"] ) { plugin.beforeRender(this); }
+      if( plugin.beforeRender ) { plugin.beforeRender(this); }
     }.scope(this) );
   },
 
   afterRender: function afterRender() {
     $H(this.plugins).iterate( function( plugin ) {
-      if( plugin["afterRender"] ) { plugin.afterRender(this); }
+      if( plugin.afterRender ) { plugin.afterRender(this); }
     }.scope(this) );
 
     this.updateExternalSource();
@@ -211,8 +212,10 @@ Canvas2D.Book = Class.extend( {
 } );
 
 // mix-in some common functionality at class level
-ProtoJS.mix( Canvas2D.Factory.extensions.all.EventHandling,
-  Canvas2D.Book.prototype );
+ProtoJS.mix( 
+  Canvas2D.Factory.extensions.all.EventHandling,
+  Canvas2D.Book.prototype 
+);
 
-  // add support for plugins
-  Canvas2D.Book.plugins = {};
+// provide a hook for plugins
+Canvas2D.Book.plugins = {};

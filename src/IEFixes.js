@@ -1,5 +1,5 @@
-if (!window['Node']) {
-    window.Node = new Object();
+if( ! window.Node ) {
+    window.Node = {};
     Node.ELEMENT_NODE = 1;
     Node.ATTRIBUTE_NODE = 2;
     Node.TEXT_NODE = 3;
