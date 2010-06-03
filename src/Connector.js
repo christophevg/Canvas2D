@@ -460,3 +460,14 @@ Canvas2D.CustomConnectors = {};
 Canvas2D.registerConnector = function registerConnector( name, connector ) {
   Canvas2D.CustomConnectors[name] = connector;
 }
+
+Canvas2D.Connector.Defaults = {
+  useCrispLines  : true,
+  lineWidth      : 1, 
+  lineColor      : "black", 
+  lineStyle      : "solid",
+  begin          : null, 
+  end            : null,
+  minTreeDist    : 30,
+  minCornerDist  : 15
+};

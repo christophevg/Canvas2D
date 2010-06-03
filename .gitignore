@@ -1,7 +1,6 @@
 #project specific
 .check-deps
 build
-lib
 dist
 #Mac OS X
 .DS_Store

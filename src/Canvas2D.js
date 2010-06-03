@@ -66,3 +66,17 @@ var Canvas2D = {
     return Canvas2D.KickStarter.manager.getBook(id);
   }
 };
+
+Canvas2D.Defaults = {};
+
+Canvas2D.Defaults.Canvas = {
+  lineWidth      : 1,   
+  useCrispLines  : true,
+  lineStyle      : "solid",
+  strokeStyle    : "black", 
+  fillStyle      : "black", 
+  font           : "10pt Sans-Serif", 
+  textAlign      : "left", 
+  textBaseline   : "alphabetic",
+  textDecoration : "none"    
+};

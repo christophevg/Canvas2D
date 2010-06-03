@@ -341,3 +341,14 @@ Canvas2D.Shape.manifestHandling.iterate( function(key, value) {
 // during registerShape the manifestHandling functions are also added to the 
 // class itself as static methods
 Canvas2D.registerShape(Canvas2D.Shape);
+
+Canvas2D.Shape.Defaults = {
+  name               : "newShape",
+  useCrispLines      : true,
+  label              : "",
+  labelFont          : "7pt Sans-Serif",
+  labelAlign         : "center",
+  labelPos           : "center",
+  labelColor         : "black",
+  labelUseCrispLines : false
+};

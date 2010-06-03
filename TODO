@@ -1,17 +1,14 @@
-0.1.0
+0.5
+- introduce extended MANIFES
+
+1.0
 - add keyboard short cuts to align/distribute shapes
-- introduce library layer as virtual container of shapes
-- introduce svg-path-shape
 - add multi-connectorhead support
-- add role names
-- introduce #copy directive to allow referencing of previously defined shapes
 - move connector.routing to position
 - add some shapes, to make nicer demo (think visio ;-))
 - use props.validation
-- make UmlCanvas diagram with class model of Canvas2D
 
 LATER
-- build custom prototype.js including only what we need
 - introduce global logging framework with fallbacks (print, console, alert)
   - http://www.depressedpress.com/Content/Development/JavaScript/Extensions/DP%5FDeBug/
 - getmouseXY should take in account possible viewports ?! (e.g. for uWe)
@@ -31,8 +28,6 @@ LATER
        - multi select
        - align methods
 - start using JSDoc-toolkit
-- use Maven to manage project
-- add full svg support
 
 IDEAS FOR PLUGINS
 - Navigator Toolbar

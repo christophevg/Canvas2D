@@ -1,166 +1,146 @@
-EXCANVAS-URL=http://explorercanvas.googlecode.com/svn/trunk/excanvas.js
+SRC_DIR   = src
+LIB_DIR   = lib
+BUILD_DIR = build
+DIST_DIR  = dist
 
-TABBER-DIST=tabber.zip
-TABBER-URL=http://www.barelyfitz.com/projects/tabber/${TABBER-DIST}
+MAKE      = make
+ZIP       = zip -qr
+RHINO     = java -jar lib/js.jar
+COMPRESS  = java -jar lib/yuicompressor-2.4.2.jar --type js
 
-COMPRESSOR-VERSION=2.4.2
-COMPRESSOR-DIST=yuicompressor-${COMPRESSOR-VERSION}.zip
-COMPRESSOR-URL=http://www.julienlecomte.net/yuicompressor/${COMPRESSOR-DIST}
-COMPRESS-JAR=lib/yuicompressor-${COMPRESSOR-VERSION}/build/yuicompressor-${COMPRESSOR-VERSION}.jar
+APP       = Canvas2D
 
-MAKE=make
-FETCH=wget -q
-GIT-PULL=git pull -q
-GIT-CLONE=git clone -q
-ZIP=zip -qr
-UNZIP=unzip -q
-UNTAR=tar -zxf
-COMPRESS=java -jar ${COMPRESS-JAR} --type js
-PATCH=patch -N -s
+CORE_SRCS = ${SRC_DIR}/IEFixes.js \
+			${SRC_DIR}/Common.js \
+			${SRC_DIR}/Canvas2D.js \
+			${SRC_DIR}/Factory.js \
+			${SRC_DIR}/Keyboard.js \
+			${SRC_DIR}/ImageManager.js \
+			${SRC_DIR}/Manager.js \
+			${SRC_DIR}/ADLVisitor.js \
+			${SRC_DIR}/TypeFactory.js \
+			${SRC_DIR}/Types.js \
+			${SRC_DIR}/Book.js \
+			${SRC_DIR}/Shape.js \
+			${SRC_DIR}/Sheet.js \
+			${SRC_DIR}/Position.js \
+			${SRC_DIR}/Connector.js \
+			${SRC_DIR}/ShapeFactory.js \
+			${SRC_DIR}/KickStart.js
 
-APP=Canvas2D
-TARGETS=build/${APP}.shared.min.js \
-        build/${APP}.standalone.min.js \
-        build/${APP}.css 
-SRCS=src/IEFixes.js \
-     src/DepCheck.js \
-     src/SanityChecks.js \
-     src/Common.js \
-     src/Canvas2D.js \
-     src/Factory.js \
-     src/Keyboard.js \
-     src/ImageManager.js \
-     src/Manager.js \
-     src/ADLVisitor.js \
-	 src/TypeFactory.js \
-	 src/Types.js \
-     src/Book.js \
-     src/Shape.js \
-     src/Sheet.js \
-     src/Position.js \
-     src/Connector.js \
-     src/Line.js \
-     src/LinePath.js \
-     src/Alias.js \
-     src/Rectangle.js \
-     src/Text.js \
-     src/Image.js \
-     src/Arrow.js \
-     src/plugins/TabbedCanvas.js \
-     src/plugins/AutoLayout.js \
-     src/plugins/Watermark.js \
-	 src/ShapeFactory.js \
-     src/KickStart.js \
-     src/Defaults.js
-CSSSRCS=lib/tabber/example.css src/${APP}.css
-VERSION=$(shell git describe --tags | cut -d'-' -f1,2)
-LIBS=lib/ProtoJS/build/ProtoJS.js \
-     lib/excanvas.js lib/canvastext.js \
-     lib/ADL/build/ADL.shared.js \
-     lib/tabber/tabber.js
+SHAPE_SRCS = ${SRC_DIR}/Line.js \
+     		 ${SRC_DIR}/LinePath.js \
+     		 ${SRC_DIR}/Alias.js \
+     		 ${SRC_DIR}/Rectangle.js \
+     		 ${SRC_DIR}/Text.js \
+     		 ${SRC_DIR}/Image.js \
+     		 ${SRC_DIR}/Arrow.js
 
-DIST=${APP}-${VERSION}.zip
-DISTSRCS=${TARGETS} examples/*.html LICENSE README
+PLUGIN_SRCS = ${SRC_DIR}/plugins/TabbedCanvas.js \
+     		  ${SRC_DIR}/plugins/AutoLayout.js \
+     		  ${SRC_DIR}/plugins/Watermark.js
 
-DIST-SRC=${APP}-${VERSION}-src.zip
-DIST-SRCSRCS=LICENSE README examples Makefile doc src
+SHARED_EXTRA_SRCS = ${SRC_DIR}/SanityChecks.js
 
-DIST-EXT=${APP}-${VERSION}-ext.zip
-DIST-EXTSRCS=LICENSE build/${APP}.standalone.min.js build/${APP}.css \
-             src/ext/${APP}.php
+SRCS=${CORE_SRCS} ${SHAPE_SRCS} ${PLUGIN_SRCS}
 
-all: build
+STANDALONE_SRCS = ${SRCS}
+SHARED_SRCS     = ${SHARED_EXTRA_SRCS} ${SRCS}
 
-build: .check-deps ${TARGETS}
+VERSION = $(shell git describe --tags | cut -d'-' -f1,2)
 
-.check-deps:
-	@echo "*** checking dependencies"
-	@echo "    (if you get errors in this section the cmd right before"
-	@echo "     the error, is not found in your PATH)"
-	@echo "    - zip"; which zip >/dev/null
-	@echo "    - touch"; which touch >/dev/null
-	@echo "    - unzip"; which unzip >/dev/null
-	@echo "    - wget";  which wget >/dev/null
-	@echo "    - git"; which git >/dev/null
-	@echo "    - patch"; which patch >/dev/null
-	@echo "    - java";  which java >/dev/null
-	@echo "*** FOUND all required commands on your system"
-	@touch $@
+LIBS = ${LIB_DIR}/ProtoJS/build/ProtoJS.js \
+       ${LIB_DIR}/ADL/build/ADL.shared.js \
+       ${LIB_DIR}/excanvas.js \
+	   ${LIB_DIR}/canvastext.js \
+	   ${LIB_DIR}/tabber.js
 
-dist: dist/${DIST} dist/${DIST-SRC} dist/${DIST-EXT}
+DIST          = ${APP}-${VERSION}.zip
+DIST_SRCS     = LICENSE README ${TARGETS} examples
 
-update-libs:
+DIST-SRC      = ${APP}-${VERSION}-src.zip
+DIST-SRC_SRCS = LICENSE README Makefile ${SRC_DIR} ${LIB_DIR} examples
+
+DIST-EXT      = ${APP}-${VERSION}-ext.zip
+DIST-EXT_SRCS = LICENSE ${BUILD_DIR}/${APP}.standalone.min.js \
+				src/ext/${APP}.php examples/Canvas2D.css
+
+TARGETS   = ${BUILD_DIR}/${APP}.shared.min.js \
+		    ${BUILD_DIR}/${APP}.standalone.min.js
+
+DIST_TARGETS = ${DIST_DIR}/${DIST} \
+			   ${DIST_DIR}/${DIST-SRC} \
+			   ${DIST_DIR}/${DIST-EXT}
+
+all: prepare ${TARGETS}
+
+dist: prepare ${DIST_TARGETS}
+
+prepare: init check-deps 
+
+init:
+	@git submodule init
+	@git submodule update
+
+check-deps:
+	@which zip >/dev/null  || ( echo "ERROR: missing  : zip"; exit 1 )
+	@which git >/dev/null  || ( echo "ERROR: missing : git"; exit 1 )
+	@which java >/dev/null || ( echo "ERROR: missing : java"; exit 1 )
+
+update:
 	@(cd lib/ADL; ${MAKE} clean; ${MAKE})
 	@(cd lib/ProtoJS; ${MAKE} clean; ${MAKE})
 
-lib/excanvas.js: 
-	@echo "*** importing $@"
-	@mkdir -p lib
-	@(cd lib; ${FETCH} ${EXCANVAS-URL})
+${BUILD_DIR}:
+	@mkdir  -p ${BUILD_DIR}
 
-lib/tabber/tabber.js: lib/tabber
-lib/tabber/tabber.css: lib/tabber
-
-lib/tabber:
-	@echo "*** importing Tabber"
-	@mkdir -p lib
-	@(cd lib; ${FETCH} ${TABBER-URL})
-	@(cd lib; mkdir tabber; cd tabber; ${UNZIP} ../${TABBER-DIST})
-
-${COMPRESS-JAR}:
-	@echo "*** importing yuicompressor"
-	@mkdir -p lib
-	@(cd lib; ${FETCH} ${COMPRESSOR-URL}; ${UNZIP} ${COMPRESSOR-DIST})
-	@(cd lib/yuicompressor-${COMPRESSOR-VERSION}; ant > /dev/null)
-
-build/${APP}.shared.js: ${SRCS}
+${BUILD_DIR}/${APP}.shared.js: ${BUILD_DIR} ${SHARED_SRCS}
 	@echo "*** building $@"
-	@mkdir -p build
-	@cat ${SRCS} > $@
+	@cat ${SHARED_SRCS} > $@
 	@echo "\nCanvas2D.version = \"${VERSION}\";\n" >> $@;
 
-build/${APP}.standalone.js: build/${APP}.shared.js ${LIBS}
+${BUILD_DIR}/${APP}.standalone.js: ${BUILD_DIR} ${LIBS} ${STANDALONE_SRCS}
 	@echo "*** building $@"
-	@mkdir -p build
-	@cat ${LIBS} build/${APP}.shared.js > $@
+	@cat ${LIBS} ${STANDALONE_SRCS} > $@
+	@echo "\nCanvas2D.version = \"${VERSION}\";\n" >> $@;
 
-build/${APP}.shared.min.js: build/${APP}.shared.js ${COMPRESS-JAR}
+${BUILD_DIR}/${APP}.shared.min.js: ${BUILD_DIR}/${APP}.shared.js
 	@echo "*** building $@"
-	@${COMPRESS} build/${APP}.shared.js > $@
+	@${COMPRESS} ${BUILD_DIR}/${APP}.shared.js > $@
 
-build/${APP}.standalone.min.js: build/${APP}.standalone.js ${COMPRESS-JAR}
+${BUILD_DIR}/${APP}.standalone.min.js: ${BUILD_DIR}/${APP}.standalone.js
 	@echo "*** building $@"
-	@${COMPRESS} build/${APP}.standalone.js > $@
+	@${COMPRESS} ${BUILD_DIR}/${APP}.standalone.js > $@
 
-build/${APP}.css: ${CSSSRCS}
-	@echo "*** building $@"
-	@mkdir -p build
-	@cat ${CSSSRCS} > $@
-
-dist/${DIST}: ${DISTSRCS}
+${DIST_DIR}/${DIST}: ${DIST_SRCS}
 	@echo "*** packaging ${APP} distribution"
-	@mkdir -p dist/js/${APP}/{examples,build}
-	@for f in ${DISTSRCS}; do \
-	    cat $$f | sed -e 's/\.\.\/build/../' > dist/js/${APP}/$$f; done
-	@mv dist/js/${APP}/build/* dist/js/${APP}/; rm -rf dist/js/${APP}/build
-	@(cd dist/js; ${ZIP} ../${DIST} ${APP})
+	@mkdir -p ${DIST_DIR}/js/${APP}
+	@cp -r ${DIST_SRCS} ${DIST_DIR}/js/${APP}/
+	@( cd ${DIST_DIR}/js/${APP}/examples; \
+	   for f in *.html; do \
+		cat $$f \
+		| sed -e 's/includes\.js/..\/Canvas2D.standalone.min.js/' \
+		| sed -e 's/..\/build\///' > \
+		$$f.new; \
+		mv $$f.new $$f; \
+	done )
+	@(cd ${DIST_DIR}/js; ${ZIP} ../${DIST} ${APP})
 
-dist/${DIST-SRC}: ${DIST-SRCSRCS}
+${DIST_DIR}/${DIST-SRC}: ${DIST-SRC_SRCS}
 	@echo "*** packaging ${APP} src distribution"
-	@mkdir -p dist/src/${APP}
-	@cp -r ${DIST-SRCSRCS} dist/src/${APP}
-	@(cd dist/src; ${ZIP} ../${DIST-SRC} ${APP})
+	@mkdir -p ${DIST_DIR}/src/${APP}
+	@cp -r ${DIST-SRC_SRCS} ${DIST_DIR}/src/${APP}
+	@(cd ${DIST_DIR}/src; ${ZIP} ../${DIST-SRC} ${APP})
 
-dist/${DIST-EXT}: ${DIST-EXTSRCS}
+dist/${DIST-EXT}: ${DIST-EXT_SRCS}
 	@echo "*** packaging ${APP} Mediawiki extenstion"
-	@mkdir -p dist/ext/${APP}
-	@cp -r ${DIST-EXTSRCS} dist/ext/${APP}
-	@(cd dist/ext; ${ZIP} ../${DIST-EXT} ${APP})
+	@mkdir -p ${DIST_DIR}/ext/${APP}
+	@cp -r ${DIST-EXT_SRCS} ${DIST_DIR}/ext/${APP}
+	@(cd ${DIST_DIR}/ext; ${ZIP} ../${DIST-EXT} ${APP})
 
 clean:
 	@find . | grep "~$$" | xargs rm -f
-	@rm -f lib/*.rej
-	@rm -rf build dist
+	@rm -rf ${DIST_DIR}
 
 mrproper: clean
-	@rm -rf lib
+	@rm -rf ${BUILD_DIR} 

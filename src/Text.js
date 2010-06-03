@@ -41,3 +41,11 @@ Canvas2D.Text.MANIFEST = {
 };
 
 Canvas2D.registerShape( Canvas2D.Text );
+
+Canvas2D.Text.Defaults = {
+  useCrispLines  : false,
+  color          : "black",
+  font           : "10pt Sans-Serif", 
+  textAlign      : "left", 
+  textDecoration : "none"
+};

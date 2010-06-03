@@ -5,9 +5,6 @@ var scripts = [
     "../lib/tabber/tabber.js",
     "../lib/ADL/build/ADL.shared.js",
     
-    "../src/DepCheck.js", 
-    "../src/SanityChecks.js", 
-
     "../src/Common.js", 
 
     "../src/Canvas2D.js", 
@@ -25,12 +22,13 @@ var scripts = [
     "../src/Sheet.js", 
     "../src/Position.js", 
     "../src/Connector.js", 
+
+    "../src/ShapeFactory.js",
+    "../src/KickStart.js",
+
     "../src/Line.js", 
     "../src/LinePath.js", 
     "../src/Alias.js", 
-
-    "../src/CompositeShape.js", 
-    "../src/Compositor.Stack.js", 
     "../src/Rectangle.js", 
     "../src/Text.js", 
     "../src/Image.js", 
@@ -38,13 +36,7 @@ var scripts = [
 
     "../src/plugins/TabbedCanvas.js", 
     "../src/plugins/AutoLayout.js", 
-    "../src/plugins/Watermark.js", 
-
-    "../src/ShapeFactory.js",
-
-    "../src/KickStart.js", 
-    
-    "../src/Defaults.js" 
+    "../src/plugins/Watermark.js"
 ];
 
 function addScript(url) {

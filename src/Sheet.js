@@ -325,3 +325,17 @@ Canvas2D.Sheet.MANIFEST = {
 };
 
 Canvas2D.registerShape( Canvas2D.Sheet );
+
+Canvas2D.Sheet.Defaults = { 
+  name           : "newSheet",
+  style          : "static",
+  lineWidth      : 1,   
+  lineStyle      : "solid",
+  strokeStyle    : "black", 
+  fillStyle      : "black", 
+  font           : "10pt Sans-Serif", 
+  textAlign      : "left", 
+  textBaseline   : "alphabetic",
+  textDecoration : "none",
+  shadowColor    : "rgba(0,0,0,0.0)"
+};

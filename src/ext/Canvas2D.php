@@ -61,7 +61,7 @@ function Canvas2DRender( $input, $args, $parser ) {
     $classes .= ( $showAbout   ? " withAbout"   : "" );
   }
     
-  $canvas = '<div class="Canvas2D-container" style="float:'.$float.'">' .
+  $canvas = '<div style="margin-left:10px;margin-right: 10px;float:'.$float.'">' .
     '<canvas class="Canvas2D'.$classes.'" id="' . $name . 
     '" width="'.$width.'" height="'.$height.'"></canvas></div>';
   $canvas .= '<pre id="'.$name.'Source" style="display:none">' . 

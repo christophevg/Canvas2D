@@ -114,3 +114,11 @@ Canvas2D.LinePath.MANIFEST = {
 };
 
 Canvas2D.registerShape( Canvas2D.LinePath );
+
+Canvas2D.LinePath.Defaults = {
+  lineWidth      : 1,
+  lineStyle      : "solid",
+  labelPos       : "center",
+  labelColor     : "black",
+  color          : "black"
+};

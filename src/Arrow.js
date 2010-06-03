@@ -100,3 +100,5 @@ Canvas2D.Arrow.MANIFEST = {
 };
 
 Canvas2D.registerShape( Canvas2D.Arrow );
+
+Canvas2D.Arrow.Defaults = {};

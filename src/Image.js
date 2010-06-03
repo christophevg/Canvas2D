@@ -44,3 +44,5 @@ Canvas2D.Image.MANIFEST = {
 };
 
 Canvas2D.registerShape( Canvas2D.Image );
+
+Canvas2D.Image.Defaults = {};

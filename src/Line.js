@@ -83,3 +83,13 @@ Canvas2D.Line.MANIFEST = {
 };
 
 Canvas2D.registerShape( Canvas2D.Line );
+
+Canvas2D.Line.Defaults = {
+  lineWidth      : 1,
+  lineStyle      : "solid",
+  labelPos       : "center",
+  labelColor     : "black",
+  color          : "black",
+  dx             : 50,
+  dy             : 50
+};

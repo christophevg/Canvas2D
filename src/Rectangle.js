@@ -60,3 +60,15 @@ Canvas2D.Rectangle.MANIFEST = {
 };
 
 Canvas2D.registerShape( Canvas2D.Rectangle );
+
+Canvas2D.Rectangle.Defaults = {
+  name           : "newRectangle",
+  useCrispLines  : true,
+  lineWidth      : 1,
+  lineColor      : "rgba(0,0,0,100)",     // solid black
+  fillColor      : "rgba(255,255,255,0)", // empty white ;-)
+  labelPos       : "center",
+  labelColor     : "black",
+  width          : 50,
+  height         : 50
+};
