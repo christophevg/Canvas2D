@@ -122,26 +122,63 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
     return this.positionsMap[shape.getName()];
   },
 
-  hit: function(x,y) {
+  isMultiSelecting: function isMultiSelecting() {
+    var kb = Canvas2D.Keyboard;
+    return (ProtoJS.Browser.WebKit && (kb.keyDown(91) || kb.keyDown(93))) ||
+    ( !ProtoJS.Browser.WebKit && (kb.keyDown(17) || kb.keyDown(19)));
+  },
+
+  getHit: function getHit(pos) {
+    for( var s = this.positions.length-1; s>=0; s-- ) {
+      if( this.positions[s].hit(pos.x,pos.y) ) {
+        return this.positions[s];
+      }
+    }
+    return null;
+  },
+
+  selectShape: function selectShape(shape) {
+    if( ! this.selectedShapes.contains(shape) ) {
+      this.selectedShapes.push(shape);
+    }
+  },
+
+  hit: function(pos) {
+    var hit = this.getHit(pos);
+    if( hit ) {
+      if( this.hasSelectedShapes() ) {
+        if( this.selectedShapes.contains( hit ) ) {
+          if( this.isMultiSelecting() ) {
+            this.selectedShapes.remove(hit);
+          } else {
+            this.selectedShapes = [];
+          } 
+        } else {
+          if( this.isMultiSelecting() ) {
+            this.selectShape(hit);
+          } else {
+            this.selectedShapes = [ hit ];
+          }
+        }
+      } else {
+        this.selectedShapes = [ hit ];
+      }
+    } else {
+      this.selectedShapes = [];
+    }
+    
+    /*
     for( var s = this.positions.length-1; s>=0; s-- ) {
       var position = this.positions[s];
       if( position.hit(x,y) ) {
-        if( Canvas2D.Keyboard.keyDown(91) ||    // cmd
-        Canvas2D.Keyboard.keyDown(17) )     // ctrl
-        {
-          // adding and removing
+        if( this.isMultiSelecting() ) {
           if( this.selectedShapes.contains(position) ) {
             this.selectedShapes.remove(position);
           } else {
             this.selectedShapes.push(position);
           }
         } else {
-          if( !this.selectedShapes.contains(position) ) {
-            this.selectedShapes = [ position ];
-          } else {
-            // just clicked on already selected shape
-            return;
-          }
+          this.selectedShapes = [ position ];
         }
         this.fireEvent( "shapeSelected", position );
         return;
@@ -149,13 +186,11 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
     }
     // no position was hit, so clearing the selection list
     this.selectedShapes = [];
+    */
   },
 
   hitArea: function( left, top, right, bottom ) {
-    var newSelection =  
-    ( Canvas2D.Keyboard.keyDown(91) || // cmd
-    Canvas2D.Keyboard.keyDown(17) ) ? // ctrl
-    this.selectedShapes : [];
+    var newSelection =  this.isMultiSelecting() ? this.selectedShapes : [];
     for( var s = this.positions.length-1; s>=0; s-- ) {
       if( this.positions[s].hitArea(left, top, right, bottom) ) {
         newSelection.push( this.positions[s] );
@@ -167,38 +202,85 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
 
   handleMouseDown: function(pos) {
     if( !this.isDynamic() ) { return; }
-    this.hit( pos.x, pos.y );
     this.currentPos = pos;
-    this.makeDirty();
   },
 
   handleMouseUp: function(pos) {
     if( !this.isDynamic() ) { return; }
-    this.selectedShapes.iterate(function(position) {
-      this.fireEvent( "shapesMoved",
-      "Shape moved to " + 
-      position.left + ", " + position.top );
-    }.scope(this) );
-    this.showSelection   = false;
-    this.makeDirty();
-  },
 
-  handleMouseDrag: function(pos) {
-    if( !this.isDynamic() ) { return; }
-    if( !this.showSelection && this.selectedShapes.length > 0 ) {
-      this.moveCurrentSelection(pos.dx, pos.dy);
+    if( this.selectingArea ) {
+      this.stopSelectingArea()
+    } else if( this.draggingSelection ) {
+      this.stopDraggingSelection();
+      this.selectedShapes.iterate(function(position) {
+        this.fireEvent( "shapesMoved",
+        "Shape moved to " + 
+        position.left + ", " + position.top );
+      }.scope(this) );
     } else {
-      // we've lost our currentPos somewhere (probably a new sheet load)
-      if( !this.currentPos ) { this.currentPos = pos; }
-      this.showSelection = true;
-      this.hitArea( this.currentPos.x, this.currentPos.y, pos.x, pos.y );
-      this.selectionPos  = pos;
+      console.log( "click" );
+      this.hit(pos);
+      this.currentPos = pos;
     }
     this.makeDirty();
   },
 
+  hasSelectedShapes : function hasSelectedShapes() {
+    return this.selectedShapes.length > 0;
+  },
+  
+  startDraggingSelection: function startDraggingSelection(pos) {
+    console.log( "start dragging" );
+    this.draggingSelection = true;
+    this.selectingArea = false;
+  },
+  
+  stopDraggingSelection: function stopDraggingSelection(pos) {
+    console.log( "stop dragging" );
+    this.draggingSelection = false;
+  },
+
+  startSelectingArea: function startSelectingArea(pos) {
+    console.log( "start selecting" );
+    this.selectingArea = true;
+    this.selectionPos  = pos;
+    this.draggingSelection = false;
+  },
+
+  stopSelectingArea: function stopSelectingArea(pos) {
+    console.log( "stop selecting" );
+    this.selectingArea = false;
+  },
+
+  handleMouseDrag: function handleMouseDrag(pos) {
+    if( !this.isDynamic() ) { return; }
+    
+    if( this.selectingArea ) {
+      console.log( "selecting area" );
+      this.hitArea( this.currentPos.x, this.currentPos.y, pos.x, pos.y );
+      this.selectionPos  = pos;
+    } else if( this.draggingSelection ) {
+      console.log( "dragging selection" );
+      this.moveCurrentSelection(pos.dx, pos.dy);
+    } else {
+      var hit = this.getHit(pos);
+      if( hit && this.hasSelectedShapes() && this.selectedShapes.contains(hit) ) {
+        this.startDraggingSelection();
+      } else if( hit && this.hasSelectedShapes() && !this.selectedShapes.contains(hit) ) {
+        this.hit(pos);
+        this.startDraggingSelection();
+      } else if( hit && !this.hasSelectedShapes() ) {
+        this.hit(pos);
+        this.startDraggingSelection();
+      } else {
+        this.startSelectingArea(pos);
+      }
+    }
+
+    this.makeDirty();
+  },
+
   selectAllShapes: function() {
-    // FIXME: only selectable shapes (so no connectors)
     this.selectedShapes = [];
     this.positions.iterate( function(position) { 
       this.selectedShapes.push(position);
@@ -231,7 +313,7 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
   },
 
   addSelectionOverlay: function() {
-    if( this.showSelection ) { 
+    if( this.selectingArea ) { 
       var pos = this.selectionPos;
       var dx = pos.x - this.currentPos.x;
       var dy = pos.y - this.currentPos.y;

@@ -1,5 +1,6 @@
 0.5
-- introduce extended MANIFES
+- introduce extended MANIFEST
+- add support for visual resizing of shapes
 
 1.0
 - add keyboard short cuts to align/distribute shapes
@@ -11,8 +12,7 @@
 LATER
 - introduce global logging framework with fallbacks (print, console, alert)
   - http://www.depressedpress.com/Content/Development/JavaScript/Extensions/DP%5FDeBug/
-- getmouseXY should take in account possible viewports ?! (e.g. for uWe)
-  - this should be done with a registerable modifier function from outside
+- getmouseXY should take in account possible viewports ?! (e.g. for UmlPad)
 - toolbar: appear on mouse over
   - diagram navigation (next/prev)
   - canvas navigation tools
