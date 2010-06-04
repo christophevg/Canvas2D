@@ -257,7 +257,14 @@ Canvas2D.Shape.MANIFEST = {
     labelUseCrispLines : Canvas2D.Types.Switch,
     useCrispLines      : Canvas2D.Types.Switch,
     geo                : Canvas2D.Types.Mapper( 
-      { map : "([0-9]+)x([0-9]+)", to: [ "width", "height" ] }
+      { 
+        map : "([0-9]+)x([0-9]+)", 
+        to  : 
+        { 
+          "width"  : Canvas2D.Types.Size, 
+          "height" : Canvas2D.Types.Size 
+        } 
+      }
     )
   }
 };

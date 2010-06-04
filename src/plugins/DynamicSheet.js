@@ -213,19 +213,97 @@ Canvas2D.DynamicSheet = {
     }
   },
 
-  addSelectionMarkers: function() {
-    this.selectedShapes.iterate( function(shape) {
-      var box = shape.getBox();
-      this.canvas.fillStyle = "rgba( 200, 200, 255, 1 )";
-      [[ box.left, box.top    ], [ box.right, box.top    ],
-      [ box.left, box.bottom ], [ box.right, box.bottom ]].iterate( 
+  addSelectionBorder: function addSelectionBorder(box, grow) {
+    // add dashed border
+    this.canvas.useCrispLines = true;
+    grow = grow || 0;
+
+    // Rectangle doesn't support dashed support yet ;-)
+    if( this.canvas.lineStyle == "dashed" ) {
+      this.canvas.beginPath();
+      this.canvas.moveTo( box.left  - grow + 0.5, box.top    - grow +0.5 );
+      this.canvas.lineTo( box.right + grow, box.top    - grow );
+      this.canvas.lineTo( box.right + grow, box.bottom + grow + 1);
+      this.canvas.lineTo( box.left  - grow - 1, box.bottom + grow + 1);
+      this.canvas.lineTo( box.left  - grow - 1 +0.5, box.top    - grow +0.5);
+      this.canvas.stroke();
+      this.canvas.closePath();
+    } else {
+      this.canvas.strokeRect( box.left - grow, box.top - grow, 
+                              ( box.right - box.left ) + grow, 
+                              ( box.bottom - box.top ) + grow );
+    }
+  },
+
+  addShapeSelectionHandles: function addShapeSelectionHandles(box, grow) {
+      var dx = (box.right - box.left) / 2;
+      var dy = (box.bottom - box.top) / 2;
+      var markSize = 6;
+      var mx = markSize / 2;
+      grow = grow || 2;
+      
+      [
+        [ box.left       - mx - grow, box.top         - mx - grow ], 
+        [ box.left  + dx - mx       , box.top         - mx - grow ],
+        [ box.right      - mx + grow, box.top         - mx - grow ],
+        [ box.right      - mx + grow, box.top    + dy - mx        ],
+        [ box.right      - mx + grow, box.bottom      - mx + grow ], 
+        [ box.left  + dx - mx       , box.bottom      - mx + grow ],
+        [ box.left       - mx - grow, box.bottom      - mx + grow ],
+        [ box.left       - mx - grow, box.bottom - dy - mx        ]
+      ].iterate( 
         function(corner) {
-          this.canvas.beginPath();
-          this.canvas.arc( corner[0],  corner[1], 5, 0, Math.PI*2, true );
-          this.canvas.fill();	
+          this.canvas.fillRect( corner[0], corner[1], markSize, markSize );
+          this.canvas.strokeRect( corner[0], corner[1], markSize, markSize );
         }.scope(this) 
       );
-    }.scope(this) );
+  },
+
+  determineSelectionBox: function determineSelectionBox() {
+    if( this.selectedShapes.length > 1 ) {
+      var minLeft = null, minTop = null, maxRight = null, maxBottom = null;
+      this.selectedShapes.iterate(function(shape) {
+        var box = shape.getBox();
+        if( minLeft   === null || box.left   < minLeft   ) { minLeft   = box.left;   }
+        if( minTop    === null || box.top    < minTop    ) { minTop    = box.top ;   }
+        if( maxRight  === null || box.right  > maxRight  ) { maxRight  = box.right;  }
+        if( maxBottom === null || box.bottom > maxBottom ) { maxBottom = box.bottom; }
+      } );
+      return { left: minLeft, top: minTop, right: maxRight, bottom: maxBottom };
+    } else {
+      return this.selectedShapes[0].getBox();
+    }
+  },
+
+  addSelectionMarkers: function addSelectionMarkers() {
+    if( this.hasSelectedShapes() ) {
+      var box = this.determineSelectionBox();
+      if( this.selectedShapes.length > 1 ) {
+        // border around all selected shapes
+        this.canvas.lineStyle = "dashed";
+        this.canvas.strokeStyle = "rgb(0,255,0)";
+        this.addSelectionBorder(box, 5);
+        // handles around all selected shapes
+        this.canvas.fillStyle = "rgb(0,255,0)"; 
+        this.canvas.strokeStyle = "black";
+        this.addShapeSelectionHandles(box, 5);
+        // border around each selected shape
+        this.canvas.lineStyle = "solid";
+        this.canvas.strokeStyle = "rgb(255,0,255)"; 
+        this.selectedShapes.iterate(function(shape) {
+          this.addSelectionBorder(shape.getBox());
+        }.scope(this) );
+      } else {
+        // border around selected shape
+        this.canvas.lineStyle = "dashed";
+        this.canvas.strokeStyle = "rgb(0,255,0)";
+        this.addSelectionBorder(box);
+        // handles for selected shape
+        this.canvas.fillStyle = "rgb(0,255,0)";
+        this.canvas.strokeStyle = "black";
+        this.addShapeSelectionHandles(this.selectedShapes[0].getBox());
+      }
+    }
   },
 
 };

@@ -106,7 +106,7 @@ Canvas2D.Types = {
     {
       _construct : function _constructMapper(config) {
         this._regexp = config.map;
-        this._props  = config.to;
+        this._props  = $H(config.to);
       },
 
       obsoletes : function obsoletesMapper() {
@@ -120,8 +120,9 @@ Canvas2D.Types = {
       unpack : function unpackMapper(prop, value) {
         var result = new RegExp(this._regexp).exec(value);
         var retval = {};
-        this._props.iterate(function(key,c) {
-          retval[key] = result[c+1];
+        var c = 1;
+        this._props.iterate( function(propName, propType) {
+          retval[propName] = propType.sanitize(result[c++]);
         } );
         return retval;
       },
