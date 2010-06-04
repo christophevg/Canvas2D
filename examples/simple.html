@@ -20,10 +20,26 @@
     <script>
     Canvas2D.on("ready", function() {
       with( Canvas2D.getBook("mySheet").getCurrentSheet() ) {
-        at(87,87).put( new Canvas2D.Rectangle( { isSelectable: false } ) );
-        var handle = new Canvas2D.Rectangle( { fillColor: "red", hideSelection: true } );
-        at(187,187).put( handle );
+        var target = new Canvas2D.Rectangle( { isSelectable: false } );
+        at(87,87).put( target );
+
+        var handle = new Canvas2D.Rectangle( 
+          { 
+            height: 10, width: 10,
+            fillColor: "rgb(0,0,255)", 
+            hideSelection: true,
+            onMouseDown: function() { this.isSelected = true;  },
+            onMouseUp:   function() { this.isSelected = false; },
+            onMouseDrag: function(sheet, dx, dy) { 
+              if( this.isSelected ) {
+                sheet.getPosition(target).move(dx, dy);
+                return true; 
+              }
+            }
+          } );
+        at(1,1).put( handle );
         remove(handle);
+        at(187,187).put( handle );
       }
     } );
     </script>

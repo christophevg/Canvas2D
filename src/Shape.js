@@ -267,7 +267,10 @@ Canvas2D.Shape.MANIFEST = {
       }
     ),
     isSelectable      : Canvas2D.Types.Switch,
-    hideSelection     : Canvas2D.Types.Switch
+    hideSelection     : Canvas2D.Types.Switch,
+    onMouseDown       : Canvas2D.Types.Handler,
+    onMouseUp         : Canvas2D.Types.Handler,
+    onMouseDrag       : Canvas2D.Types.Handler
   }
 };
 
@@ -359,5 +362,8 @@ Canvas2D.Shape.Defaults = {
   labelColor         : "black",
   labelUseCrispLines : false,
   isSelectable       : true,
-  hideSelection      : false
+  hideSelection      : false,
+  onMouseDown        : function() {},
+  onMouseUp          : function() {},
+  onMouseDrag        : function() {}
 };

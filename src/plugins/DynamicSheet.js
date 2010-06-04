@@ -99,10 +99,15 @@ Canvas2D.DynamicSheet = {
   handleMouseDown: function handleMouseDown(pos) {
     if( !this.isDynamic() ) { return; }
     this.currentPos = pos;
+    var shape = this.getHit(pos);
+    if( shape ) { shape.shape.getOnMouseDown()(); }
   },
 
   handleMouseUp: function handleMouseUp(pos) {
     if( !this.isDynamic() ) { return; }
+
+    var shape = this.getHit(pos);
+    if( shape ) { shape.shape.getOnMouseUp(); }
 
     if( this.selectingArea ) {
       this.stopSelectingArea()
@@ -152,6 +157,16 @@ Canvas2D.DynamicSheet = {
     } else if( this.draggingSelection ) {
       this.moveCurrentSelection(pos.dx, pos.dy);
     } else {
+      // check if shape doesn't want to be only selectShape
+      // (aka the selection stealing shape)
+      var hit = this.getHit(pos);
+      if( hit ) { 
+        if( hit.shape.getOnMouseDrag()(this, pos.dx, pos.dy) ) { 
+          this.selectShape(hit,true);
+          this.startDraggingSelection();
+          return;
+        }
+      }
       var hit = this.getHit(pos);
       if( hit && this.hasSelectedShapes() && this.selectedShapes.contains(hit) ) {
         this.startDraggingSelection();
@@ -181,6 +196,7 @@ Canvas2D.DynamicSheet = {
   moveCurrentSelection: function(dx, dy) {
     this.selectedShapes.iterate(function(position) {	
       position.move(dx, dy);
+      position.shape.getOnMouseDrag()(this, dx, dy );
     }.scope(this) );
   },
 

@@ -144,5 +144,13 @@ Canvas2D.Types = {
         (this._regexp, this._props);
       }
     }
+  ),
+  
+  Handler : Canvas2D.TypeFactory.createType(
+    {
+      validate : function validateHandler(value) {
+        return value.isFunction();
+      }
+    }
   )
 };
