@@ -66,8 +66,18 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
   put: function(shape) {
     return this.add(shape);
   },
+  
+  remove: function remove(shape) {
+    var baseName = shape.getName().replace(/<.*$/,'');
+    shape.on( "change", function(){} );
+    delete this.shapesMap[baseName];
+    this.positions.remove(this.positionsMap[baseName]);
+    delete this.positionsMap[baseName];
+    this.fireEvent( "removeShape", shape );
+    this.makeDirty();
+  },
 
-  add: function(shape) {
+  add: function add(shape) {
     var baseName = shape.getName().replace(/<.*$/,'');
     if( this.shapesMap[baseName] ) {
       var logger = this.book ? this.book : console;
