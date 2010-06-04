@@ -18,11 +18,14 @@
       }
     </pre>
     <script>
-      Canvas2D.on("ready", function() {
-        with( Canvas2D.getBook("mySheet").getCurrentSheet() ) {
-          at( 87, 87 ).put( new Canvas2D.Rectangle() );
-        }
-      } );
+    Canvas2D.on("ready", function() {
+      with( Canvas2D.getBook("mySheet").getCurrentSheet() ) {
+        at(87,87)
+        .put( new Canvas2D.Rectangle( { isSelectable: false } ) );
+        at(187,187)
+        .put( new Canvas2D.Rectangle( { fillColor: "red", hideSelection: true } ) );
+      }
+    } );
     </script>
 <!--    <textarea rows="17" cols="85" id="mySheetGenerated"></textarea> -->
   </body>

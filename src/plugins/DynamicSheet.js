@@ -53,9 +53,13 @@ Canvas2D.DynamicSheet = {
 
   selectShape: function selectShape(shape, reset) {
     if( reset ) {
-      this.selectedShapes = [ shape ];
+      if( shape.shape.getIsSelectable() ) {
+        this.selectedShapes = [ shape ];
+      }
     } else if( ! this.selectedShapes.contains(shape) ) {
-      this.selectedShapes.push(shape);
+      if( shape.shape.getIsSelectable() ) {
+        this.selectedShapes.push(shape);
+      }
     }
     this.fireEvent( "shapeSelected", shape );
   },
@@ -169,7 +173,7 @@ Canvas2D.DynamicSheet = {
   selectAllShapes: function() {
     this.selectedShapes = [];
     this.positions.iterate( function(position) { 
-      this.selectedShapes.push(position);
+      this.selectShape(position);
     }.scope(this) );
     this.makeDirty();
   },
@@ -229,34 +233,36 @@ Canvas2D.DynamicSheet = {
       this.canvas.stroke();
       this.canvas.closePath();
     } else {
-      this.canvas.strokeRect( box.left - grow, box.top - grow, 
-                              ( box.right - box.left ) + grow, 
-                              ( box.bottom - box.top ) + grow );
+      this.canvas.strokeRect( 
+        box.left - grow, box.top - grow, 
+        ( box.right - box.left ) + grow, 
+        ( box.bottom - box.top ) + grow 
+      );
     }
   },
 
   addShapeSelectionHandles: function addShapeSelectionHandles(box, grow) {
-      var dx = (box.right - box.left) / 2;
-      var dy = (box.bottom - box.top) / 2;
-      var markSize = 6;
-      var mx = markSize / 2;
-      grow = grow || 2;
-      
-      [
-        [ box.left       - mx - grow, box.top         - mx - grow ], 
-        [ box.left  + dx - mx       , box.top         - mx - grow ],
-        [ box.right      - mx + grow, box.top         - mx - grow ],
-        [ box.right      - mx + grow, box.top    + dy - mx        ],
-        [ box.right      - mx + grow, box.bottom      - mx + grow ], 
-        [ box.left  + dx - mx       , box.bottom      - mx + grow ],
-        [ box.left       - mx - grow, box.bottom      - mx + grow ],
-        [ box.left       - mx - grow, box.bottom - dy - mx        ]
-      ].iterate( 
-        function(corner) {
-          this.canvas.fillRect( corner[0], corner[1], markSize, markSize );
-          this.canvas.strokeRect( corner[0], corner[1], markSize, markSize );
-        }.scope(this) 
-      );
+    var dx = (box.right - box.left) / 2;
+    var dy = (box.bottom - box.top) / 2;
+    var markSize = 6;
+    var mx = markSize / 2;
+    grow = grow || 2;
+
+    [
+    [ box.left       - mx - grow, box.top         - mx - grow ], 
+    [ box.left  + dx - mx       , box.top         - mx - grow ],
+    [ box.right      - mx + grow, box.top         - mx - grow ],
+    [ box.right      - mx + grow, box.top    + dy - mx        ],
+    [ box.right      - mx + grow, box.bottom      - mx + grow ], 
+    [ box.left  + dx - mx       , box.bottom      - mx + grow ],
+    [ box.left       - mx - grow, box.bottom      - mx + grow ],
+    [ box.left       - mx - grow, box.bottom - dy - mx        ]
+    ].iterate( 
+      function(corner) {
+        this.canvas.fillRect( corner[0], corner[1], markSize, markSize );
+        this.canvas.strokeRect( corner[0], corner[1], markSize, markSize );
+      }.scope(this) 
+    );
   },
 
   determineSelectionBox: function determineSelectionBox() {
@@ -291,21 +297,25 @@ Canvas2D.DynamicSheet = {
         this.canvas.lineStyle = "solid";
         this.canvas.strokeStyle = "rgb(255,0,255)"; 
         this.selectedShapes.iterate(function(shape) {
-          this.addSelectionBorder(shape.getBox());
+          if( !shape.shape.getHideSelection() ) {
+            this.addSelectionBorder(shape.getBox());
+          }
         }.scope(this) );
       } else {
-        // border around selected shape
-        this.canvas.lineStyle = "dashed";
-        this.canvas.strokeStyle = "rgb(0,255,0)";
-        this.addSelectionBorder(box);
-        // handles for selected shape
-        this.canvas.fillStyle = "rgb(0,255,0)";
-        this.canvas.strokeStyle = "black";
-        this.addShapeSelectionHandles(this.selectedShapes[0].getBox());
+        var shape = this.selectedShapes[0];
+        if( !shape.shape.getHideSelection() ) {      
+          // border around selected shape
+          this.canvas.lineStyle = "dashed";
+          this.canvas.strokeStyle = "rgb(0,255,0)";
+          this.addSelectionBorder(shape.getBox());
+          // handles for selected shape
+          this.canvas.fillStyle = "rgb(0,255,0)";
+          this.canvas.strokeStyle = "black";
+          this.addShapeSelectionHandles(shape.getBox());
+        }
       }
     }
-  },
-
+  }
 };
 
 ProtoJS.mix( Canvas2D.DynamicSheet, Canvas2D.Sheet.prototype, true );

@@ -265,7 +265,9 @@ Canvas2D.Shape.MANIFEST = {
           "height" : Canvas2D.Types.Size 
         } 
       }
-    )
+    ),
+    isSelectable      : Canvas2D.Types.Switch,
+    hideSelection     : Canvas2D.Types.Switch
   }
 };
 
@@ -355,5 +357,7 @@ Canvas2D.Shape.Defaults = {
   labelAlign         : "center",
   labelPos           : "center",
   labelColor         : "black",
-  labelUseCrispLines : false
+  labelUseCrispLines : false,
+  isSelectable       : true,
+  hideSelection      : false
 };
