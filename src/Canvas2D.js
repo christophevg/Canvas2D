@@ -76,7 +76,7 @@ var Canvas2D = {
         if( pluginClass.exposes && pluginClass.exposes.isArray() ) {
           pluginClass.exposes.iterate(function(func) {
             this[func] = function(arg1, arg2, arg3) { 
-              this.plugins[key][func](arg1, arg2, arg3);
+              this.plugins[name][func](arg1, arg2, arg3);
             };
           }.scope(this) );
         }

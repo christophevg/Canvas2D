@@ -7,6 +7,7 @@ var scripts = [
     
     "../src/Common.js", 
 
+    "../src/Canvas2D.css.js", 
     "../src/Canvas2D.js", 
     "../src/Factory.js", 
     "../src/Keyboard.js", 

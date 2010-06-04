@@ -12,6 +12,7 @@ APP       = Canvas2D
 
 CORE_SRCS = ${SRC_DIR}/IEFixes.js \
 			${SRC_DIR}/Common.js \
+			${SRC_DIR}/Canvas2D.css.js \
 			${SRC_DIR}/Canvas2D.js \
 			${SRC_DIR}/Factory.js \
 			${SRC_DIR}/Keyboard.js \
@@ -65,7 +66,7 @@ DIST-SRC_SRCS = LICENSE README Makefile ${SRC_DIR} ${LIB_DIR} examples
 
 DIST-EXT      = ${APP}-${VERSION}-ext.zip
 DIST-EXT_SRCS = LICENSE ${BUILD_DIR}/${APP}.standalone.min.js \
-				src/ext/${APP}.php examples/Canvas2D.css
+				src/ext/${APP}.php
 
 TARGETS   = ${BUILD_DIR}/${APP}.shared.min.js \
 		    ${BUILD_DIR}/${APP}.standalone.min.js
@@ -128,8 +129,7 @@ ${DIST_DIR}/${DIST}: ${DIST_SRCS}
 	   for f in *.html; do \
 		cat $$f \
 		| sed -e 's/includes\.js/..\/Canvas2D.standalone.min.js/' \
-		| sed -e 's/..\/build\///' > \
-		$$f.new; \
+		> $$f.new; \
 		mv $$f.new $$f; \
 	done )
 	@(cd ${DIST_DIR}/js; ${ZIP} ../${DIST} ${APP})

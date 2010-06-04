@@ -15,8 +15,8 @@ state, I'll add documentation and examples here also :-)
 
 In a nutshell:
 $ make
-*** building build/Canvas2D.js
-*** building build/Canvas2D.css
+*** building build/Canvas2D.shared.js
+*** building build/Canvas2D.shared.min.js
 
 Visit examples/ with your browser to see things in action and
 while waiting for me to write decent documentation, study the code.
@@ -29,7 +29,7 @@ $ make dist
 *** packaging Canvas2D Mediawiki extenstion
 
 $ ls dist/ext/Canvas2D/
-Canvas2D.css	Canvas2D.js	Canvas2D.php	LICENSE
+Canvas2D.php			Canvas2D.standalone.min.js	LICENSE
 
 Symlink/copy the extension directory to the Mediawiki extensions
 directory and add
