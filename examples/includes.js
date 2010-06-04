@@ -31,6 +31,8 @@ var scripts = [
     "../src/Image.js", 
     "../src/Arrow.js",
 
+    "../src/plugins/DynamicSheet.js",
+    "../src/plugins/Widget.js",
     "../src/plugins/TabbedCanvas.js", 
     "../src/plugins/AutoLayout.js", 
     "../src/plugins/Watermark.js"

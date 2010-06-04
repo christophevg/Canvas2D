@@ -45,7 +45,7 @@ var Canvas2D = {
       }
       Canvas2D.libraries.get(library).push(shape);
     } );
-    
+
     // setup getters
     shape.getPropertiesConfig().iterate(function propertyConfigIterator(prop, config) {
       var propName = prop.substr(0,1).toUpperCase() + prop.substr(1);
@@ -64,6 +64,31 @@ var Canvas2D = {
 
   getBook : function(id) {
     return Canvas2D.KickStarter.manager.getBook(id);
+  },
+
+  makePluggable : function makePluggable(shape) {
+    shape.plugins = {};
+    shape.prototype.setupPlugins = function() {
+      this.plugins = {};
+      $H(shape.plugins).iterate(function(name, pluginClass) {
+        var plugin = new (pluginClass)(this);
+        this.plugins[name] = plugin;
+        if( pluginClass.exposes && pluginClass.exposes.isArray() ) {
+          pluginClass.exposes.iterate(function(func) {
+            this[func] = function(arg1, arg2, arg3) { 
+              this.plugins[key][func](arg1, arg2, arg3);
+            };
+          }.scope(this) );
+        }
+      }.scope(this) );
+    };
+
+    // add setupPlugins as a Post-Init aspect
+    var originalInit = shape.prototype.init;
+    shape.prototype.init = function(element) {
+      originalInit.call(this, element);
+      this.setupPlugins();
+    }
   }
 };
 

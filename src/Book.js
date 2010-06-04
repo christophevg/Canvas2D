@@ -8,45 +8,14 @@ Canvas2D.Book = Class.extend( {
       } 
     );
 
-    this.canvas = Canvas2D.Factory.setup(element);
+    this.HTMLElement  = element;
+    this.canvas       = Canvas2D.Factory.setup(this.HTMLElement);
+    this.name         = element.id;
 
-    this.sheets = [];
+    this.sheets       = [];
     this.currentSheet = 0;      // index of the current show sheet
 
-    this.canvas.on( "mousedown", function(data) {
-      this.fireEvent("mousedown");
-      var sheet = this.getCurrentSheet();
-      if( sheet )  {
-        sheet.handleMouseDown(data);
-      }
-    }.scope(this) );
-
-    this.canvas.on( "mouseup", function(data) {
-      this.fireEvent("mouseup");
-      var sheet = this.getCurrentSheet();
-      if( sheet ) {
-        sheet.handleMouseUp(data);
-      }
-    }.scope(this) );
-
-    this.canvas.on( "mousedrag", function(data) {
-      this.fireEvent("mousedrag");
-      var sheet = this.getCurrentSheet();
-      if( sheet ) {
-        sheet.handleMouseDrag(data);
-      }
-    }.scope(this) );
-
-
-    // look for a console and sources for this book
-    this.console   = document.getElementById( element.id + "Console"   );
-    this.source    = document.getElementById( element.id + "Source"    );
-    this.generated = document.getElementById( element.id + "Generated" );
-
-    this.name = element.id;
-
     this.setupExtensions();
-    this.setupPlugins();
   },
 
   add: function( sheet ) {
@@ -68,21 +37,6 @@ Canvas2D.Book = Class.extend( {
     this.extensions = new Hash();
     Canvas2D.extensions.iterate(function(extension) {
       this.extensions.set(extension.name, extension);
-    }.scope(this) );
-  },
-
-  setupPlugins: function() {
-    this.plugins = {};
-    $H(Canvas2D.Book.plugins).iterate(function(key, value) {
-      var plugin = new (value)(this);
-      this.plugins[key] = plugin;
-      if( value.exposes ) {
-        value.exposes.iterate(function(func) {
-          this[func] = function(arg1, arg2, arg3) { 
-            this.plugins[key][func](arg1, arg2, arg3);
-          };
-        }.scope(this) );
-      }
     }.scope(this) );
   },
 
@@ -217,5 +171,5 @@ ProtoJS.mix(
   Canvas2D.Book.prototype 
 );
 
-// provide a hook for plugins
-Canvas2D.Book.plugins = {};
+// enable plugins to register themselves with this class
+Canvas2D.makePluggable( Canvas2D.Book );

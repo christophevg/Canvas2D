@@ -36,7 +36,9 @@ SHAPE_SRCS = ${SRC_DIR}/Line.js \
      		 ${SRC_DIR}/Image.js \
      		 ${SRC_DIR}/Arrow.js
 
-PLUGIN_SRCS = ${SRC_DIR}/plugins/TabbedCanvas.js \
+PLUGIN_SRCS = ${SRC_DIR}/plugins/DynamicSheet.js \
+			  ${SRC_DIR}/plugins/Widget.js \
+			  ${SRC_DIR}/plugins/TabbedCanvas.js \
      		  ${SRC_DIR}/plugins/AutoLayout.js \
      		  ${SRC_DIR}/plugins/Watermark.js
 
@@ -82,7 +84,7 @@ lint: ${SRCS}
 	  ${RHINO} lib/jslint-check.js $$f; \
 	done
 
-prepare: init check-deps 
+prepare: init check-deps update 
 
 init:
 	@git submodule init
@@ -94,8 +96,8 @@ check-deps:
 	@which java >/dev/null || ( echo "ERROR: missing : java"; exit 1 )
 
 update:
-	@(cd lib/ADL; ${MAKE} clean; ${MAKE})
-	@(cd lib/ProtoJS; ${MAKE} clean; ${MAKE})
+	@(cd lib/ADL; ${MAKE})
+	@(cd lib/ProtoJS; ${MAKE})
 
 ${BUILD_DIR}:
 	@mkdir  -p ${BUILD_DIR}
