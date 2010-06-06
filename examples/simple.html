@@ -6,7 +6,8 @@
   </head>
   <body>
     <h1>Simple</h1>
-    <canvas id="mySheet" class="Canvas2D Tabbed withAbout withSource withConsole" width="300" height="250"></canvas>
+    <canvas id="mySheet" class="Canvas2D" width="300" height="250"></canvas>
+    <textarea id="shapes" cols="50" rows="17"></textarea>
     <pre id="mySheetSource" style="display:none;">
       +dynamic sheet mySheet {
         [@50,50]
@@ -20,6 +21,14 @@
     <script>
     Canvas2D.on("ready", function() {
       with( Canvas2D.getBook("mySheet").getCurrentSheet() ) {
+        on( 'afterRender', function(sheet) {
+          var shapes = document.getElementById("shapes");
+          shapes.value = "";
+          sheet.positions.iterate( function(position) {
+            shapes.value = position.shape.getName() + "\n" + shapes.value;
+          } );
+        } );
+        
         var target = new Canvas2D.Rectangle( { isSelectable: false } );
         at(87,87).put( target );
 

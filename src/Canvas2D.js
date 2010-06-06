@@ -59,6 +59,12 @@ var Canvas2D = {
           shape.prototype[getterName] = function() { return this.getProperty(prop);};
         }
       }
+      var setterName = "set"+propName;
+      if( typeof shape.prototype[setterName] == "undefined" ) {
+        shape.prototype[setterName] = function(value) {
+          this.setProperty(prop, value);
+        }
+      }
     }.scope(this));
   },
 

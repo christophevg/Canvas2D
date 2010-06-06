@@ -32,7 +32,15 @@ var scripts = [
     "../src/Image.js", 
     "../src/Arrow.js",
 
-    "../src/plugins/DynamicSheet.js",
+    "../src/plugins/DynamicSheet/DynamicSheet.js",
+    "../src/plugins/DynamicSheet/Selection.js",
+    "../src/plugins/DynamicSheet/Overlay.js",
+    "../src/plugins/DynamicSheet/Marker.js",
+    "../src/plugins/DynamicSheet/Box.js",
+    "../src/plugins/DynamicSheet/Border.js",
+    "../src/plugins/DynamicSheet/Position.js",
+    "../src/plugins/DynamicSheet/Group.js",
+
     "../src/plugins/Widget.js",
     "../src/plugins/TabbedCanvas.js", 
     "../src/plugins/AutoLayout.js", 

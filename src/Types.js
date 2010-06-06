@@ -145,7 +145,7 @@ Canvas2D.Types = {
       }
     }
   ),
-  
+
   Handler : Canvas2D.TypeFactory.createType(
     {
       validate : function validateHandler(value) {
@@ -154,3 +154,9 @@ Canvas2D.Types = {
     }
   )
 };
+
+// extended Types
+
+Canvas2D.Types.FontDecoration = Canvas2D.Types.Selection(
+  { values: [ "underline", "overline", "line-through", "none" ] } 
+);

@@ -73,11 +73,14 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
     delete this.shapesMap[baseName];
     this.positions.remove(this.positionsMap[baseName]);
     delete this.positionsMap[baseName];
+    this.positions.remove(shape);
     this.fireEvent( "removeShape", shape );
     this.makeDirty();
   },
 
-  add: function add(shape) {
+  addPosition: function addPosition(position) {
+    var shape = position.shape;
+
     var baseName = shape.getName().replace(/<.*$/,'');
     if( this.shapesMap[baseName] ) {
       var logger = this.book ? this.book : console;
@@ -86,12 +89,8 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
       return null;
     }
 
-    var position = new Canvas2D.Position( shape, this.newLeft, this.newTop);
     shape   .on( "change", this.makeDirty.scope(this) );
     position.on( "change", this.makeDirty.scope(this) );
-
-    this.newLeft = null;
-    this.newTop = null;
 
     this.positions.push(position);
     this.shapesMap[baseName] = shape;
@@ -105,6 +104,12 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
     this.makeDirty();
 
     return shape;
+  },
+
+  add: function add(shape) {
+    return this.addPosition( 
+      new Canvas2D.Position( shape, this.newLeft, this.newTop)
+    );
   },
 
   getPosition: function getPosition(shape) {
@@ -122,6 +127,8 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
     }.scope(this) );
 
     delayed.iterate( function(shape) { shape.render(this); }.scope(this) );
+    
+    this.fireEvent( "afterRender", this );
   },
 
   toADL: function() {

@@ -1,43 +1,31 @@
-Canvas2D.Text = Canvas2D.Rectangle.extend( {
-    prepare: function(sheet) {
-	sheet.useCrispLines  = this.getUseCrispLines();
-	sheet.strokeStyle    = this.getColor();
-	sheet.fillStyle      = this.getColor();
-	sheet.font           = this.getFont();
-	sheet.textAlign      = this.getTextAlign();
-	sheet.textDecoration = this.getTextDecoration();
-	this.width  = sheet.measureText(this.getText());
-	this.height = sheet.getFontSize();
-    },
+Canvas2D.Text = Canvas2D.Shape.extend( {
+  // TODO : change to beforeInit(props) ???
+  beforeRender: function beforeRender(sheet) {
+    sheet.useCrispLines  = this.getUseCrispLines();
+    sheet.strokeStyle    = this.getColor();
+    sheet.fillStyle      = this.getColor();
+    sheet.font           = this.getFont();
+    sheet.textAlign      = this.getTextAlign();
+    sheet.textDecoration = this.getTextDecoration();
+    this.width  = sheet.measureText(this.getText());
+    this.height = sheet.getFontSize();
+  },
 
-    draw: function(sheet, left, top) {
-	if( this.getTopDown() ) { top += this.getHeight(); }
-	sheet.fillText(this.getText(), left, top );
-    },
-
-    asConstruct: function() {
-	var construct = this._super();
-	construct.addModifiers( [ "color" ] );
-	return construct;
-    }
+  draw: function draw(sheet, left, top) {
+    sheet.fillText(this.getText(), left, top );
+  }
 } );
 
-Canvas2D.Text.from = function( construct, parent ) {
-    var props = { name: construct.name, text: construct.value.value };
-    construct.modifiers.iterate(function(key, value) {
-	value = ( typeof value.value != "undefined" ? 
-		      value.value.value : "" );
-	props[key] = value;
-    } );
-
-    return new Canvas2D.Text(props);
-};
-
 Canvas2D.Text.MANIFEST = {
-    name         : "text",
-    properties   : [ "text", "color", "font", "textAlign","textDecoration" ],
-    propertyPath : [ Canvas2D.Rectangle ],
-    libraries    : [ "Canvas2D" ]
+  name         : "text",
+  properties   : { 
+    "text"           : Canvas2D.Types.Text, 
+    "color"          : Canvas2D.Types.Color, 
+    "font"           : Canvas2D.Types.Font, 
+    "textAlign"      : Canvas2D.Types.Align,
+    "textDecoration" : Canvas2D.Types.FontDecoration
+  },
+  libraries    : [ "Canvas2D" ]
 };
 
 Canvas2D.registerShape( Canvas2D.Text );

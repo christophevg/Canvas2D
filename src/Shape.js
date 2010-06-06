@@ -31,8 +31,6 @@ Canvas2D.Shape = Class.extend( {
     return this.parent;
   },
 
-  prepare: function prepare(sheet) {},
-
   setProperties : function setProperties(props) {
     // process each property in the propertyList
     this.getPropertyList().iterate(
@@ -55,7 +53,6 @@ Canvas2D.Shape = Class.extend( {
       var getterName = "get"+propName;
       return this[getterName]();
     } else {
-      if( prop == "geo" ) { console.log( this ); }
       return this[prop] != null ? 
       this[prop] : this.getPropertyDefault(prop);
     }
@@ -176,14 +173,20 @@ Canvas2D.Shape = Class.extend( {
     }
   },
 
-  render: function(sheet, left, top) {
-    this.prepare(sheet);
-
+  render: function render(sheet, left, top) {
+    if( ! this.getIsVisible() ) { return; }
+    this.beforeRender(sheet);
+    
     sheet.save();
     this.draw     (sheet, left, top);
     this.drawLabel(sheet, left, top);
     sheet.restore();
+    
+    this.afterRender(sheet);
   },
+  
+  beforeRender: function prepare(sheet) {},
+  afterRender : function prepare(sheet) {},
 
   getCenter: function() {
     return { left: this.getWidth()  / 2, top:  this.getHeight() / 2 };
@@ -267,6 +270,7 @@ Canvas2D.Shape.MANIFEST = {
       }
     ),
     isSelectable      : Canvas2D.Types.Switch,
+    isVisible         : Canvas2D.Types.Switch,
     hideSelection     : Canvas2D.Types.Switch,
     onMouseDown       : Canvas2D.Types.Handler,
     onMouseUp         : Canvas2D.Types.Handler,
@@ -363,7 +367,9 @@ Canvas2D.Shape.Defaults = {
   labelUseCrispLines : false,
   isSelectable       : true,
   hideSelection      : false,
+  isVisible          : true,
   onMouseDown        : function() {},
   onMouseUp          : function() {},
-  onMouseDrag        : function() {}
+  onMouseDrag        : function() {},
+  onMove             : function() {}
 };
