@@ -5,6 +5,8 @@ var scripts = [
     "../lib/canvastext.js",
     "../lib/tabber.js",
     
+    "../src/IEFixes.js", 
+
     "../src/Common.js", 
 
     "../src/Canvas2D.css.js", 

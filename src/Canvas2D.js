@@ -63,7 +63,7 @@ var Canvas2D = {
       if( typeof shape.prototype[setterName] == "undefined" ) {
         shape.prototype[setterName] = function(value) {
           this.setProperty(prop, value);
-        }
+        };
       }
     }.scope(this));
   },
@@ -94,7 +94,7 @@ var Canvas2D = {
     shape.prototype.init = function(element) {
       originalInit.call(this, element);
       this.setupPlugins();
-    }
+    };
   }
 };
 

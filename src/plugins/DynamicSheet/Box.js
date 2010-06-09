@@ -23,10 +23,11 @@ Canvas2D.DynamicSheet.Selection.Marker.Box.Defaults = {
   height       : 6,
   lineColor    : "black",
   isSelectable : false 
-}
+};
 
 Canvas2D.DynamicSheet.Selection.Marker.Box.MANIFEST = {
   name         : "SelectionMarkerBox",
-  propertyPath : [ Canvas2D.Rectangle ],
-}
+  propertyPath : [ Canvas2D.Rectangle ]
+};
+
 Canvas2D.registerShape(Canvas2D.DynamicSheet.Selection.Marker.Box);

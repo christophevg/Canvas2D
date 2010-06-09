@@ -26,10 +26,11 @@ Canvas2D.DynamicSheet.Selection.Marker.Border = Canvas2D.Rectangle.extend( {
 
 Canvas2D.DynamicSheet.Selection.Marker.Border.Defaults = {
   isSelectable : false
-}
+};
 
 Canvas2D.DynamicSheet.Selection.Marker.Border.MANIFEST = {
   name         : "SelectionMarkerBorder",
-  propertyPath : [ Canvas2D.Rectangle ],
-}
+  propertyPath : [ Canvas2D.Rectangle ]
+};
+
 Canvas2D.registerShape(Canvas2D.DynamicSheet.Selection.Marker.Border);

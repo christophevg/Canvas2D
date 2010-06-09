@@ -22,7 +22,7 @@ Canvas2D.DynamicBook.setupMouseEventHandling = function setupMouseEventHandling(
       }
     }.scope(this) );
   }.scope(this) );
-},
+};
 
 Class.extendMethod( 
   Canvas2D.Book, "init", 
@@ -57,15 +57,15 @@ Canvas2D.DynamicSheet = {
   },
 
   hit: function hit(pos) {
-    var hit = this.getHit(pos);
-    if( hit ) {
+    var shape = this.getHit(pos);
+    if( shape ) {
       if( this.selection.hasSelectedShapes() ) {
         console.log( "** has selected shapes" );
-        if( this.selection.contains( hit ) ) {
+        if( this.selection.contains( shape ) ) {
           console.log( "** hit is already in selection" );
           if( this.isMultiSelecting() ) {
             console.log( "** removing from multiselect" );
-            this.selection.removeShape(hit);
+            this.selection.removeShape(shape);
           } else {
             console.log( "** removing all == stop multiselection" );
             this.selection.removeAllShapes();
@@ -74,15 +74,15 @@ Canvas2D.DynamicSheet = {
           console.log( "** hit is not in current selection" );
           if( this.isMultiSelecting() ) {
             console.log( "** adding to multiselection" );
-            this.selection.addShape(hit);
+            this.selection.addShape(shape);
           } else {
             console.log( "** reset to new single selection" );
-            this.selection.addOnlyShape(hit);
+            this.selection.addOnlyShape(shape);
           }
         }
       } else {
         console.log( "** first selection" );
-        this.selection.addShape(hit);
+        this.selection.addShape(shape);
       }
     } else {
       console.log( "** blank hit" );
@@ -114,7 +114,7 @@ Canvas2D.DynamicSheet = {
     if( shape ) { shape.shape.getOnMouseUp(); }
 
     if( this.selectingArea ) {
-      this.stopSelectingArea()
+      this.stopSelectingArea();
     } else if( this.draggingSelection ) {
       this.stopDraggingSelection();
       this.selection.getSelectedShapes().iterate(function(position) {
@@ -170,14 +170,14 @@ Canvas2D.DynamicSheet = {
           return;
         }
       }
-      var hit = this.getHit(pos);
-      if( hit && this.selection.hasSelectedShapes() && this.selection.contains(hit) ) {
+      var shape = this.getHit(pos);
+      if( shape && this.selection.hasSelectedShapes() && this.selection.contains(shape) ) {
         this.startDraggingSelection();
-      } else if( hit && this.selection.hasSelectedShapes() && !this.selection.contains(hit) ) {
+      } else if( shape && this.selection.hasSelectedShapes() && !this.selection.contains(shape) ) {
         if( !this.isMultiSelecting() ) { this.selection.removeAllShapes(); }
         this.hit(pos);
         this.startDraggingSelection();
-      } else if( hit && !this.selection.hasSelectedShapes() ) {
+      } else if( shape && !this.selection.hasSelectedShapes() ) {
         this.hit(pos);
         this.startDraggingSelection();
       } else {
@@ -210,7 +210,7 @@ Canvas2D.DynamicSheet = {
     {
       this.selectAllShapes();
     }
-  },
+  }
 };
 
 ProtoJS.mix( Canvas2D.DynamicSheet, Canvas2D.Sheet.prototype, true );

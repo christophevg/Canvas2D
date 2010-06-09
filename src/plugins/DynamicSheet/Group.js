@@ -9,7 +9,7 @@ Canvas2D.DynamicSheet.Selection.Group = Canvas2D.Shape.extend( {
   getBox: function getBox() {
     var minLeft = null, minTop = null, maxRight = null, maxBottom = null;
     var shapes = this.selection.getSelectedShapes();
-    if( shapes.lengt == 0 ) {
+    if( shapes.lengt === 0 ) {
       return { left: 0, top: 0, right: 0, bottom: 0 };
     } else {
       shapes.iterate(function(shape) {
@@ -45,9 +45,10 @@ Canvas2D.DynamicSheet.Selection.Group = Canvas2D.Shape.extend( {
 Canvas2D.DynamicSheet.Selection.Group.Defaults = {
   isSelectable : false,
   isVisible    : false
-}
+};
 
 Canvas2D.DynamicSheet.Selection.Group.MANIFEST = {
-  name         : "SelectionGroup",
-}
+  name         : "SelectionGroup"
+};
+
 Canvas2D.registerShape(Canvas2D.DynamicSheet.Selection.Group);

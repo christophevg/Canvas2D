@@ -236,7 +236,7 @@ Canvas2D.Shape = Class.extend( {
 
   // the remaining methods are not applicable for abstract shapes
   beforeInit : function beforeInit(props)      { return props; },
-  afterInit  : function afterInidt()           { },
+  afterInit  : function afterInit()            { },
   draw       : function draw(sheet, left, top) { }
 } );
 
