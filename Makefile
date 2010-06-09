@@ -37,7 +37,14 @@ SHAPE_SRCS = ${SRC_DIR}/Line.js \
      		 ${SRC_DIR}/Image.js \
      		 ${SRC_DIR}/Arrow.js
 
-PLUGIN_SRCS = ${SRC_DIR}/plugins/DynamicSheet.js \
+PLUGIN_SRCS = ${SRC_DIR}/plugins/DynamicSheet/DynamicSheet.js \
+			  ${SRC_DIR}/plugins/DynamicSheet/Selection.js \
+			  ${SRC_DIR}/plugins/DynamicSheet/Overlay.js \
+			  ${SRC_DIR}/plugins/DynamicSheet/Marker.js \
+			  ${SRC_DIR}/plugins/DynamicSheet/Box.js \
+			  ${SRC_DIR}/plugins/DynamicSheet/Border.js \
+			  ${SRC_DIR}/plugins/DynamicSheet/Position.js \
+			  ${SRC_DIR}/plugins/DynamicSheet/Group.js \
 			  ${SRC_DIR}/plugins/Widget.js \
 			  ${SRC_DIR}/plugins/TabbedCanvas.js \
      		  ${SRC_DIR}/plugins/AutoLayout.js \
