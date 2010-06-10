@@ -56,6 +56,15 @@ Canvas2D.Position = Class.extend( {
     " to " + this.getLeft() + "," + this.getTop() );
     this.fireEvent( "move", { x: dleft, y: dtop } );
   },
+  
+  moveTo: function( left, top ) {
+    this.left = left;
+    this.top  = top;
+  },
+  
+  resize: function( dx, dy ) {
+    this.shape.resize( dx, dy );
+  },
 
   getName: function() {
     return this.shape.getName();

@@ -16,8 +16,16 @@ Canvas2D.DynamicSheet.Selection = Class.extend( {
     this.groupShape.move( dx, dy ); // FIXME: groupShape should be on Sheet
     this.selections.iterate(function(position) {
       position.move(dx, dy);
-      position.shape.getOnMouseDrag()(this.sheet, dx, dy );
+      //position.shape.getOnMouseDrag()(this.sheet, dx, dy );
     }.scope(this));
+  },
+  
+  resize : function resize(dx, dy) {
+    this.move(dx * this.resizers.left, dy * this.resizers.top );
+    this.groupShape.resize(dx*this.resizers.width, dy * this.resizers.height);
+    this.selections.iterate(function(position) {
+      position.resize(dx*this.resizers.width, dy*this.resizers.height);
+    }.scope(this));    
   },
   
   contains : function contains(shape) {
@@ -76,5 +84,14 @@ Canvas2D.DynamicSheet.Selection = Class.extend( {
   
   hasMultipleSelectedShapes: function hasMultipleSelectedShapes() {
     return this.selections.length > 1;
+  },
+  
+  startResizing: function startResizing(resizers) {
+    this.resizers = resizers;
+    this.sheet.startResizingSelection();
+  },
+  
+  stopResizing: function stopResizing() {
+    this.sheet.stopResizingSelection();
   }
 } );

@@ -2,6 +2,10 @@ Canvas2D.DynamicSheet.Selection.Marker.Box = Canvas2D.Rectangle.extend( {
   beforeInit: function beforeInit(props) {
     this.marker = props.marker;
     delete props.marker;
+    this.sizers = props.sizers;
+    props.onMouseDown = function() {
+      this.marker.selection.startResizing(this.sizers);
+    }.scope(this);
     return props;
   },
   
@@ -11,10 +15,6 @@ Canvas2D.DynamicSheet.Selection.Marker.Box = Canvas2D.Rectangle.extend( {
   
   getIsVisible: function getIsVisible() {
     return this.marker.isShowingBoxes();
-  },
-
-  hit: function hit() {
-    return false;
   }
 } );
 

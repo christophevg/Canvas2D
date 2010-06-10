@@ -24,13 +24,20 @@ Canvas2D.DynamicSheet.Selection.Marker = Class.extend( {
   },
   
   setupMarker: function setupMarker() {
-    [ "topLeft", "topCenter", "topRight", "centerRight", 
-    "bottomRight", "bottomCenter", "bottomLeft", "centerLeft" 
-    ].iterate( function(handle) { 
+    $H({ 
+      topLeft      : { width: -1, height: -1, left: 1, top: 1 }, 
+      topCenter    : { width:  0, height: -1, left: 0, top: 1 }, 
+      topRight     : { width:  1, height: -1, left: 0, top: 1 },
+      centerRight  : { width:  1, height:  0, left: 0, top: 0 }, 
+      bottomRight  : { width:  1, height:  1, left: 0, top: 0 }, 
+      bottomCenter : { width:  0, height:  1, left: 0, top: 0 },
+      bottomLeft   : { width: -1, height:  1, left: 1, top: 0 }, 
+      centerLeft   : { width: -1, height:  0, left: 1, top: 0 }
+    }).iterate( function(handle, sizers) { 
       this.marks[handle] = 
         new Canvas2D.DynamicSheet.Selection.Marker.Box({
           name: "marker-" + this.shape.getName() + "-" + handle,
-          marker: this
+          sizers: sizers, marker: this
         }); 
     }.scope(this) );
 
@@ -81,14 +88,41 @@ Canvas2D.DynamicSheet.Selection.Marker = Class.extend( {
     var dx = d.x, dy = d.y;
     $H(this.marks).iterate(function(key, mark) {
       var position = this.sheet.getPosition(mark);
-      // FIXME: why ?
       position.move(dx, dy);
     }.scope(this) );
     this.sheet.getPosition(this.border).move(dx, dy);
   },
 
-  resize: function resize() {
-    // coming soon ;-)
+  resize: function resize(dw, dh) {
+    if( ! this.showing ) { return; }
+
+    var box = this.shape.getBox();
+    var dx = ( box.right - box.left ) / 2;
+    var dy = ( box.bottom - box.top ) / 2;
+    var ds = 3;
+
+    var padding = this.isGroupMarker ? 5 : 1;
+
+    $H({
+      topLeft     : { left : box.left   -ds -padding    ,
+                      top  : box.top    -ds -padding     },
+      topCenter   : { left : box.left                +dx,
+                      top  : box.top    -ds -padding     },
+      topRight    : { left : box.right  -ds +padding    ,
+                      top  : box.top    -ds -padding     },
+      centerRight : { left : box.right  -ds +padding    ,
+                      top  : box.top                 +dy },
+      bottomRight : { left : box.right  -ds +padding    ,
+                      top  : box.bottom -ds +padding     },
+      bottomCenter: { left : box.right               -dx,
+                      top  : box.bottom -ds +padding     },
+      bottomLeft  : { left : box.left   -ds -padding    ,
+                      top  : box.bottom -ds +padding     },
+      centerLeft  : { left : box.left   -ds -padding    ,
+                      top  : box.bottom              -dy }
+    }).iterate(function( name, change ) {
+      this.sheet.getPosition(this.marks[name]).moveTo(change.left, change.top);
+    }.scope(this));
   },
 
   hide: function hide() {

@@ -13,16 +13,6 @@ Canvas2D.Shape = Class.extend( {
     this.afterInit();
   },
 
-  preprocess: function preprocess(props) {
-    console.log( "WARNING: preprocess is deprecated. please use beforeInit.");
-    this.beforeInit(props);
-  },
-
-  postInitialize: function postInitialize() {
-    console.log( "WARNING: postInitialize is deprecated. please use afterInit.");
-    this.afterInit(props);
-  },
-
   setParent: function setParent(parent) {
     this.parent = parent;
   },
@@ -232,6 +222,12 @@ Canvas2D.Shape = Class.extend( {
       0 > bottom             ||
       this.getHeight() < top 
     );
+  },
+  
+  resize: function resize(dx, dy) {
+    this.setWidth (this.getWidth()  + dx);
+    this.setHeight(this.getHeight() + dy);
+    this.fireEvent( "resize" );
   },
 
   // the remaining methods are not applicable for abstract shapes

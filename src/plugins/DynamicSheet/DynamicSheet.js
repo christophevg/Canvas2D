@@ -122,6 +122,8 @@ Canvas2D.DynamicSheet = {
         "Shape moved to " + 
         position.left + ", " + position.top );
       }.scope(this) );
+    } else if( this.resizingSelection ) {
+      this.stopResizingSelection();
     } else {
       this.hit(pos);
       this.currentPos = pos;
@@ -136,6 +138,14 @@ Canvas2D.DynamicSheet = {
 
   stopDraggingSelection: function stopDraggingSelection(pos) {
     this.draggingSelection = false;
+  },
+  
+  startResizingSelection: function startResizingSelection(pos) {
+    this.resizingSelection = true;
+  },
+
+  stopResizingSelection: function stopResizingSelection(pos) {
+    this.resizingSelection = false;
   },
 
   startSelectingArea: function startSelectingArea(pos) {
@@ -159,6 +169,8 @@ Canvas2D.DynamicSheet = {
       this.selectionOverlay.set( this.selectionPos, this.currentPos );
     } else if( this.draggingSelection ) {
       this.selection.move(pos.dx, pos.dy);
+    } else if( this.resizingSelection ) {
+      this.selection.resize(pos.dx, pos.dy);
     } else {
       // check if shape doesn't want to be only selectShape
       // (aka the selection stealing shape)
