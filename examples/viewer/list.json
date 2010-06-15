@@ -1,7 +1,12 @@
 [
 	{ 
 		id    : "simple", 
-		label : "Demo of new Features",
+		label : "New Interactive Features",
 		info  : "This diagram shows how the redesign of Canvas2D 0.4 enables users to do all kind of fancy interactive stuff."
+	},
+	{
+		id    : "round_corners", 
+		label : "Rectangle with rounded corners",
+		info  : "Showing of the new rounded corners feature of the Rectangle shape."
 	}
 ]
