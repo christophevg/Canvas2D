@@ -1,0 +1,8 @@
++dynamic sheet mySheet {
+  [@50,50]
+  rectangle rect1 +width=60 +height=60 +lineColor="yellow" 
+                  +lineWidth=10 +roundCorners;
+  [@75,75]
+  rectangle rect2 +geo="150x75" +lineColor="red" 
+                  +fillColor="rgba(125,125,255,0.5)";
+}

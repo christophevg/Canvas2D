@@ -1,0 +1,7 @@
+[
+	{ 
+		id    : "simple", 
+		label : "Demo of new Features",
+		info  : "This diagram shows how the redesign of Canvas2D 0.4 enables users to do all kind of fancy interactive stuff."
+	}
+]

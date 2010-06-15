@@ -1,0 +1,45 @@
+HTML, BODY {
+  margin: 0px;
+  border: 0px;
+  overflow: hidden;
+}
+
+CANVAS {
+  background-color: white;
+  border: 1px solid #777;
+}
+
+.pane {
+  background-color: #ddd;
+  padding: 10px;
+}
+
+.header {
+  font-size: 16pt;
+  padding-bottom: 0px;
+  height: 25px;
+}
+
+.inspector {
+  float: left;
+  width: 250px;
+}
+
+.navigator {
+  background-color: white;
+  border: 1px solid #777;
+  overflow: auto;
+}
+
+.info {
+  background-color: white;
+  border: 1px solid #777;
+  height: 150px;
+  overflow: auto;
+  margin-top: 10px;
+}
+
+.viewer {
+  margin-left: 270px;
+  padding-left: 0px;
+}

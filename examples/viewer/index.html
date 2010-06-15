@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Canvas2D Example Viewer</title>
+
+  <link rel="stylesheet" type="text/css" href="../examples.css" />
+  <link rel="stylesheet" type="text/css" href="viewer.css" />
+
+  <script type="text/javascript">
+    window.loadingPrefix = "../../";
+  </script>
+  <script type="text/javascript" src="../includes.js"></script>
+  <script type="text/javascript" src="viewer.js"></script>
+  <script type="text/javascript">
+    // This is the default configuration. which can be overriden
+    Canvas2D.Viewer.config = {
+      repository : "./",
+      canvas     : "C2D_Viewer",
+      navigator  : "C2D_Navigator",
+      info       : "C2D_Info"
+    };
+  </script>
+</head>
+
+<body id="index" class="home">
+
+  <div class="header pane">Canvas2D Example Viewer</div>
+
+  <div class="inspector pane">
+    <div id="navigatorPane" class="navigator pane">
+      <div id="C2D_Navigator">loading examples index ...</div>
+    </div>
+    <div class="info pane">
+      <div id="C2D_Info">
+        Select an example from the list above...
+      </div>
+    </div>
+  </div>
+
+  <div id="viewerPane" class="viewer pane">
+    <canvas id="C2D_Viewer" class="Canvas2D"></canvas>
+  </div>
+
+  <script type="text/javascript">
+    function getWindowSize() {
+      var width = 0, height = 0;
+      if( typeof( window.innerWidth ) == 'number' ) {
+        // Non-IE
+        width = window.innerWidth;
+        height = window.innerHeight;
+      } else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
+        //IE 6+ in 'standards compliant mode'
+        width = document.documentElement.clientWidth;
+        height = document.documentElement.clientHeight;
+      } else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
+        //IE 4 compatible
+        width = document.body.clientWidth;
+        height = document.body.clientHeight;
+      }
+      return { width: width, height: height };
+    }
+    
+    function resizeCanvasContainer() {
+      var winHeight = getWindowSize().height - 55;
+      document.getElementById("viewerPane")   .style.height = winHeight + "px";
+      document.getElementById("navigatorPane").style.height = winHeight - 202 + "px";
+    }
+
+    ProtoJS.Event.observe( window, "resize", resizeCanvasContainer );
+    resizeCanvasContainer();
+  </script>
+
+</body>
+</html>
