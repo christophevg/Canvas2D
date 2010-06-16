@@ -73,19 +73,24 @@ var Canvas2D = {
   },
 
   makePluggable : function makePluggable(shape) {
-    shape.plugins = {};
-    shape.prototype.setupPlugins = function() {
-      this.plugins = {};
-      $H(shape.plugins).iterate(function(name, pluginClass) {
-        var plugin = new (pluginClass)(this);
-        this.plugins[name] = plugin;
-        if( pluginClass.exposes && pluginClass.exposes.isArray() ) {
-          pluginClass.exposes.iterate(function(func) {
-            this[func] = function(arg1, arg2, arg3) { 
-              this.plugins[name][func](arg1, arg2, arg3);
-            };
-          }.scope(this) );
-        }
+    // class level plugin registration
+    shape.pluginClasses = [];
+    shape.addPlugin = function addPlugin(plugin, exposes) {
+      exposes = exposes || [];
+      this.pluginClasses.push( { clazz: plugin, exposes: exposes } );
+    };
+    
+    // instance level setup
+    shape.prototype.setupPlugins = function setupPlugins() {
+      this.plugins = [];
+      shape.pluginClasses.iterate(function(plugin) {
+        var pluginInst = new (plugin.clazz)(this);
+        this.plugins.push(pluginInst);
+        plugin.exposes.iterate(function(func) {
+          this[func] = function(arg1, arg2, arg3) { 
+            pluginInst[func](arg1, arg2, arg3);
+          };
+        }.scope(this) );
       }.scope(this) );
     };
 

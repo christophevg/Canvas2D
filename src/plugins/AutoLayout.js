@@ -1,4 +1,4 @@
-Canvas2D.Book.plugins.AutoLayout = Class.extend( {
+Canvas2D.AutoLayout = Class.extend( {
   init: function(book) {
     this.book = book;
     this.active = false;
@@ -63,10 +63,12 @@ Canvas2D.Book.plugins.AutoLayout = Class.extend( {
 
   afterPublish: function afterPublish(book) {
     if( this.active ) { book.rePublish(); }
-  }
+  },
+  
+  getName: function getName() { return "AutoLayout"; }
 } );
 
-Canvas2D.Book.plugins.AutoLayout.exposes = [ "autoLayout" ];
+Canvas2D.Book.addPlugin( Canvas2D.AutoLayout, [ "autoLayout" ] );
 
 var ForceLayoutStrategy = Class.extend( {
   init: function initialize(config) {

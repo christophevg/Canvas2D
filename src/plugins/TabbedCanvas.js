@@ -1,4 +1,4 @@
-Canvas2D.Book.plugins.TabbedCanvas = Class.extend( {
+Canvas2D.TabbedCanvas = Class.extend( {
   init: function(book) {
     this.book = book;
   },
@@ -103,7 +103,23 @@ Canvas2D.Book.plugins.TabbedCanvas = Class.extend( {
       this.tabber.appendChild(this.getAboutTab());
     }
     tabberAutomatic(); 
-  }
+  },
+
+  activate: function activate(book, classes) {
+    if( classes.contains("Tabbed") ) {
+      var tabs = [];
+      if(classes.contains("withSource" )){ tabs.push("source" ); }
+      if(classes.contains("withConsole")){ tabs.push("console"); }
+      if(classes.contains("withAbout"  )){ tabs.push("about"  ); }
+      book.makeTabbed(tabs); 
+    }
+  },
+  
+  getName: function getName() { return "TabbedCanvas"; }
 } );
 
-Canvas2D.Book.plugins.TabbedCanvas.exposes = [ "makeTabbed" ];
+// expose makeTabbed functionality at the Book interface
+Canvas2D.Book.addPlugin( Canvas2D.TabbedCanvas, [ "makeTabbed" ] );
+
+// activate for each Canvas2D instance
+Canvas2D.KickStart.Starter.addPlugin( Canvas2D.TabbedCanvas );

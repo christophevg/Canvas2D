@@ -1,33 +1,36 @@
-Canvas2D.KickStart = {};
+Canvas2D.KickStart = { 
+  triggers: [ "Canvas2D" ], // list of CSS classnames that trigger KickStarting
+};
 
 Canvas2D.KickStart.Starter = Class.extend( {
   init: function() {
+    this.initManager();
+  },
+  
+  initManager: function initManager() {
     this.manager = new Canvas2D.Manager();
   },
-
-  getTag: function() {
-    return "Canvas2D";
-  },
-
-  makeInstance: function( name ) {
+  
+  makeInstance: function makeInstance( name ) {
     return this.manager.setupBook(name);
   },   
 
-  start: function() {
+  start: function start() {
     var htmlCanvases = document.getElementsByTagName( "canvas" );
     for(var c=0; c<htmlCanvases.length; c++ ) {
       var htmlCanvas = htmlCanvases[c];
       var classes = htmlCanvas.className;
-      if( classes.contains(this.getTag()) ) {
+      Canvas2D.KickStart.triggers
+
+      if( classes.containsOneOf(Canvas2D.KickStart.triggers) ) {
+        
         var name = htmlCanvas.id;
         var book = this.makeInstance(htmlCanvas);
-        if( classes.contains("Tabbed") ) {
-          var tabs = [];
-          if(classes.contains("withSource" )){ tabs.push("source" ); }
-          if(classes.contains("withConsole")){ tabs.push("console"); }
-          if(classes.contains("withAbout"  )){ tabs.push("about"  ); }
-          book.makeTabbed(tabs); 
-        }
+
+        this.plugins.iterate(function(plugin) {
+          if( plugin.activate ) { plugin.activate(book, classes); }
+        });
+
         var sourceElement = document.getElementById(name+"Source");
         if( sourceElement ) {
           var source;
@@ -44,9 +47,13 @@ Canvas2D.KickStart.Starter = Class.extend( {
     }
     this.fireEvent( "ready" );
     this.manager.startAll();
-  }
+  },
+  
+  getName: function getName() { return "KickStarter"; }
 } );
 
+
+Canvas2D.makePluggable(Canvas2D.KickStart.Starter);
 
 // add-in some common functionality
 ProtoJS.mix( 
@@ -54,11 +61,11 @@ ProtoJS.mix(
   Canvas2D.KickStart.Starter.prototype 
 );
 
-Canvas2D.KickStarter = new Canvas2D.KickStart.Starter();
+// start as soon as the window has been loaded
 ProtoJS.Event.observe( window, 'load', function() { 
+  Canvas2D.KickStarter = new Canvas2D.KickStart.Starter();
+  Canvas2D.KickStarter.on( "ready", function() { 
+    Canvas2D.fireEvent( "ready" );
+  } );
   Canvas2D.KickStarter.start(); 
-} );
-
-Canvas2D.KickStarter.on( "ready", function() { 
-  Canvas2D.fireEvent( "ready" );
 } );

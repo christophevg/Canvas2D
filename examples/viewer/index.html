@@ -62,9 +62,9 @@
     }
     
     function resizeCanvasContainer() {
-      var winHeight = getWindowSize().height - 55;
-      document.getElementById("viewerPane")   .style.height = winHeight + "px";
-      document.getElementById("navigatorPane").style.height = winHeight - 202 + "px";
+      var winHeight = getWindowSize().height;
+      document.getElementById("viewerPane")   .style.height = winHeight -  55 + "px";
+      document.getElementById("navigatorPane").style.height = winHeight - 257 + "px";
     }
 
     ProtoJS.Event.observe( window, "resize", resizeCanvasContainer );
