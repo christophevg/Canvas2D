@@ -11,6 +11,16 @@
     window.loadingPrefix = "../../";
   </script>
   <script type="text/javascript" src="../includes.js"></script>
+  <script type="text/javascript">
+    Canvas2D.registerConnector( "Triangle",
+      {
+        n:{lines:[[ -5, -10],[ +5,-10],[  0,  0]],end:[ 0,-10]},
+        e:{lines:[[+10,  +5],[+10, -5],[  0,  0]],end:[10,  0]},
+        s:{lines:[[ +5, +10],[ -5,+10],[  0,  0]],end:[ 0, 10]},
+        w:{lines:[[-10,  -5],[-10, +5],[  0,  0]],end:[-10, 0]}
+      }
+    );
+  </script>
   <script type="text/javascript" src="viewer.js"></script>
   <script type="text/javascript">
     // This is the default configuration. which can be overriden

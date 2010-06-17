@@ -1,6 +1,8 @@
 Canvas2D.Connector = Canvas2D.Shape.extend( {
-  preprocess: function preprocess(props) {
-    props = this._super(props);
+  beforeInit: function beforeInit(props) {
+    if( props.routeBegin !== null && props.routeEnd !== null ) {
+      props.routing = "custom";
+    }
     if( props.from == props.to ) { props.routing = "recursive"; }
     return props;
   },
@@ -368,104 +370,55 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
   hit: function hit(x,y) {
     // connectors aren't selectable (for now ;-))
     return false;
-  },
-
-  asConstruct: function asConstruct() {
-    var construct = this._super();
-
-    if( this.getFrom() && this.getTo() ) {
-      construct.modifiers[this.getFrom().getName() + "-" +
-      this.getTo().getName()] = null;
-    }
-
-    construct.modifiers[this.getRouting()] = null;
-    if( this.getRouting() == "custom" ) {
-      construct.annotation.data = this.getRouteStyle() + ":" +
-      this.getRouteBegin() + "-" +
-      this.getRouteEnd();
-    }
-
-    construct.addModifiers( [ "lineColor", "lineStyle", "lineWidth", 
-    "begin", "end",
-    "beginLabel", "centerLabel", "endLabel" ] );
-
-    if( this.getRouting() == "recursive" && this.getRouteBegin() != "ene" ) {
-      construct.addModifiers( [ "routeBegin" ] );
-    }
-    return construct;
   }
 } );
-
-Canvas2D.Connector.from = function from(construct, sheet) {
-  var props = { name: construct.name }, parts;
-  construct.modifiers.iterate(function(key, value) {
-    if( value.value == null ) {
-      if( key.contains("-") ) {
-        parts = key.split( "-" );
-        props.from = sheet.shapesMap[parts[0]];
-        props.to   = sheet.shapesMap[parts[1]];
-      } else {
-        props.routing = key;
-        if( key == "custom" && construct.annotation && 
-        construct.annotation.data &&
-        construct.annotation.data.contains(":") &&
-        construct.annotation.data.contains("-") ) 
-        {
-          parts = construct.annotation.data.split(":");
-          props.routeStyle = parts[0];
-          var ends = parts[1].split("-");
-          props.routeBegin = ends[0];
-          props.routeEnd   = ends[1];
-        }
-      }
-    } else {
-      props[key] = ( key == "from" || key == "to" ) ? 
-      sheet.shapesMap[value.value.value] : value.value.value;
-      if( key == "begin" || key == "end" ) {
-        props[key] = Canvas2D.CustomConnectors[props[key]];
-      }
-    }
-  });
-
-  errors = [];
-  warnings = [];
-  if( !props.from ) {
-    errors.push( "Missing FROM connection-end on " + construct.name );
-  }
-  if( !props.to ) {
-    errors.push( "Missing TO connection-end on " + construct.name   );
-  }
-  if( !["vertical","horizontal","direct","custom"]
-  .has(props.routing) )
-  {
-    warnings.push( "unknown routing: " + props.routing + 
-    ", defaulting to direct." );
-  }
-
-  var result = {};
-
-  if( warnings.length > 0 ) {
-    result.warnings = warnings;
-  }
-
-  if( errors.length > 0 ) {
-    result.errors = errors;
-  } else {
-    var elem = new Canvas2D.Connector( props );
-    elem.warnings = result.warnings;
-    result = elem;
-  }
-
-  return result;
-};
 
 Canvas2D.Connector.MANIFEST = {
   name         : "connector",
   aliasses     : [ "link" ],
-  properties   : [ "lineColor", "lineStyle", "lineWidth", 
-  "from", "to", "begin", "end",
-  "routing", "routeStyle", "routeBegin", "routeEnd",
-  "beginLabel", "centerLabel", "endLabel" ],
+  properties   : { 
+    lineColor  : Canvas2D.Types.Color,
+    lineStyle  : Canvas2D.Types.LineStyle,
+    lineWidth  : Canvas2D.Types.Size, 
+    from       : Canvas2D.Types.Shape,
+    to         : Canvas2D.Types.Shape,
+    fromTo     : Canvas2D.Types.Mapper( {
+      asKey: true,
+      map : "^([^-]+)-(.+)$",
+      to  : {
+        from : Canvas2D.Types.Shape,
+        to   : Canvas2D.Types.Shape
+      }
+    } ),
+
+    routing    : Canvas2D.Types.Selection( { 
+      values: [ "custom", "recursive", "vertical", "horizontal", "direct" ], 
+      asKey: true 
+    } ), 
+    beginLabel : Canvas2D.Types.Text, 
+    centerLabel: Canvas2D.Types.Text, 
+    endLabel   : Canvas2D.Types.Text,
+
+    routeStyle : Canvas2D.Types.Selection( {
+      values: [ "corner", "tree", "recursive", "direct" ]
+    } ), 
+    routeBegin : Canvas2D.Types.Direction,
+    routeEnd   : Canvas2D.Types.Direction,
+    route      : Canvas2D.Types.Mapper( { 
+      extractFrom : ADL.Annotation,
+      map : "([a-zA-Z]+):([nesw]+)-([news]+)", 
+      to  : 
+      { 
+        routeStyle: Canvas2D.Types.Selection({
+          values: [ "corner", "tree", "recursive", "direct" ]
+        } ),
+        routeBegin: Canvas2D.Types.Direction, 
+        routeEnd  : Canvas2D.Types.Direction
+      } 
+    } ),
+    begin      : Canvas2D.Types.ConnectorHead,
+    end        : Canvas2D.Types.ConnectorHead
+  },
   libraries    : [ "Canvas2D" ]
 };
 

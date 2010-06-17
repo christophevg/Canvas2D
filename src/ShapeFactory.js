@@ -7,6 +7,7 @@ Canvas2D.ShapeFactory = {
 
       // TODO: REMOVE THIS ASAP !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       console.log( "WARNING: " + shape.getType() + ".from() is deprecated.");
+      console.log( "WARNING: using old FROM !!!" );
       return shape.from( construct, parent );
       // TODO: REMOVE THIS ASAP !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

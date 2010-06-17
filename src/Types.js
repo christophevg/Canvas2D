@@ -92,7 +92,7 @@ Canvas2D.Types = {
   Selection : Canvas2D.TypeFactory.createType( 
     {
       _construct : function _constructSelection(config) {
-        this._values = config.values;
+        this._values      = config.values;
         this.extractAsKey = config.asKey;
       },
 
@@ -107,6 +107,8 @@ Canvas2D.Types = {
       _construct : function _constructMapper(config) {
         this._regexp = config.map;
         this._props  = $H(config.to);
+        if( config.extractFrom ) { this.extractFrom  = config.extractFrom; }
+        if( config.asKey       ) { this.extractAsKey = config.asKey;       }
       },
 
       obsoletes : function obsoletesMapper() {
@@ -122,7 +124,7 @@ Canvas2D.Types = {
         var retval = {};
         var c = 1;
         this._props.iterate( function(propName, propType) {
-          retval[propName] = propType.sanitize(result[c++]);
+          retval[propName] = propType.unpack(propName, propType.sanitize(result[c++]))[propName];
         } );
         return retval;
       },
@@ -152,6 +154,35 @@ Canvas2D.Types = {
         return value.isFunction();
       }
     }
+  ),
+  
+  Shape : Canvas2D.TypeFactory.createType(
+    {
+      validate: function validateShape(shapeName) {
+        return this.parent instanceof Canvas2D.Sheet && 
+               $H(this.parent.shapesMap).keys().contains(shapeName);
+      },
+      
+      unpack: function unpackShape(prop, value) {
+        var result = {};
+        result[prop] = this.parent.shapesMap[value];
+        return result;
+      }
+    }
+  ),
+  
+  ConnectorHead : Canvas2D.TypeFactory.createType(
+    {
+      validate: function validateConnectorHead(name) {
+        return $H(Canvas2D.CustomConnectors).keys().contains(name);
+      },
+      
+      unpack: function unpackConnectorHead(prop, value) {
+        var result = {};
+        result[prop] = Canvas2D.CustomConnectors[value]
+        return result;
+      }
+    }
   )
 };
 
@@ -159,4 +190,13 @@ Canvas2D.Types = {
 
 Canvas2D.Types.FontDecoration = Canvas2D.Types.Selection(
   { values: [ "underline", "overline", "line-through", "none" ] } 
+);
+
+Canvas2D.Types.LineStyle = Canvas2D.Types.Selection(
+  { values: [ "solid", "dashed", "none" ] } 
+);
+
+Canvas2D.Types.Direction = Canvas2D.Types.Selection(
+  { values: [ "n", "nne", "ne", "ene", "e", "ese", "se", "sse",
+              "s", "ssw", "sw", "wsw", "w", "wnw", "nw", "nnw"  ] }
 );
