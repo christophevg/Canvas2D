@@ -1,5 +1,5 @@
 Canvas2D.KickStart = { 
-  triggers: [ "Canvas2D" ], // list of CSS classnames that trigger KickStarting
+  triggers: [ "Canvas2D" ] // list of CSS classnames that trigger KickStarting
 };
 
 Canvas2D.KickStart.Starter = Class.extend( {
@@ -20,8 +20,6 @@ Canvas2D.KickStart.Starter = Class.extend( {
     for(var c=0; c<htmlCanvases.length; c++ ) {
       var htmlCanvas = htmlCanvases[c];
       var classes = htmlCanvas.className;
-      Canvas2D.KickStart.triggers
-
       if( classes.containsOneOf(Canvas2D.KickStart.triggers) ) {
         var name = htmlCanvas.id;
         var book = this.makeInstance(htmlCanvas);

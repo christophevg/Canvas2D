@@ -94,8 +94,8 @@ Canvas2D.Grow = Class.extend( {
   },
 
   handleResize: function handleResize() {
-    this.element.width  = parseInt(this.element.parentElement.clientWidth) - this.padding;
-    this.element.height = parseInt(this.element.parentElement.clientHeight) - this.padding * 2;
+    this.element.width  = parseInt(this.element.parentNode.clientWidth) - this.padding;
+    this.element.height = parseInt(this.element.parentNode.clientHeight) - this.padding * 2;
     this.canvas.rePublish();
   }
 } );
