@@ -15,11 +15,12 @@
   <script type="text/javascript">
     // This is the default configuration. which can be overriden
     Canvas2D.Viewer.config = {
-      repository : "./",
+      repository : "./repo.php?id=",
       canvas     : "C2D_Viewer",
       navigator  : "C2D_Navigator",
       info       : "C2D_Info"
     };
+    Canvas2D.Repository.addRepository( "php", "./repo.php?id=" );
   </script>
 </head>
 
@@ -39,7 +40,7 @@
   </div>
 
   <div id="viewerPane" class="viewer pane">
-    <canvas id="C2D_Viewer" class="Canvas2D"></canvas>
+    <canvas id="C2D_Viewer" class="Canvas2D withRepo:php"></canvas>
   </div>
 
   <script type="text/javascript">

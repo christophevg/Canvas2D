@@ -1,9 +1,20 @@
 Canvas2D.TabbedCanvas = Class.extend( {
-  init: function(book) {
+  init: function init(book) {
     this.book = book;
   },
+  
+  activate: function activate() {
+    var classes = this.book.HTMLElement.className;
+    if( classes.contains("Tabbed") ) {
+      var tabs = [];
+      if(classes.contains("withSource" )){ tabs.push("source" ); }
+      if(classes.contains("withConsole")){ tabs.push("console"); }
+      if(classes.contains("withAbout"  )){ tabs.push("about"  ); }
+      this.book.makeTabbed(tabs); 
+    }
+  },
 
-  makeTab: function(name, height, content) {
+  makeTab: function makeTab(name, height, content) {
     var tab = document.createElement("div");
     tab.className = "tabbertab";
     tab.style.height = ( 4 + parseInt(height,10) ) + "px";
@@ -15,7 +26,7 @@ Canvas2D.TabbedCanvas = Class.extend( {
     return tab;
   },
 
-  getAboutTab: function() {
+  getAboutTab: function getAboutTab() {
     var width  = this.book.canvas.canvas.width;
     var height = this.book.canvas.canvas.height;
     var about  = document.createElement("div");
@@ -46,7 +57,7 @@ Canvas2D.TabbedCanvas = Class.extend( {
     return this.makeTab("About", height, about );
   },
 
-  getConsoleTab: function() {
+  getConsoleTab: function getConsoleTab() {
     var width  = this.book.canvas.canvas.width;
     var height = this.book.canvas.canvas.height;
     this.book.console = document.createElement("textarea");
@@ -57,7 +68,7 @@ Canvas2D.TabbedCanvas = Class.extend( {
     return this.makeTab("Console", height, this.book.console );
   },
 
-  getSourceTab: function() {
+  getSourceTab: function getSourceTab() {
     var width    = this.book.canvas.canvas.width;
     var height   = this.book.canvas.canvas.height;
     var oldValue = this.book.generated ? this.book.generated.value : "";
@@ -70,7 +81,7 @@ Canvas2D.TabbedCanvas = Class.extend( {
     return this.makeTab("Source", height, this.book.generated );
   },
 
-  applyTabber: function() {
+  applyTabber: function applyTabber() {
     var source = this.book.canvas.canvas;
 
     this.tabber = document.createElement("div");
@@ -89,7 +100,7 @@ Canvas2D.TabbedCanvas = Class.extend( {
     this.tabber.appendChild(tab1);
   },
 
-  makeTabbed: function(tabs) {
+  makeTabbed: function makeTabbed(tabs) {
     if( !this.tabber ) { this.applyTabber(); }
     if( !Object.isArray(tabs) ) { return; }
 
@@ -105,21 +116,11 @@ Canvas2D.TabbedCanvas = Class.extend( {
     tabberAutomatic(); 
   },
 
-  activate: function activate(book, classes) {
-    if( classes.contains("Tabbed") ) {
-      var tabs = [];
-      if(classes.contains("withSource" )){ tabs.push("source" ); }
-      if(classes.contains("withConsole")){ tabs.push("console"); }
-      if(classes.contains("withAbout"  )){ tabs.push("about"  ); }
-      book.makeTabbed(tabs); 
-    }
-  },
-  
   getName: function getName() { return "TabbedCanvas"; }
 } );
 
-// expose makeTabbed functionality at the Book interface
-Canvas2D.Book.addPlugin( Canvas2D.TabbedCanvas, [ "makeTabbed" ] );
+Canvas2D.TabbedCanvas.getInstance = function getInstance(book) {
+  return new Canvas2D.TabbedCanvas(book);
+};
 
-// activate for each Canvas2D instance
-Canvas2D.KickStart.Starter.addPlugin( Canvas2D.TabbedCanvas );
+Canvas2D.Book.addPlugin( "TabbedCanvas", Canvas2D.TabbedCanvas, [ "makeTabbed" ] );

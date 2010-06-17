@@ -7,7 +7,7 @@ Canvas2D.ImageManager.load = function(src, onload) {
   Canvas2D.ImageManager.work++;
   image.onload = function() {
     Canvas2D.ImageManager.work--;
-    onload();
+    if( onload ) { onload(); }
   };
   image.src = src;
   return image;

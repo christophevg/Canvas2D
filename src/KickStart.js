@@ -23,14 +23,8 @@ Canvas2D.KickStart.Starter = Class.extend( {
       Canvas2D.KickStart.triggers
 
       if( classes.containsOneOf(Canvas2D.KickStart.triggers) ) {
-        
         var name = htmlCanvas.id;
         var book = this.makeInstance(htmlCanvas);
-
-        this.plugins.iterate(function(plugin) {
-          if( plugin.activate ) { plugin.activate(book, classes); }
-        });
-
         var sourceElement = document.getElementById(name+"Source");
         if( sourceElement ) {
           var source;
@@ -52,8 +46,6 @@ Canvas2D.KickStart.Starter = Class.extend( {
   getName: function getName() { return "KickStarter"; }
 } );
 
-
-Canvas2D.makePluggable(Canvas2D.KickStart.Starter);
 
 // add-in some common functionality
 ProtoJS.mix( 

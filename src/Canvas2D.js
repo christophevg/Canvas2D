@@ -75,23 +75,30 @@ var Canvas2D = {
   makePluggable : function makePluggable(shape) {
     // class level plugin registration
     shape.pluginClasses = [];
-    shape.addPlugin = function addPlugin(plugin, exposes) {
+    shape.addPlugin = function addPlugin(name, plugin, exposes) {
       exposes = exposes || [];
-      this.pluginClasses.push( { clazz: plugin, exposes: exposes } );
+      this.pluginClasses.push({name: name, clazz: plugin, exposes: exposes});
     };
     
     // instance level setup
     shape.prototype.setupPlugins = function setupPlugins() {
-      this.plugins = [];
+      this.plugins = $H();
       shape.pluginClasses.iterate(function(plugin) {
-        var pluginInst = new (plugin.clazz)(this);
-        this.plugins.push(pluginInst);
-        plugin.exposes.iterate(function(func) {
-          this[func] = function(arg1, arg2, arg3) { 
-            pluginInst[func](arg1, arg2, arg3);
-          };
-        }.scope(this) );
+        var pluginInst = plugin.clazz.getInstance(this);
+        if( pluginInst ) {
+          this.plugins.set(plugin.name, pluginInst);
+          plugin.exposes.iterate(function(func) {
+            this[func] = function(arg1, arg2, arg3) { 
+              pluginInst[func](arg1, arg2, arg3);
+            };
+          }.scope(this) );
+          if( pluginInst.activate ) { pluginInst.activate(); }
+        }
       }.scope(this) );
+    };
+    
+    shape.prototype.getPlugin = function getPlugin(name) {
+      return this.plugins.get(name);
     };
 
     // add setupPlugins as a Post-Init aspect

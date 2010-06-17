@@ -46,7 +46,8 @@ var scripts = [
     "src/plugins/Widget.js",
     "src/plugins/TabbedCanvas.js", 
     "src/plugins/AutoLayout.js", 
-    "src/plugins/Watermark.js"
+    "src/plugins/Watermark.js",
+    "src/plugins/Splash.js"
 ];
 
 function addScript(url) {

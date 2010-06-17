@@ -1,24 +1,37 @@
 Canvas2D.Watermark = Class.extend( {
-    afterPublish: function afterPublish(book) {
-      book.canvas.save();
-      book.canvas.fillStyle = "rgba(125,125,125,1)";
-      book.canvas.textDecoration = "none";
-      book.canvas.rotate(Math.PI/2);
-      var extensions = "";
-      book.extensions.iterate(function(key, value) { 
-        extensions += " + " + key; 
-      });
-      book.canvas.font = "6pt Sans-Serif";
-      book.canvas.textAlign = "left";
-      book.canvas.useCrispLines = false;
-      book.canvas.lineStyle = "solid";
-      book.canvas.fillText( "Canvas2D" + extensions + " / Christophe VG",
-      3, (book.canvas.canvas.width * -1) + 7 +
-      ( ProtoJS.Browser.IE ? 4 : 0 ) ); // if styleborder
-      book.canvas.restore();
-    },
+  init: function init(book) {
+    this.book = book;
+    this.book.on( "afterPublish", this.afterPublish.scope(this) );
+  },
 
-    getName: function getName() { return "WaterMark"; }
+  afterPublish: function afterPublish() {
+    this.book.canvas.save();
+    this.book.canvas.fillStyle = "rgba(125,125,125,1)";
+    this.book.canvas.textDecoration = "none";
+    this.book.canvas.rotate(Math.PI/2);
+    var extensions = "";
+    this.book.extensions.iterate(function(key, value) { 
+      extensions += " + " + key; 
+    });
+    this.book.canvas.font = "6pt Sans-Serif";
+    this.book.canvas.textAlign = "left";
+    this.book.canvas.useCrispLines = false;
+    this.book.canvas.lineStyle = "solid";
+    this.book.canvas.fillText( "Canvas2D" + extensions + " / Christophe VG",
+    3, (this.book.canvas.canvas.width * -1) + 7 +
+    ( ProtoJS.Browser.IE ? 4 : 0 ) ); // if styleborder
+    this.book.canvas.restore();
+  },
+
+  getName: function getName() { return "WaterMark"; }
 } );
 
-Canvas2D.Book.addPlugin( Canvas2D.Watermark );
+// one Watermarker for all Canvas2D instances is enough
+Canvas2D.Watermark.getInstance = function getInstance(book) {
+  if( !Canvas2D.Watermark.__instance__ ) {
+    Canvas2D.Watermark.__instance__ = new Canvas2D.Watermark(book);
+  }
+  return Canvas2D.Watermark.__instance__;
+};
+
+Canvas2D.Book.addPlugin( "Watermark", Canvas2D.Watermark );

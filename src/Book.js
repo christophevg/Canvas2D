@@ -15,6 +15,8 @@ Canvas2D.Book = Class.extend( {
     this.sheets       = [];
     this.currentSheet = 0;      // index of the current show sheet
 
+    this.loadFilters  = [];
+
     this.setupExtensions();
   },
 
@@ -68,7 +70,26 @@ Canvas2D.Book = Class.extend( {
   freeze: function() { this.wait = true;  },
   thaw: function()   { this.wait = false; },
 
-  load: function(source) {    
+  addLoadFilter: function addLoadFilter(filter) {
+    this.loadFilters.push(filter);
+  },
+
+  applyLoadFilters: function applyLoadFilters(input, filterIndex, onReadyHandler) {
+    if( filterIndex < this.loadFilters.length ) {
+      this.loadFilters[filterIndex].apply( input, function(result) {
+        this.applyLoadFilters(result, filterIndex+1, onReadyHandler);
+      }.scope(this) );
+    } else {
+      onReadyHandler(input);
+    }
+  },
+
+  load: function load(input) {
+    this.fireEvent("load");
+    this.applyLoadFilters(input, 0, this.show.scope(this));
+  },
+
+  show: function showLoaded(source) {
     var parser = new ADL.Parser();
     var tree;
     this.errors = "";
@@ -112,7 +133,7 @@ Canvas2D.Book = Class.extend( {
     if( this.rePublishNeeded && !this.wait ) {
       this.publishOnce();
       this.rePublishNeeded = false;
-      this.afterPublish();
+      this.fireEvent( "afterPublish" );
     }
 
     // reshedule publish in 10ms
@@ -124,32 +145,12 @@ Canvas2D.Book = Class.extend( {
     this.canvas.clear();
 
     if( this.getCurrentSheet() ) {
-      this.beforeRender();
+      this.fireEvent("beforeRender");
       this.getCurrentSheet().render();
-      this.afterRender();
+      this.fireEvent("afterRender");
     }
 
     this.log( "Canvas2D::publish: RenderTime: " + timer.stop() + "ms" );
-  },
-
-  afterPublish: function afterPublish() {
-    $H(this.plugins).iterate( function( name, plugin ) {
-      if( plugin.afterPublish ) { plugin.afterPublish(this); }
-    }.scope(this) );
-  },
-
-  beforeRender: function beforeRender() {
-    $H(this.plugins).iterate( function( name, plugin ) {
-      if( plugin.beforeRender ) { plugin.beforeRender(this); }
-    }.scope(this) );
-  },
-
-  afterRender: function afterRender() {
-    $H(this.plugins).iterate( function( plugin ) {
-      if( plugin.afterRender ) { plugin.afterRender(this); }
-    }.scope(this) );
-
-    this.updateExternalSource();
   },
 
   updateExternalSource: function updateExternalSource() {

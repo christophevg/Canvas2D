@@ -1,6 +1,8 @@
 Canvas2D.AutoLayout = Class.extend( {
   init: function(book) {
     this.book = book;
+    this.book.on( "beforeRender", this.beforeRender.scope(this) );
+    this.book.on( "afterPublish", this.beforeRender.scope(this) );
     this.active = false;
   },
 
@@ -68,7 +70,11 @@ Canvas2D.AutoLayout = Class.extend( {
   getName: function getName() { return "AutoLayout"; }
 } );
 
-Canvas2D.Book.addPlugin( Canvas2D.AutoLayout, [ "autoLayout" ] );
+Canvas2D.AutoLayout.getInstance = function getInstance(book) {
+  return new Canvas2D.AutoLayout(book);
+};
+
+Canvas2D.Book.addPlugin( "AutoLayout", Canvas2D.AutoLayout, [ "autoLayout" ] );
 
 var ForceLayoutStrategy = Class.extend( {
   init: function initialize(config) {
