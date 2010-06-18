@@ -183,6 +183,55 @@ Canvas2D.Types = {
 	      return regexp.test(url);
       }
     }
+  ),
+
+  Position : Canvas2D.TypeFactory.createType(
+    {
+      validate: function validatePosition(value) {
+        return value.match(/-?[0-9\.]+,-?[0-9\.]+/); // FIXME: improve ;-)
+      },
+
+      unpack: function unpackPosition(prop, value) {
+        var values = value.split(",");
+        var props = {};
+        props[prop] = {
+          left: parseFloat(values[0]),
+          top: parseFloat(values[1])
+        };
+        return props;
+      }
+    }
+  ),
+
+  List : Canvas2D.TypeFactory.createType(
+    {
+      _construct : function _constructList(type) {
+        this.type = type;
+      },
+
+      validate: function validateList(value) {
+        this.values = value.split(";");
+        var isValid = true;
+        this.values.iterate(function(listValue) {
+          if( ! this.type.validate(listValue) ) { isValid = false; }
+        }.scope(this) );
+        return isValid;
+      },
+
+      unpack: function unpackList(prop, value) {
+        // validate has been called normally, which has already split value
+        // into values, just check to be sure ;-)
+        if( ! this.values ) { this.validate(value); }
+        var listValues = [];
+        this.values.iterate( function(value) {
+          var tmp = this.type.unpack(prop, value);
+          listValues.push( tmp[prop] );
+        }.scope(this) );
+        var props = {};
+        props[prop] = listValues;
+        return props;
+      }
+    }
   )
 };
 

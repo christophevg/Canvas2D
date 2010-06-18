@@ -1,125 +1,62 @@
 Canvas2D.LinePath = Canvas2D.Shape.extend( {
-  getWidth : function() { return this.dx; },
-  getHeight: function() { return this.dy; },
-
-  getStart : function() { return this.start; },
-  getMoves : function() { return this.moves; },
-
-  preprocess : function(props) {
-    if( props.start ) {
-      var parts = props.start.split(",");
-      props.start = { left:parseInt(parts[0],10), top:parseInt(parts[1],10) };
-    } else {
-      props.start = { left:0, top:0 };
-    }
-    if( props.moves ) {
-      var moves = [];
-      var dx = max(0,props.start.left);
-      var dy = max(0,props.start.top );
-
-      props.moves.split(";").iterate( function(move) {
-        var parts = move.split(",");
-        moves.push( {dx:parseInt(parts[0],10), dy:parseInt(parts[1],10)} );
-        dx = max(dx, dx + parseInt(parts[0],10));
-        dy = max(dy, dy + parseInt(parts[1],10));
-      });
-      props.moves = moves;
-      props.dx    = dx;
-      props.dy    = dy;
-    }
-    return props;
+  afterInit: function afterInit() {
+    this.offsets = this.getOffsets();
   },
 
-  draw: function(sheet, left, top) {
-    sheet.beginPath();
+  draw: function draw(sheet, left, top) {
     sheet.strokeStyle = this.getColor();
-    sheet.lineWidth = this.getLineWidth();
-    sheet.lineStyle = this.getLineStyle();
+    sheet.lineWidth   = this.getLineWidth();
+    sheet.lineStyle   = this.getLineStyle();
 
-    left += this.start.left;
-    top  += this.start.top;
+    // determine offsets
+    var width = this.getWidth();
+    var height = this.getHeight();
+
+    sheet.beginPath();
+    left -= this.offsets.left;
+    top  -= this.offsets.top;
     sheet.moveTo(left, top);
     this.getMoves().iterate( function(move) {
-      left = left + move.dx;
-      top  = top  + move.dy;
+      left = left + move.left;
+      top  = top  + move.top;
       sheet.lineTo(left, top);
     } );
     sheet.stroke();
-
     sheet.closePath();
   },
-
-  hit: function(x,y) { 
-    return ( this.getWidth() >= x && this.getHeight() >= y ); 
+  
+  getOffsets: function getOffsets() {
+    var x = 0, left = 0, right = 0;
+    var y  = 0, top  = 0, bottom  = 0;
+    this.getMoves().iterate(function(move) {
+      x += move.left;
+      y  += move.top;
+      if( x < left   ) { left   = x; };
+      if( x > right  ) { right  = x; };
+      if( y < top    ) { top    = y; };
+      if( y > bottom ) { bottom = y; };
+    });
+    return { left: left, right: right, top: top, bottom: bottom }
   },
-
-  hitArea: function(left, top, right, bottom) { 
-    return ! ( 0 > right      ||
-      this.getWidth() < left  ||
-      0 > bottom              ||
-      this.getHeight() < top 
-    );
+  
+  getWidth: function getWidth() {
+    return this.offsets.right - this.offsets.left;
   },
-
-  getCenter: function() {
-    return { left: this.getWidth()  / 2, top:  this.getHeight() / 2 };
-  },
-
-  getPort: function(side) {
-    switch(side) {
-      case "n": case "north":  
-      return { top : 0,                left: this.getWidth() / 2 };
-      case "s": case "south":  
-      return { top : this.getHeight(), left: this.getWidth() / 2 };
-      case "e": case "east":
-      return { top : this.getHeight() / 2, left: this.getWidth() };
-      case "w": case "west":
-      return { top : this.getHeight() / 2, left: 0               };
-    }
-  },
-
-  getGeo: function() {
-    return this.getWidth() && this.getHeight() ?
-    this.getWidth() + "x" + this.getHeight() : null;
-  },
-
-  asConstruct: function() {
-    var construct = this._super();
-    construct.addModifiers( [ "geo", "color" ] );
-    return construct;
+  
+  getHeight: function getHeight() {
+    return this.offsets.bottom - this.offsets.top;
   }
 } );
 
-Canvas2D.LinePath.from = function( construct, sheet ) {
-  var props = { name: construct.name };
-  construct.modifiers.iterate(function(key, value) {
-    value = ( value.value ? value.value.value : "" );
-
-    if( key == "dx" || key == "dy" || key == "lineWidth" ) {
-      value = parseInt(value,10);
-    } else if( value == "" ) {
-      value = key;
-      key = "color";
-    }
-
-    props[key] = value;
-  } );
-
-  return new Canvas2D.LinePath(props);
-};
-
 Canvas2D.LinePath.MANIFEST = {
-  name       : "linepath",
-  properties : [ "dx", "dy", "start", "moves", "color", "lineWidth", "lineStyle" ],
-  libraries  : [ "Canvas2D" ]
+  name         : "linepath",
+  properties   : {
+     moves : Canvas2D.Types.List(Canvas2D.Types.Position) // RelativePosition
+  },
+  propertyPath : [ Canvas2D.Line ],
+  libraries    : [ "Canvas2D" ]
 };
+
+Canvas2D.LinePath.Defaults = {};
 
 Canvas2D.registerShape( Canvas2D.LinePath );
-
-Canvas2D.LinePath.Defaults = {
-  lineWidth      : 1,
-  lineStyle      : "solid",
-  labelPos       : "center",
-  labelColor     : "black",
-  color          : "black"
-};
