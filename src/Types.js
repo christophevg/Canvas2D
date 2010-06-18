@@ -115,8 +115,14 @@ Canvas2D.Types = {
         var retval = {};
         var c = 1;
         this._props.iterate( function(propName, propType) {
-          retval[propName] = propType.unpack(propName, propType.sanitize(result[c++]))[propName];
-        } );
+          propType.setParent(this.getParent());
+          if( propType.validate(result[c]) ) {
+            retval[propName] = propType.unpack(propName, propType.sanitize(result[c]))[propName];
+          } else {
+            console.log( "invalid : " + propName + " = " + result[c] );
+          }
+          c++;
+        }.scope(this) );
         return retval;
       },
 
@@ -150,13 +156,12 @@ Canvas2D.Types = {
   Shape : Canvas2D.TypeFactory.createType(
     {
       validate: function validateShape(shapeName) {
-        return this.parent instanceof Canvas2D.Sheet && 
-               $H(this.parent.shapesMap).keys().contains(shapeName);
+        return $H(this.getParent().getContainer().shapesMap).keys().contains(shapeName);
       },
       
       unpack: function unpackShape(prop, value) {
         var result = {};
-        result[prop] = this.parent.shapesMap[value];
+        result[prop] = this.getParent().getContainer().shapesMap[value];
         return result;
       }
     }
@@ -237,19 +242,27 @@ Canvas2D.Types = {
 
 // extended Types
 
-Canvas2D.Types.FontDecoration = Canvas2D.Types.Selection(
-  { values: [ "underline", "overline", "line-through", "none" ] } 
+Canvas2D.Types.FontDecoration = Canvas2D.TypeFactory.extend( 
+    Canvas2D.Types.Selection(
+      { values: [ "underline", "overline", "line-through", "none" ] } 
+    )
 );
 
-Canvas2D.Types.LineStyle = Canvas2D.Types.Selection(
-  { values: [ "solid", "dashed", "none" ] } 
+Canvas2D.Types.LineStyle = Canvas2D.TypeFactory.extend(
+  Canvas2D.Types.Selection(
+    { values: [ "solid", "dashed", "none" ] }
+  )
 );
 
-Canvas2D.Types.Direction = Canvas2D.Types.Selection(
-  { values: [ "n", "nne", "ne", "ene", "e", "ese", "se", "sse",
-              "s", "ssw", "sw", "wsw", "w", "wnw", "nw", "nnw"  ] }
+Canvas2D.Types.Direction = Canvas2D.TypeFactory.extend(
+  Canvas2D.Types.Selection(
+    { values: [ "n", "nne", "ne", "ene", "e", "ese", "se", "sse",
+                "s", "ssw", "sw", "wsw", "w", "wnw", "nw", "nnw"  ] }
+  )
 );
 
-Canvas2D.Types.Align = Canvas2D.Types.Selection(
-  { values: [ "left", "center", "right", "top", "middle", "bottom" ] }
+Canvas2D.Types.Align = Canvas2D.TypeFactory.createType(
+  Canvas2D.Types.Selection(
+    { values: [ "left", "center", "right", "top", "middle", "bottom" ] }
+  )
 );

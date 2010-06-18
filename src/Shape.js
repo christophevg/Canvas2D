@@ -1,5 +1,8 @@
 Canvas2D.Shape = Class.extend( {
   init: function initialize( props ) {
+    // reference to our parent shape
+    this.__parent = props.__parent;
+    
     // beforeInit is used to allow Shapes to preprocess the
     // properties before they are automatically initialized
     props = this.beforeInit(props || {});
@@ -13,14 +16,10 @@ Canvas2D.Shape = Class.extend( {
     this.afterInit();
   },
 
-  setParent: function setParent(parent) {
-    this.parent = parent;
+  getContainer: function getContainer() {
+    return this.__parent.getContainer();
   },
-
-  getParent: function getParent() {
-    return this.parent;
-  },
-
+  
   setProperties : function setProperties(props) {
     // process each property in the propertyList
     this.getPropertyList().iterate(
@@ -245,32 +244,32 @@ ProtoJS.mix(
 Canvas2D.Shape.MANIFEST = {
   name : "shape",
   properties: {
-    name               : Canvas2D.Types.Name,
-    width              : Canvas2D.Types.Size,
-    height             : Canvas2D.Types.Size,
-    label              : Canvas2D.Types.Text,
-    labelPos           : Canvas2D.Types.Align,
-    labelColor         : Canvas2D.Types.Color,
-    labelAlign         : Canvas2D.Types.Align,
-    labelFont          : Canvas2D.Types.Font,
-    labelUseCrispLines : Canvas2D.Types.Switch,
-    useCrispLines      : Canvas2D.Types.Switch,
+    name               : Canvas2D.Types.Name(),
+    width              : Canvas2D.Types.Size(),
+    height             : Canvas2D.Types.Size(),
+    label              : Canvas2D.Types.Text(),
+    labelPos           : Canvas2D.Types.Align(),
+    labelColor         : Canvas2D.Types.Color(),
+    labelAlign         : Canvas2D.Types.Align(),
+    labelFont          : Canvas2D.Types.Font(),
+    labelUseCrispLines : Canvas2D.Types.Switch(),
+    useCrispLines      : Canvas2D.Types.Switch(),
     geo                : Canvas2D.Types.Mapper( 
       { 
         map : "([0-9]+)x([0-9]+)", 
         to  : 
         { 
-          width  : Canvas2D.Types.Size, 
-          height : Canvas2D.Types.Size 
+          width  : Canvas2D.Types.Size(), 
+          height : Canvas2D.Types.Size() 
         } 
       }
     ),
-    isSelectable      : Canvas2D.Types.Switch,
-    isVisible         : Canvas2D.Types.Switch,
-    hideSelection     : Canvas2D.Types.Switch,
-    onMouseDown       : Canvas2D.Types.Handler,
-    onMouseUp         : Canvas2D.Types.Handler,
-    onMouseDrag       : Canvas2D.Types.Handler
+    isSelectable      : Canvas2D.Types.Switch(),
+    isVisible         : Canvas2D.Types.Switch(),
+    hideSelection     : Canvas2D.Types.Switch(),
+    onMouseDown       : Canvas2D.Types.Handler(),
+    onMouseUp         : Canvas2D.Types.Handler(),
+    onMouseDrag       : Canvas2D.Types.Handler()
   }
 };
 

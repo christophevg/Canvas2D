@@ -1,4 +1,8 @@
 Canvas2D.Sheet = Canvas2D.Shape.extend( {
+  getContainer: function getContainer() {
+    return this;
+  },
+
   setCanvas: function setCanvas(canvas) {
     this.canvas = canvas;
     this.wireCanvasDelegation();
@@ -171,7 +175,7 @@ Canvas2D.Sheet.Operations = [
 Canvas2D.Sheet.MANIFEST = {
   name      : "sheet",
   properties : {
-    book  : Canvas2D.Types.Parent,
+    book  : Canvas2D.Types.Parent(),
     style : Canvas2D.Types.Selection( 
       { values: [ "static", "dynamic" ], asKey: true } 
     )

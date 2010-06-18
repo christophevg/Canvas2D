@@ -1,13 +1,16 @@
 Canvas2D.TypeFactory = {
   _baseType : Class.extend( {
+    _construct: function _construct(data) {},
     hasGenerator: function hasGenerator() { return this.generate != null; },
     hasGetter: function hasGetter() { return this.createGetter != null; },
     obsoletes: function obsoletes() { return []; },
     extractFrom : ADL.Modifier,
     extractAsKey : false,
     validate: function validate(value) { return false; },
+    setParent: function setParent(parent) { this._parent = parent; },
+    getParent: function getParent() { return this._parent },
     extract : function extract(props, prop, construct, parent) {
-      this.parent = parent; // normally this will be a sheet
+      this.setParent(parent);
       if( this.extractFrom == ADL.Modifier ) {
         this._extractModifier(props, prop, construct);
       } else if( this.extractFrom == ADL.Annotation ) {
@@ -67,20 +70,17 @@ Canvas2D.TypeFactory = {
     }
   } ),
 
-  createType: function(specifics) {
-    var newType = this._createSimpleType(specifics);
-    if( newType.prototype._construct ) {
-      return function(data) { 
-        var instance = new newType(); 
-        instance._construct(data);
-        return instance;
-      };
-    }
-    return new newType();
+  extend: function(builder) {
+    return function() { return builder; };
   },
 
-  _createSimpleType: function _createSimpleType(type) {
-    type = type || {};
-    return Canvas2D.TypeFactory._baseType.extend( type );
+  createType: function(specifics) {
+    specifics = specifics || {};
+    var newType = Canvas2D.TypeFactory._baseType.extend( specifics );
+    return function(data) { 
+      var instance = new newType(); 
+      if( data ) { instance._construct(data); }
+      return instance;
+    };
   }
 };

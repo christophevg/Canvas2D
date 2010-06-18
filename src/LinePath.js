@@ -51,7 +51,7 @@ Canvas2D.LinePath = Canvas2D.Shape.extend( {
 Canvas2D.LinePath.MANIFEST = {
   name         : "linepath",
   properties   : {
-     moves : Canvas2D.Types.List(Canvas2D.Types.Position) // RelativePosition
+     moves : Canvas2D.Types.List(Canvas2D.Types.Position()) // RelativePosition
   },
   propertyPath : [ Canvas2D.Line ],
   libraries    : [ "Canvas2D" ]

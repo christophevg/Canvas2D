@@ -12,7 +12,7 @@ Canvas2D.ShapeFactory = {
       // TODO: REMOVE THIS ASAP !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     } else {
-      var props = {};
+      var props = { __parent: parent };
       shape.getPropertiesConfig().iterate(
         function(prop, type) {
           type.extract(props, prop, construct, parent);
