@@ -25,4 +25,7 @@
                 +arrowHeadWidth=10  +arrowHeadHeight=25
                 +lineColor="blue"   +fillColor="red"
                 +lineWidth=4;
+
+  [@250,10]
+  image myImage +src="../test.png";
 }
