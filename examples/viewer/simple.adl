@@ -19,4 +19,9 @@
 
   [@direct:wsw-ssw]
   connector conn2 +rect2-rect1 +end="Triangle";
+
+  [@30,30] Arrow myArrow +width=50 +height=10 
+                         +lineColor="blue"   +fillColor="red"
+  			 			 +lineWidth=4
+  			 			 +arrowHeadWidth=10  +arrowHeadHeight=25;
 }

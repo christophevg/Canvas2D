@@ -260,8 +260,8 @@ Canvas2D.Shape.MANIFEST = {
         map : "([0-9]+)x([0-9]+)", 
         to  : 
         { 
-          "width"  : Canvas2D.Types.Size, 
-          "height" : Canvas2D.Types.Size 
+          width  : Canvas2D.Types.Size, 
+          height : Canvas2D.Types.Size 
         } 
       }
     ),

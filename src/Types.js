@@ -41,15 +41,6 @@ Canvas2D.Types = {
     }
   ),
 
-  Align  : Canvas2D.TypeFactory.createType(
-    {
-      validate: function validateAlign(value) {
-        return [ "left", "center", "right", "top", "middle", "bottom" ]
-        .contains(value);
-      }
-    }
-  ),
-
   Color  : Canvas2D.TypeFactory.createType(
     {
       // TODO add http://www.w3schools.com/html/html_colornames.asp
@@ -199,4 +190,8 @@ Canvas2D.Types.LineStyle = Canvas2D.Types.Selection(
 Canvas2D.Types.Direction = Canvas2D.Types.Selection(
   { values: [ "n", "nne", "ne", "ene", "e", "ese", "se", "sse",
               "s", "ssw", "sw", "wsw", "w", "wnw", "nw", "nnw"  ] }
+);
+
+Canvas2D.Types.Align = Canvas2D.Types.Selection(
+  { values: [ "left", "center", "right", "top", "middle", "bottom" ] }
 );
