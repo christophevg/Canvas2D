@@ -21,13 +21,13 @@
   connector conn2 +rect2-rect1 +end="Triangle";
 
   [@30,30]
-  arrow myArrow +width=50           +height=30
-                +arrowHeadWidth=10  +arrowHeadHeight=25
-                +lineColor="blue"   +fillColor="red"
-                +lineWidth=4;
+  arrow arrow1 +width=50           +height=30
+               +arrowHeadWidth=10  +arrowHeadHeight=25
+               +lineColor="blue"   +fillColor="red"
+               +lineWidth=4;
 
   [@250,10]
-  image myImage +src="../test.png";
+  image image1 +src="../test.png";
 
   [@375,50]
   line line1 +width=100 +height=75
@@ -35,5 +35,10 @@
              +lineWidth=3 +lineStyle="dashed";
 
   [@300,125]
-  linePath lines +moves="50,0;0,50;-100,0;0,-100;150,0";
+  linePath linePath1 +moves="50,0;0,50;-100,0;0,-100;150,0";
+  
+  [@50,210] 
+  Text text1 +textDecoration="underline overline line-through"
+             +color="purple"
+             := "Default Font with all Decorations";
 }

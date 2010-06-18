@@ -1,6 +1,9 @@
 Canvas2D.TypeFactory = {
   _baseType : Class.extend( {
-    _construct: function _construct(data) {},
+    _construct: function _construct(data) {
+      // TODO: make more generic
+      if( data.extractFrom ) { this.extractFrom = data.extractFrom; }
+    },
     hasGenerator: function hasGenerator() { return this.generate != null; },
     hasGetter: function hasGetter() { return this.createGetter != null; },
     obsoletes: function obsoletes() { return []; },
@@ -15,6 +18,8 @@ Canvas2D.TypeFactory = {
         this._extractModifier(props, prop, construct);
       } else if( this.extractFrom == ADL.Annotation ) {
         this._extractAnnotation(props, prop, construct);
+      } else if( this.extractFrom == "ADL.Value" ) { // FIXME ;-)
+        props[prop] = construct.value.value;
       } else if( this.extractFrom == "name" ) {
         props[prop] = construct.name;
       } else if( this.extractFrom == "parent" ) {
