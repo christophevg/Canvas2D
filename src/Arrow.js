@@ -1,40 +1,43 @@
 Canvas2D.Arrow = Canvas2D.Rectangle.extend( {
-  draw: function(sheet, left, top) {
+  draw: function draw(sheet, left, top) {
     // rect
     sheet.useCrispLines = this.getUseCrispLines();
     sheet.lineWidth     = this.getLineWidth();
     sheet.strokeStyle   = this.getLineColor();
     sheet.fillStyle     = this.getFillColor();
 
-    sheet.fillRect( left, 
-      top, 
-      this.getWidth() - this.getArrowHeadWidth(), 
-      this.getHeight() 
-    );
-    sheet.strokeRect( left, 
-      top, 
-      this.getWidth() - this.getArrowHeadWidth(), 
-      this.getHeight() 
-    );
+    /**           w
+     *      <------------> 
+     *                aw
+     * l,t  +       <---->
+     *    ^         3        ^  ah
+     *    | 1       2        V
+     * h  |              4   
+     *    | 7       6
+     *    v         5
+     */
+    var aw = this.getArrowHeadWidth();
+    var ah = this.getArrowHeadHeight();
+    var start = 
+      { left: 0,               top: ah               }; // 1
+    var points = [
+      { left: this.width - aw, top: ah               }, // 2
+      { left: this.width - aw, top: 0                }, // 3
+      { left: this.width,      top: this.height / 2  }, // 4
+      { left: this.width - aw, top: this.height      }, // 5
+      { left: this.width - aw, top: this.height - ah }, // 6
+      { left: 0,               top: this.height - ah }  // 7
+    ];
 
-    // arrow head
     sheet.beginPath();
-
-    sheet.moveTo(left + this.getWidth() - this.getArrowHeadWidth(), top);
-
-    sheet.lineTo(left + this.getWidth() - this.getArrowHeadWidth(), 
-    top + (this.getHeight() / 2) - (this.getArrowHeadHeight() / 2));
-    sheet.lineTo(left + this.getWidth(), 
-    top + (this.getHeight() / 2));
-    sheet.lineTo(left + this.getWidth() - this.getArrowHeadWidth(), 
-    top + (this.getHeight() / 2) + (this.getArrowHeadHeight() / 2));
-
+    sheet.moveTo( left + start.left, top + start.top );
+    points.iterate( function(point) {
+      sheet.lineTo( left + point.left, top + point.top );
+    } );
     sheet.closePath();
-
     sheet.stroke();
     sheet.fill();
   }
-
 } );
 
 Canvas2D.Arrow.MANIFEST = {

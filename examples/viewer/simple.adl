@@ -8,20 +8,21 @@
 
   [@corner:ene-nne]
   connector conn1 +lineColor="red"
-				  +lineStyle="dashed"
-				  +lineWidth=5
-				  +from="rect1" +to="rect2"
-				  +routing="vertical"
-				  +beginLabel="begin"
-				  +centerLabel="center"
-				  +endLabel="end"
-				  +end="Triangle";
+                  +lineStyle="dashed"
+                  +lineWidth=5
+                  +from="rect1" +to="rect2"
+                  +routing="vertical"
+                  +beginLabel="begin"
+                  +centerLabel="center"
+                  +endLabel="end"
+                  +end="Triangle";
 
   [@direct:wsw-ssw]
   connector conn2 +rect2-rect1 +end="Triangle";
 
-  [@30,30] Arrow myArrow +width=50 +height=10 
-                         +lineColor="blue"   +fillColor="red"
-  			 			 +lineWidth=4
-  			 			 +arrowHeadWidth=10  +arrowHeadHeight=25;
+  [@30,30]
+  Arrow myArrow +width=50           +height=30
+                +arrowHeadWidth=10  +arrowHeadHeight=25
+                +lineColor="blue"   +fillColor="red"
+                +lineWidth=4;
 }
