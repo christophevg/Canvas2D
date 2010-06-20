@@ -2,11 +2,8 @@ HTML, BODY {
   margin: 0px;
   border: 0px;
   overflow: hidden;
-}
-
-CANVAS {
-  background-color: white;
-  border: 1px solid #777;
+  font-family: 'Lucida Grande';
+  font-size: 11px;
 }
 
 .pane {
@@ -15,36 +12,42 @@ CANVAS {
 }
 
 .header {
+  height: 25px;
   font-size: 16pt;
   padding-bottom: 0px;
-  height: 25px;
 }
 
-.inspector {
+.left {
   float: left;
-  width: 250px;
+  width: 260px;
 }
 
-.navigator {
-  background-color: white;
-  border: 1px solid #777;
-  overflow: auto;
-}
-
-.navigator UL {
+.right {
+  margin-left: 280px;
   padding-left: 0px;
-  list-style-type: none;
 }
 
-.info {
-  background-color: white;
-  border: 1px solid #777;
-  height: 150px;
-  overflow: auto;
+.top {
+}
+
+.bottom {
   margin-top: 10px;
 }
 
-.viewer {
-  margin-left: 270px;
-  padding-left: 0px;
+.content {
+  width: 100%;
+  background-color: white;
+  border: 1px solid #777;
+}
+
+.content UL {
+  padding-left: 10px;
+  list-style-type: none;
+}
+
+.content.bottom TEXTAREA {
+  padding: 0px;
+  width: 100%;
+  border: none;
+  height: 140px;
 }

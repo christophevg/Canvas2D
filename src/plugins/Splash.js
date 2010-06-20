@@ -40,7 +40,7 @@ Canvas2D.Splash.Overlay = Class.extend( {
     this.message.style.marginBottom = "20px";
     this.overlay.appendChild( this.message );
     this.overlay.appendChild( this.image );
-    document.body.appendChild(this.overlay);
+    document.body.appendChild( this.overlay );
   },
   
   show: function show(msg) {

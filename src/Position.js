@@ -5,12 +5,10 @@ Canvas2D.Position = Class.extend( {
     this.top   = top  || null;
   },
 
-  toADL: function(prefix) {
-    var loc = "";
-    if( this.getLeft() != null && this.getTop() != null ) {
-      loc = prefix + "[@" + this.getLeft() + "," + this.getTop() + "]\n";
-    }
-    return loc + this.shape.toADL(prefix);
+  asConstruct: function asConstruct() {
+    var construct = this.shape.asConstruct();
+    construct.annotation = new ADL.Annotation( this.getLeft() + "," + this.getTop() );
+    return construct;
   },
 
   getLeft: function() { return this.left; },

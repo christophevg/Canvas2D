@@ -59,81 +59,9 @@ Canvas2D.Shape = Class.extend( {
     return retVal;
   },
 
-  toADL: function(prefix) {
-    return this.constructToString(this.asConstruct(), prefix);
-  },
-
   asConstruct: function() {
-    var construct =  
-    { __SHAPE__   : this,
-      annotation  : { data: null },
-      type        : this.getType(),
-      name        : this.getName(),
-      supers      : [],
-      modifiers   : {},
-      children    : [],
-      addModifiers: function( props ) {
-        var remove = [];
-        props.iterate( function(prop, config) {
-          if( prop == "name" ) { return; }
-          if( this.__SHAPE__.getProperty( prop ) ) {
-            this.addModifier( prop, this.__SHAPE__.getProperty(prop) );
-          }
-          remove = remove.concat(config.obsoletes());
-        }.scope(this) );
-        remove.iterate(function(modifier) { 
-          delete this.modifiers[modifier];
-        }.scope(this) );
-      },
-      addModifier : function( key, value ) {
-        if( this.__SHAPE__.getPropertyDefault( key ) != value ) {
-          if( typeof value == "boolean" ) {
-            if( value ) {
-              this.modifiers[key] = null;
-            } else {
-              this.modifiers[key] = "false";
-            }
-          } else if( value.isNumber() ) {
-            this.modifiers[key] = value;
-          } else {
-            this.modifiers[key] = "\"" + value + "\"";
-          }
-        }
-      }
-    };
-
-    construct.addModifiers( this.getPropertiesConfig() );
-
+    var construct = new ADL.Construct( this.getType(), this.getName() );
     return construct;
-  },
-
-  constructToString: function(construct, prefix) {
-    if(construct == null) { return ""; }
-    var string = "";
-    if( construct.annotation && construct.annotation.data ) {
-      string += prefix + "[@" + construct.annotation.data + "]\n";
-    }
-    string += prefix + construct.type + " " + construct.name;
-    construct.supers.iterate(function(zuper) { string += " : " + zuper; });
-    $H(construct.modifiers).iterate( 
-      function modifierIterator( key, value ) {
-        if( typeof value != "function" ) {
-          string += " +" + key;
-          if( value ) { string += "=" + value; }
-        }
-      } 
-    );
-    if( construct.children.length > 0 ) {
-      string += " {\n";
-      var me = this;
-      construct.children.iterate(function childIterator(child) {
-        string += me.constructToString(child, prefix + "  " ) + "\n";
-      } );
-      string += prefix + "}";
-    } else {
-      string += ";";
-    }
-    return string;
   },
 
   delayRender: function() {

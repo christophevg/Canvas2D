@@ -4,22 +4,22 @@ Canvas2D.Watermark = Class.extend( {
     this.book.on( "afterPublish", this.afterPublish.scope(this) );
   },
 
+  getLabel: function getLabel() {
+    return "Canvas2D / Christophe VG";
+  },
+
   afterPublish: function afterPublish() {
     this.book.canvas.save();
     this.book.canvas.fillStyle = "rgba(125,125,125,1)";
     this.book.canvas.textDecoration = "none";
     this.book.canvas.rotate(Math.PI/2);
-    var extensions = "";
-    this.book.extensions.iterate(function(key, value) { 
-      extensions += " + " + key; 
-    });
     this.book.canvas.font = "6pt Sans-Serif";
     this.book.canvas.textAlign = "left";
     this.book.canvas.useCrispLines = false;
     this.book.canvas.lineStyle = "solid";
-    this.book.canvas.fillText( "Canvas2D" + extensions + " / Christophe VG",
-    3, (this.book.canvas.canvas.width * -1) + 7 +
-    ( ProtoJS.Browser.IE ? 4 : 0 ) ); // if styleborder
+    this.book.canvas.fillText( this.getLabel(), 3, 
+      (this.book.canvas.canvas.width * -1) + 7 +
+      ( ProtoJS.Browser.IE ? 4 : 0 ) ); // if styleborder
     this.book.canvas.restore();
   },
 

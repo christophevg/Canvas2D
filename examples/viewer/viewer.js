@@ -59,32 +59,35 @@ Canvas2D.Repository.getInstance = function getInstance(book) {
 Canvas2D.Book.addPlugin( "Repository", Canvas2D.Repository );
 
 function ElementDimensions(elem) {
-  this.inner = {	//content and padding; gives 0 for inline elements (you can use scrollWidth/Height if it's inline)
-  width: elem.clientWidth,
-  height: elem.clientHeight
-};
-this.outer = {	//everything (content, padding, scrollbar, border)
-  width: elem.offsetWidth,
-  height: elem.offsetHeight
-};
-this.scroll = {
-  //width & height of entire content field (including padding), visible or not
-  //incorrect in Opera; it doesn't include the padding
-  width: elem.scrollWidth,
-  //if there are no scrollbars, IE gives the actual height of the content instead of the height of the element
-  height: elem.scrollHeight<elem.clientHeight ? elem.clientHeight : elem.scrollHeight,
+  // content and padding; gives 0 for inline elements (you can use scrollWidth/Height if it's inline)
+  this.inner = {	
+    width: elem.clientWidth,
+    height: elem.clientHeight
+  };
+  // everything (content, padding, scrollbar, border)
+  this.outer = {
+    width: elem.offsetWidth,
+    height: elem.offsetHeight
+  };
+  // width & height of entire content field (including padding), visible or not
+  // incorrect in Opera; it doesn't include the padding
+  this.scroll = {
+    width: elem.scrollWidth,
+    //if there are no scrollbars, IE gives the actual height of the content instead of the height of the element
+    height: elem.scrollHeight<elem.clientHeight ? elem.clientHeight : elem.scrollHeight,
 
-  //scroll position of content & padding
-  left: elem.scrollLeft,
-  top: elem.scrollTop
-};
+    //scroll position of content & padding
+    left: elem.scrollLeft,
+    top: elem.scrollTop
+  };
 }
 
+// TODO: turn into "real" plugin, with exposed grow() method to initialize
 Canvas2D.Grow = Class.extend( {
   init: function init(canvas, padding) {
     this.canvas = canvas;
     this.element = this.canvas.canvas.canvas;
-    this.padding = padding;
+    this.padding = padding || 0;
     this.handleResize();
     this.wireHandlers();
   },
@@ -111,7 +114,7 @@ Canvas2D.Viewer = Class.extend( {
     this.info       = document.getElementById(Canvas2D.Viewer.config.info);
     this.book       = Canvas2D.getBook(Canvas2D.Viewer.config.canvas);
     this.repository = this.book.getPlugin( "Repository" );
-    new Canvas2D.Grow(this.book, 10);
+    new Canvas2D.Grow(this.book);
   },
 
   _createLink: function _createLink(label, handler) {

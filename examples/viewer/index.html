@@ -4,13 +4,18 @@
   <meta charset="utf-8" />
   <title>Canvas2D Example Viewer</title>
 
-  <link rel="stylesheet" type="text/css" href="../examples.css" />
   <link rel="stylesheet" type="text/css" href="viewer.css" />
 
   <script type="text/javascript">
+    // this is used in includes.js to get the right path to all includes
     window.loadingPrefix = "../../";
   </script>
   <script type="text/javascript" src="../includes.js"></script>
+
+  <!-- alternatively we can include the "compiled" all-in-one script
+  <script type="text/javascript" src="../../build/Canvas2D.standalone.min.js"></script>
+  -->
+  
   <script type="text/javascript">
     Canvas2D.registerConnector( "Triangle",
       {
@@ -23,13 +28,15 @@
   </script>
   <script type="text/javascript" src="viewer.js"></script>
   <script type="text/javascript">
-    // This is the default configuration. which can be overriden
+    // This is the default Viewer configuration. which can be overriden
     Canvas2D.Viewer.config = {
-      repository : "./repo.php?id=",
       canvas     : "C2D_Viewer",
       navigator  : "C2D_Navigator",
       info       : "C2D_Info"
     };
+    // this is a repository that loads static adl files from the current dir
+    Canvas2D.Repository.addRepository( "adl", "./" );
+    // this repository loads the same adl files but with a 2 second delay
     Canvas2D.Repository.addRepository( "php", "./repo.php?id=" );
   </script>
 </head>
@@ -38,19 +45,22 @@
 
   <div class="header pane">Canvas2D Example Viewer</div>
 
-  <div class="inspector pane">
-    <div id="navigatorPane" class="navigator pane">
+  <div class="left pane">
+    <div id="navigatorPane" class="top content">
       <div id="C2D_Navigator">loading examples index ...</div>
     </div>
-    <div class="info pane">
-      <div id="C2D_Info">
-        Select an example from the list above...
-      </div>
+    <div class="bottom content">
+      <textarea id="C2D_Info">Select an example from the list above...</textarea>
     </div>
   </div>
 
-  <div id="viewerPane" class="viewer pane">
-    <canvas id="C2D_Viewer" class="Canvas2D withRepo:php"></canvas>
+  <div class="right pane">
+    <div id="viewerPane" class="top content">
+      <canvas id="C2D_Viewer" class="Canvas2D withRepo:php"></canvas>
+    </div>
+    <div class="bottom content">
+      <textarea id="C2D_ViewerGenerated" class="code"></textarea>
+    </div>
   </div>
 
   <script type="text/javascript">
@@ -72,14 +82,14 @@
       return { width: width, height: height };
     }
     
-    function resizeCanvasContainer() {
-      var winHeight = getWindowSize().height;
-      document.getElementById("viewerPane")   .style.height = winHeight -  55 + "px";
-      document.getElementById("navigatorPane").style.height = winHeight - 257 + "px";
+    function resizeLayout() {
+      var winHeight = getWindowSize().height - 210;
+      document.getElementById("viewerPane")   .style.height = winHeight + "px";
+      document.getElementById("navigatorPane").style.height = winHeight + "px";
     }
 
-    ProtoJS.Event.observe( window, "resize", resizeCanvasContainer );
-    resizeCanvasContainer();
+    ProtoJS.Event.observe( window, "resize", resizeLayout );
+    resizeLayout();
   </script>
 
 </body>

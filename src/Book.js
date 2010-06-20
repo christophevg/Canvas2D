@@ -16,8 +16,6 @@ Canvas2D.Book = Class.extend( {
     this.currentSheet = 0;      // index of the current show sheet
 
     this.loadFilters  = [];
-
-    this.setupExtensions();
   },
 
   add: function( sheet ) {
@@ -35,18 +33,10 @@ Canvas2D.Book = Class.extend( {
     return sheet;
   },
 
-  setupExtensions: function() {
-    this.extensions = new Hash();
-    Canvas2D.extensions.iterate(function(extension) {
-      this.extensions.set(extension.name, extension);
-    }.scope(this) );
-  },
-
   log: function( msg ) {
-    if( this.console ) { 
-      this.console.value = "[" + (new Date()).toLocaleString() + "] " +
-      msg + "\n" + this.console.value;
-    }
+    this.logs = "[" + (new Date()).toLocaleString() + "] " + 
+                msg + "\n" + this.logs;
+    this.fireEvent("logUpdated");
   },
 
   getCurrentSheet: function() {
@@ -85,14 +75,17 @@ Canvas2D.Book = Class.extend( {
   },
 
   load: function load(input) {
+    if( ! input || input.trim() == "" ) { return; }
     this.fireEvent("load");
     this.applyLoadFilters(input, 0, this.show.scope(this));
   },
 
-  show: function showLoaded(source) {
+  show: function show(source) {
     var parser = new ADL.Parser();
     var tree;
     this.errors = "";
+    var success = false;
+    
     if( ( tree = parser.parse( source ) ) ) {
       this.clear();
       this.freeze();
@@ -107,20 +100,23 @@ Canvas2D.Book = Class.extend( {
           this.errors += "\n   - " + error;
         }.scope(this));
       }
-      this.fireEvent("sourceLoaded");
-      return true;
+      success = true;
     } else {
       this.log( parser.errors );
       this.errors = parser.errors;
-      this.fireEvent("sourceLoaded");
-      return false;
     }
+    
+    if( this.getCurrentSheet() ) {
+      var newSource = this.toADL();
+      this.fireEvent( "sourceLoaded", newSource );
+    }
+    return success;
   },
 
   toADL: function() {
     var s = "";
     this.sheets.iterate(function(sheet) {
-      s += sheet.toADL() + "\n";
+      s += sheet.asConstruct().toString() + "\n";
     } );
     return s;
   },
@@ -151,19 +147,7 @@ Canvas2D.Book = Class.extend( {
     }
 
     this.log( "Canvas2D::publish: RenderTime: " + timer.stop() + "ms" );
-  },
-
-  updateExternalSource: function updateExternalSource() {
-    if( this.getCurrentSheet() ) {
-      var newSource = this.getCurrentSheet().toADL();
-      // this should be moved to Widget
-      if( this.generated && newSource != this.generated.value ) {
-        this.generated.value = newSource;
-      }
-      this.fireEvent( "sourceUpdated", newSource );
-    }
   }
-
 } );
 
 // mix-in some common functionality at class level

@@ -134,17 +134,13 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
     
     this.fireEvent( "afterRender", this );
   },
-
-  toADL: function() {
-    var s = "";
-    s += "Sheet "  + this.name;
-    s += " +" + this.style + " {\n";
-    this.positions.iterate(function(shape) { 
-      var t = shape.toADL("  ");
-      if( t ) { s += t + "\n"; }
+  
+  asConstruct: function asConstruct() {
+    var construct = this._super();
+    this.positions.iterate(function(position) {
+      construct.children.push( position.asConstruct() );
     } );
-    s += "}";
-    return s;
+    return construct;
   }
 } );
 
