@@ -45,10 +45,11 @@ PLUGIN_SRCS = ${SRC_DIR}/plugins/DynamicSheet/DynamicSheet.js \
 			  ${SRC_DIR}/plugins/DynamicSheet/Border.js \
 			  ${SRC_DIR}/plugins/DynamicSheet/Position.js \
 			  ${SRC_DIR}/plugins/DynamicSheet/Group.js \
+			  ${SRC_DIR}/plugins/Splash.js \
 			  ${SRC_DIR}/plugins/Widget.js \
 			  ${SRC_DIR}/plugins/TabbedCanvas.js \
-     		  ${SRC_DIR}/plugins/AutoLayout.js \
-     		  ${SRC_DIR}/plugins/Watermark.js
+     		${SRC_DIR}/plugins/AutoLayout.js \
+     		${SRC_DIR}/plugins/Watermark.js
 
 SHARED_EXTRA_SRCS = ${SRC_DIR}/SanityChecks.js
 
