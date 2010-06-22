@@ -1,7 +1,5 @@
 APP = Canvas2D
 
-include lib/common.make/Makefile.inc
-
 CORE_SRCS = ${SRC_DIR}/IEFixes.js \
 			${SRC_DIR}/Common.js \
 			${SRC_DIR}/Canvas2D.css.js \
@@ -55,6 +53,21 @@ LIBS = ${LIB_DIR}/ProtoJS/build/ProtoJS.js \
 
 UPDATE_LIBS = ${LIB_DIR}/ADL ${LIB_DIR}/ProtoJS
 
+#############################################################################
+# boilerplate to kickstart common.make
+
+have-common := $(wildcard lib/common.make/Makefile.inc)
+ifeq ($(strip $(have-common)),)
+all:
+        @echo "*** one-time initialization of common.make"
+        @git submodule -q init
+        @git submodule -q update
+        @$(MAKE) -s $@
+endif
+
+-include lib/common.make/Makefile.inc
+
+#############################################################################
 # add the Mediawiki extension
 
 MORE_DIST_TARGETS = ${DIST_DIR}/${DIST-EXT}
