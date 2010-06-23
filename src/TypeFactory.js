@@ -40,12 +40,13 @@ Canvas2D.TypeFactory = {
     isVirtual : false,
 
     _extractAnnotation: function _extractAnnotation(props, prop, construct) {
-      var annotation = construct.annotation.data;
-      if( this.validate(annotation) ) {
-        $H(this.unpack(prop, this.sanitize(annotation))).iterate(function(key,value) {
-          props[key] = value;
-        });
-      }
+      construct.getAnnotations().iterate(function(annotation) {
+      	if( this.validate(annotation) ) {
+        	$H(this.unpack(prop, this.sanitize(annotation))).iterate(function(key,value) {
+          	props[key] = value;
+        	});
+				}
+      }.scope(this) );
     },
 
     _extractModifier: function _extractModifier(props, prop, construct) {

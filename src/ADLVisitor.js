@@ -4,9 +4,7 @@ Canvas2D.ADLVisitor = Class.extend( {
   },
 
   visit: function( construct, parent ) {
-    var constructType = construct.type.toLowerCase();
-
-    if( constructType == "root" ) {
+    if( construct.getName() == "root" ) {
       construct.childrenAccept(this, parent);  // just move on to the children
       return parent;
     } 
