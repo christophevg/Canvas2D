@@ -19,7 +19,7 @@ Canvas2D.TypeFactory = {
       } else if( this.extractFrom == ADL.Annotation ) {
         this._extractAnnotation(props, prop, construct);
       } else if( this.extractFrom == ADL.Value ) { 
-        props[prop] = construct.value.value;
+        props[prop] = construct.getValue().getValue(); // value of the Value
       } else if( this.extractFrom == "name" ) {
         props[prop] = construct.name;
       } else if( this.extractFrom == "parent" ) {

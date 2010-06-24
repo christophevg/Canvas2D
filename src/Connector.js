@@ -1,6 +1,8 @@
 Canvas2D.Connector = Canvas2D.Shape.extend( {
   beforeInit: function beforeInit(props) {
-    if( props.routeBegin !== null && props.routeEnd !== null ) {
+    if( typeof props.routeBegin != "undefined" && 
+				typeof props.routeEnd   != "undefined" ) 
+		{
       props.routing = "custom";
     }
     if( props.from == props.to ) { props.routing = "recursive"; }
@@ -65,10 +67,12 @@ Canvas2D.Connector = Canvas2D.Shape.extend( {
     }
 
     // label positions and alignment for begin and end
-    var offset = { "e" : { left: +5, top: -5, align: "left"  },
-    "n" : { left: +5, top: -5, align: "left"  },
-    "w" : { left: -5, top: -5, align: "right" },
-    "s" : { left: +5, top: +10, align: "left"  } };
+    var offset = { 
+			"e" : { left: +5, top: -5, align: "left"  },
+			"n" : { left: +5, top: -5, align: "left"  },
+			"w" : { left: -5, top: -5, align: "right" },
+			"s" : { left: +5, top: +10, align: "left"  }
+		};
 
     var dir;
     if( this.getRouteBegin() ) {

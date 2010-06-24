@@ -184,7 +184,7 @@ Canvas2D.Types = {
   URL : Canvas2D.TypeFactory.createType(
     {
       validate: function validateURL(url) {
-	      var regexp = /(ftp|http|https:\/)?\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+	      var regexp = /(ftp|http|https:\/\/)?(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
 	      return regexp.test(url);
       }
     }
@@ -194,7 +194,7 @@ Canvas2D.Types = {
     {
       validate: function validatePosition(value) {
 				if( !value ) { return false; }
-        return value.match(/-?[0-9\.]+,-?[0-9\.]+/); // FIXME: improve ;-)
+        return value.match(/-?[0-9\.]+[, ]+-?[0-9\.]+/); // FIXME: improve ;-)
       },
 
       unpack: function unpackPosition(prop, value) {
@@ -202,7 +202,7 @@ Canvas2D.Types = {
         var props = {};
         props[prop] = {
           left: parseFloat(values[0]),
-          top: parseFloat(values[1])
+          top : parseFloat(values[1])
         };
         return props;
       }
