@@ -22,12 +22,12 @@ Canvas2D.ADLVisitor = Class.extend( {
             this.errors.push( error );
           }.scope(this) );
         }
-        var left, top;
-        if( construct.annotation && parent.at ) {
-          var pos = construct.annotation.data.split(",");
-          left = parseInt(pos[0],10);
-          top  = parseInt(pos[1],10);
-          parent.at(left,top).add( shape );
+
+				var props = {};
+				Canvas2D.Types.Position( { extractFrom: ADL.Annotation } )
+					.extract( props, 'position', construct );
+        if( props.position ) {
+          parent.at(props.position.left, props.position.top).add( shape );
         } else {
           parent.add( shape );
         }

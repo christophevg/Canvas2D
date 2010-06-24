@@ -18,7 +18,7 @@ Canvas2D.TypeFactory = {
         this._extractModifier(props, prop, construct);
       } else if( this.extractFrom == ADL.Annotation ) {
         this._extractAnnotation(props, prop, construct);
-      } else if( this.extractFrom == "ADL.Value" ) { // FIXME ;-)
+      } else if( this.extractFrom == ADL.Value ) { 
         props[prop] = construct.value.value;
       } else if( this.extractFrom == "name" ) {
         props[prop] = construct.name;
@@ -41,8 +41,10 @@ Canvas2D.TypeFactory = {
 
     _extractAnnotation: function _extractAnnotation(props, prop, construct) {
       construct.getAnnotations().iterate(function(annotation) {
-      	if( this.validate(annotation) ) {
-        	$H(this.unpack(prop, this.sanitize(annotation))).iterate(function(key,value) {
+      	if( this.validate(annotation.getValue()) ) {
+        	$H(this.unpack(prop, this.sanitize(annotation.getValue())))
+						.iterate(function(key,value) 
+					{
           	props[key] = value;
         	});
 				}

@@ -20,7 +20,7 @@ Canvas2D.Text = Canvas2D.Shape.extend( {
 Canvas2D.Text.MANIFEST = {
   name         : "text",
   properties   : { 
-    text           : Canvas2D.Types.Text({extractFrom:"ADL.Value"}),
+    text           : Canvas2D.Types.Text( { extractFrom:ADL.Value } ),
     color          : Canvas2D.Types.Color(), 
     font           : Canvas2D.Types.Font(), 
     textAlign      : Canvas2D.Types.Align(),

@@ -107,7 +107,7 @@ Canvas2D.Types = {
       },
 
       validate: function validateMapper(value) {
-        return value.match(this._regexp);
+        return value && value.match(this._regexp);
       },
 
       unpack : function unpackMapper(prop, value) {
@@ -193,6 +193,7 @@ Canvas2D.Types = {
   Position : Canvas2D.TypeFactory.createType(
     {
       validate: function validatePosition(value) {
+				if( !value ) { return false; }
         return value.match(/-?[0-9\.]+,-?[0-9\.]+/); // FIXME: improve ;-)
       },
 
