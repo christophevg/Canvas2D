@@ -1,36 +1,47 @@
+/**
+ * Watermark Plugin adds a watermark to every diagram. This watermark is
+ * configurable on a Book by Book basis.
+ * @author xtof
+ */
 Canvas2D.Watermark = Class.extend( {
-  init: function init(book) {
-    this.book = book;
-    this.book.on( "afterPublish", this.afterPublish.scope(this) );
+  /**
+   * Registers a watermark drawing function at afterPublish of a Book.
+   * @param Book to which the Watermark will be added
+   */
+  addBook: function addBook(book) {
+    book.on( "afterPublish", this.drawWatermark.scope(book) );
   },
 
-  getLabel: function getLabel() {
-    return "Canvas2D / Christophe VG";
-  },
+  /**
+   * Draws a watermark on a book, which it is in scope of.
+   * @private
+   */
+  drawWatermark: function drawWatermark() {
+    this.canvas.save();
+    this.canvas.rotate(Math.PI/2);
+    this.canvas.fillStyle     = "rgb(125,125,125)";
+    this.canvas.font          = "6pt Sans-Serif";
+    this.canvas.useCrispLines = false;
+    var labels = $H(Canvas2D.Watermark.label);
+    var label = labels.get( 
+      labels.hasKey(this.getName()) ? this.getName() : "_default" 
+    );
 
-  afterPublish: function afterPublish() {
-    this.book.canvas.save();
-    this.book.canvas.fillStyle = "rgba(125,125,125,1)";
-    this.book.canvas.textDecoration = "none";
-    this.book.canvas.rotate(Math.PI/2);
-    this.book.canvas.font = "6pt Sans-Serif";
-    this.book.canvas.textAlign = "left";
-    this.book.canvas.useCrispLines = false;
-    this.book.canvas.lineStyle = "solid";
-    this.book.canvas.fillText( this.getLabel(), 3, 
-      (this.book.canvas.canvas.width * -1) + 7 +
+    this.canvas.fillText( label, 3, (this.getWidth() * -1) + 7 +
       ( ProtoJS.Browser.IE ? 4 : 0 ) ); // if styleborder
-    this.book.canvas.restore();
-  },
-
-  getName: function getName() { return "WaterMark"; }
+    this.canvas.restore();
+  }
 } );
+
+// label hash allows per book configuration of Watermark
+Canvas2D.Watermark.label = { _default: "Canvas2D / Christophe VG" };
 
 // one Watermarker for all Canvas2D instances is enough
 Canvas2D.Watermark.getInstance = function getInstance(book) {
   if( !Canvas2D.Watermark.__instance__ ) {
-    Canvas2D.Watermark.__instance__ = new Canvas2D.Watermark(book);
+    Canvas2D.Watermark.__instance__ = new Canvas2D.Watermark();
   }
+  Canvas2D.Watermark.__instance__.addBook(book);
   return Canvas2D.Watermark.__instance__;
 };
 

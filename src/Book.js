@@ -17,6 +17,14 @@ Canvas2D.Book = Class.extend( {
 
     this.loadFilters  = [];
   },
+  
+  getName: function getName() {
+    return this.name;
+  },
+  
+  getWidth: function getWidth() {
+    return this.canvas.canvas.width;
+  },
 
   add: function( sheet ) {
     return this.addSheet(sheet);
@@ -127,9 +135,8 @@ Canvas2D.Book = Class.extend( {
 
   publish : function() {
     if( this.rePublishNeeded && !this.wait ) {
-      this.publishOnce();
       this.rePublishNeeded = false;
-      this.fireEvent( "afterPublish" );
+      this.publishOnce();
     }
 
     // reshedule publish in 10ms
@@ -137,16 +144,16 @@ Canvas2D.Book = Class.extend( {
   },
 
   publishOnce : function() {
+    this.fireEvent("beforePublish");
     var timer = new Timer();
     this.canvas.clear();
 
     if( this.getCurrentSheet() ) {
-      this.fireEvent("beforeRender");
       this.getCurrentSheet().render();
-      this.fireEvent("afterRender");
     }
 
     this.log( "Canvas2D::publish: RenderTime: " + timer.stop() + "ms" );
+    this.fireEvent( "afterPublish" );
   }
 } );
 
