@@ -243,7 +243,7 @@ function afterInit() {
 
 // add style property
 Canvas2D.Sheet.MANIFEST.properties.style = 
-Canvas2D.Types.Selection({ values: [ "static", "dynamic" ], asKey: true } );
+new Canvas2D.Types.Selection({ values: [ "static", "dynamic" ], asKey: true } );
 
 // re-register Sheet to add new properties/getters/setters
 Canvas2D.registerShape( Canvas2D.Sheet );

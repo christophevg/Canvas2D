@@ -20,11 +20,11 @@ Canvas2D.Text = Canvas2D.Shape.extend( {
 Canvas2D.Text.MANIFEST = {
   name         : "text",
   properties   : { 
-    text           : Canvas2D.Types.Text( { extractFrom:ADL.Value } ),
-    color          : Canvas2D.Types.Color(), 
-    font           : Canvas2D.Types.Font(), 
-    textAlign      : Canvas2D.Types.Align(),
-    textDecoration : Canvas2D.Types.FontDecoration()
+    text           : new Canvas2D.Types.Text( { extractFrom:ADL.Value } ),
+    color          : new Canvas2D.Types.Color(), 
+    font           : new Canvas2D.Types.Font(), 
+    textAlign      : new Canvas2D.Types.Align(),
+    textDecoration : new Canvas2D.Types.FontDecoration()
   },
   libraries    : [ "Canvas2D" ]
 };

@@ -44,8 +44,8 @@ Canvas2D.Arrow.MANIFEST = {
   name         : "arrow",
   aliasses     : [ "pointer" ],
   properties   : { 
-    arrowHeadWidth  : Canvas2D.Types.Size(),
-    arrowHeadHeight : Canvas2D.Types.Size(),
+    arrowHeadWidth  : new Canvas2D.Types.Size(),
+    arrowHeadHeight : new Canvas2D.Types.Size(),
   },
   propertyPath : [ Canvas2D.Rectangle ],
   libraries    : [ "Canvas2D" ]

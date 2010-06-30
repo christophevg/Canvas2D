@@ -1,6 +1,6 @@
 Canvas2D.Types = {
 
-  Name: Canvas2D.TypeFactory.createType( 
+  Name: Canvas2D.Type.extend( 
     { 
       _shapeCounter : {},
       generate: function generateName( shape ) {
@@ -15,13 +15,13 @@ Canvas2D.Types = {
     }
   ),
 
-  Parent : Canvas2D.TypeFactory.createType(
+  Parent : Canvas2D.Type.extend(
     {
       extractFrom: "parent"
     }
   ),
 
-  Size   : Canvas2D.TypeFactory.createType(
+  Size   : Canvas2D.Type.extend(
     {
       sanitize: function sanitizeSize(value) {
         return parseFloat(value);
@@ -33,7 +33,7 @@ Canvas2D.Types = {
     }
   ),
 
-  Text   : Canvas2D.TypeFactory.createType(
+  Text   : Canvas2D.Type.extend(
     {
       validate: function validateText(value) {
         return value.isString();
@@ -41,7 +41,7 @@ Canvas2D.Types = {
     }
   ),
 
-  Color  : Canvas2D.TypeFactory.createType(
+  Color  : Canvas2D.Type.extend(
     {
       // TODO add http://www.w3schools.com/html/html_colornames.asp
       validate: function validateColor(value) {
@@ -56,7 +56,7 @@ Canvas2D.Types = {
     }
   ),
 
-  Font   : Canvas2D.TypeFactory.createType(
+  Font   : Canvas2D.Type.extend(
     {
       validate: function validateFont(value) {
         // TODO improve matching
@@ -65,7 +65,7 @@ Canvas2D.Types = {
     }
   ),
 
-  Switch : Canvas2D.TypeFactory.createType(
+  Switch : Canvas2D.Type.extend(
     {
       sanitize: function sanitizeSwitch(value) {
         if( [ true, "true", "yes", "on" ].contains(value) ||
@@ -80,22 +80,25 @@ Canvas2D.Types = {
     }
   ),
 
-  Selection : Canvas2D.TypeFactory.createType( 
+  Selection : Canvas2D.Type.extend( 
     {
-      _construct : function _constructSelection(config) {
-        this._values      = config.values;
-        this.extractAsKey = config.asKey;
+      values : [],
+      init : function initSelection(config) {
+        if(config && config.values ) { this.values = config.values; }
+        if(config && config.asKey  ) { 
+          this.extractAsKey = config.asKey || false;
+        }
       },
 
       validate   : function validateSelection(value) {
-        return this._values.contains(value);
+        return this.values.contains(value);
       }
     }
   ),
 
-  Mapper : Canvas2D.TypeFactory.createType(
+  Mapper : Canvas2D.Type.extend(
     {
-      _construct : function _constructMapper(config) {
+      init : function init(config) {
         this._regexp = config.map;
         this._props  = $H(config.to);
         if( config.extractFrom ) { this.extractFrom  = config.extractFrom; }
@@ -145,7 +148,7 @@ Canvas2D.Types = {
     }
   ),
 
-  Handler : Canvas2D.TypeFactory.createType(
+  Handler : Canvas2D.Type.extend(
     {
       validate : function validateHandler(value) {
         return value.isFunction();
@@ -153,7 +156,7 @@ Canvas2D.Types = {
     }
   ),
   
-  Shape : Canvas2D.TypeFactory.createType(
+  Shape : Canvas2D.Type.extend(
     {
       validate: function validateShape(shapeName) {
         return $H(this.getParent().getContainer().shapesMap).keys().contains(shapeName);
@@ -167,7 +170,7 @@ Canvas2D.Types = {
     }
   ),
   
-  ConnectorHead : Canvas2D.TypeFactory.createType(
+  ConnectorHead : Canvas2D.Type.extend(
     {
       validate: function validateConnectorHead(name) {
         return $H(Canvas2D.CustomConnectors).keys().contains(name);
@@ -175,22 +178,22 @@ Canvas2D.Types = {
       
       unpack: function unpackConnectorHead(prop, value) {
         var result = {};
-        result[prop] = Canvas2D.CustomConnectors[value]
+        result[prop] = Canvas2D.CustomConnectors[value];
         return result;
       }
     }
   ),
 
-  URL : Canvas2D.TypeFactory.createType(
+  URL : Canvas2D.Type.extend(
     {
       validate: function validateURL(url) {
-	      var regexp = /(ftp|http|https:\/\/)?(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+	      var regexp = /(ftp|http|https:\/\/)?(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 	      return regexp.test(url);
       }
     }
   ),
 
-  Position : Canvas2D.TypeFactory.createType(
+  Position : Canvas2D.Type.extend(
     {
       validate: function validatePosition(value) {
 				if( !value ) { return false; }
@@ -209,9 +212,9 @@ Canvas2D.Types = {
     }
   ),
 
-  List : Canvas2D.TypeFactory.createType(
+  List : Canvas2D.Type.extend(
     {
-      _construct : function _constructList(type) {
+      init : function initList(type) {
         this.type = type;
       },
 
@@ -243,27 +246,19 @@ Canvas2D.Types = {
 
 // extended Types
 
-Canvas2D.Types.FontDecoration = Canvas2D.TypeFactory.extend( 
-    Canvas2D.Types.Selection(
-      { values: [ "underline", "overline", "line-through", "none" ] } 
-    )
+Canvas2D.Types.FontDecoration = Canvas2D.Types.Selection.extend(
+  { values: [ "underline", "overline", "line-through", "none" ] } 
 );
 
-Canvas2D.Types.LineStyle = Canvas2D.TypeFactory.extend(
-  Canvas2D.Types.Selection(
-    { values: [ "solid", "dashed", "none" ] }
-  )
+Canvas2D.Types.LineStyle = Canvas2D.Types.Selection.extend(
+  { values: [ "solid", "dashed", "none" ] }
 );
 
-Canvas2D.Types.Direction = Canvas2D.TypeFactory.extend(
-  Canvas2D.Types.Selection(
-    { values: [ "n", "nne", "ne", "ene", "e", "ese", "se", "sse",
-                "s", "ssw", "sw", "wsw", "w", "wnw", "nw", "nnw"  ] }
-  )
+Canvas2D.Types.Direction = Canvas2D.Types.Selection.extend(
+ { values: [ "n", "nne", "ne", "ene", "e", "ese", "se", "sse",
+             "s", "ssw", "sw", "wsw", "w", "wnw", "nw", "nnw"  ] }
 );
 
-Canvas2D.Types.Align = Canvas2D.TypeFactory.createType(
-  Canvas2D.Types.Selection(
-    { values: [ "left", "center", "right", "top", "middle", "bottom" ] }
-  )
+Canvas2D.Types.Align = Canvas2D.Types.Selection.extend(
+  { values: [ "left", "center", "right", "top", "middle", "bottom" ] }
 );

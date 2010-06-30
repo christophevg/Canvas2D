@@ -171,8 +171,8 @@ Canvas2D.Sheet.Operations = [
 Canvas2D.Sheet.MANIFEST = {
   name      : "sheet",
   properties : {
-    book  : Canvas2D.Types.Parent(),
-    style : Canvas2D.Types.Selection( 
+    book  : new Canvas2D.Types.Parent(),
+    style : new Canvas2D.Types.Selection( 
       { values: [ "static", "dynamic" ], asKey: true } 
     )
   },

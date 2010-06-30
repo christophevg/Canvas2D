@@ -172,32 +172,32 @@ ProtoJS.mix(
 Canvas2D.Shape.MANIFEST = {
   name : "shape",
   properties: {
-    name               : Canvas2D.Types.Name(),
-    width              : Canvas2D.Types.Size(),
-    height             : Canvas2D.Types.Size(),
-    label              : Canvas2D.Types.Text(),
-    labelPos           : Canvas2D.Types.Align(),
-    labelColor         : Canvas2D.Types.Color(),
-    labelAlign         : Canvas2D.Types.Align(),
-    labelFont          : Canvas2D.Types.Font(),
-    labelUseCrispLines : Canvas2D.Types.Switch(),
-    useCrispLines      : Canvas2D.Types.Switch(),
-    geo                : Canvas2D.Types.Mapper( 
+    name               : new Canvas2D.Types.Name(),
+    width              : new Canvas2D.Types.Size(),
+    height             : new Canvas2D.Types.Size(),
+    label              : new Canvas2D.Types.Text(),
+    labelPos           : new Canvas2D.Types.Align(),
+    labelColor         : new Canvas2D.Types.Color(),
+    labelAlign         : new Canvas2D.Types.Align(),
+    labelFont          : new Canvas2D.Types.Font(),
+    labelUseCrispLines : new Canvas2D.Types.Switch(),
+    useCrispLines      : new Canvas2D.Types.Switch(),
+    geo                : new Canvas2D.Types.Mapper( 
       { 
         map : "([0-9]+)x([0-9]+)", 
         to  : 
         { 
-          width  : Canvas2D.Types.Size(), 
-          height : Canvas2D.Types.Size() 
+          width  : new Canvas2D.Types.Size(), 
+          height : new Canvas2D.Types.Size() 
         } 
       }
     ),
-    isSelectable      : Canvas2D.Types.Switch(),
-    isVisible         : Canvas2D.Types.Switch(),
-    hideSelection     : Canvas2D.Types.Switch(),
-    onMouseDown       : Canvas2D.Types.Handler(),
-    onMouseUp         : Canvas2D.Types.Handler(),
-    onMouseDrag       : Canvas2D.Types.Handler()
+    isSelectable      : new Canvas2D.Types.Switch(),
+    isVisible         : new Canvas2D.Types.Switch(),
+    hideSelection     : new Canvas2D.Types.Switch(),
+    onMouseDown       : new Canvas2D.Types.Handler(),
+    onMouseUp         : new Canvas2D.Types.Handler(),
+    onMouseDrag       : new Canvas2D.Types.Handler()
   }
 };
 

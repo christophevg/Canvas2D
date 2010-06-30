@@ -381,47 +381,47 @@ Canvas2D.Connector.MANIFEST = {
   name         : "connector",
   aliasses     : [ "link" ],
   properties   : { 
-    lineColor  : Canvas2D.Types.Color(),
-    lineStyle  : Canvas2D.Types.LineStyle(),
-    lineWidth  : Canvas2D.Types.Size(), 
-    from       : Canvas2D.Types.Shape(),
-    to         : Canvas2D.Types.Shape(),
-    fromTo     : Canvas2D.Types.Mapper( {
+    lineColor  : new Canvas2D.Types.Color(),
+    lineStyle  : new Canvas2D.Types.LineStyle(),
+    lineWidth  : new Canvas2D.Types.Size(), 
+    from       : new Canvas2D.Types.Shape(),
+    to         : new Canvas2D.Types.Shape(),
+    fromTo     : new Canvas2D.Types.Mapper( {
       asKey: true,
       map : "^([^-]+)-(.+)$",
       to  : {
-        from : Canvas2D.Types.Shape(),
-        to   : Canvas2D.Types.Shape()
+        from : new Canvas2D.Types.Shape(),
+        to   : new Canvas2D.Types.Shape()
       }
     } ),
 
-    routing    : Canvas2D.Types.Selection( { 
+    routing    : new Canvas2D.Types.Selection( { 
       values: [ "custom", "recursive", "vertical", "horizontal", "direct" ], 
       asKey: true 
     } ), 
-    beginLabel : Canvas2D.Types.Text(), 
-    centerLabel: Canvas2D.Types.Text(), 
-    endLabel   : Canvas2D.Types.Text(),
+    beginLabel : new Canvas2D.Types.Text(), 
+    centerLabel: new Canvas2D.Types.Text(), 
+    endLabel   : new Canvas2D.Types.Text(),
 
-    routeStyle : Canvas2D.Types.Selection( {
+    routeStyle : new Canvas2D.Types.Selection( {
       values: [ "corner", "tree", "recursive", "direct" ]
     } ), 
-    routeBegin : Canvas2D.Types.Direction(),
-    routeEnd   : Canvas2D.Types.Direction(),
-    route      : Canvas2D.Types.Mapper( { 
+    routeBegin : new Canvas2D.Types.Direction(),
+    routeEnd   : new Canvas2D.Types.Direction(),
+    route      : new Canvas2D.Types.Mapper( { 
       extractFrom : ADL.Annotation,
       map : "([a-zA-Z]+):([nesw]+)-([news]+)", 
       to  : 
       { 
-        routeStyle: Canvas2D.Types.Selection({
+        routeStyle: new Canvas2D.Types.Selection({
           values: [ "corner", "tree", "recursive", "direct" ]
         } ),
-        routeBegin: Canvas2D.Types.Direction(), 
-        routeEnd  : Canvas2D.Types.Direction()
+        routeBegin: new Canvas2D.Types.Direction(), 
+        routeEnd  : new Canvas2D.Types.Direction()
       } 
     } ),
-    begin      : Canvas2D.Types.ConnectorHead(),
-    end        : Canvas2D.Types.ConnectorHead()
+    begin      : new Canvas2D.Types.ConnectorHead(),
+    end        : new Canvas2D.Types.ConnectorHead()
   },
   libraries    : [ "Canvas2D" ]
 };

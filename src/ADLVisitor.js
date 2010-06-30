@@ -24,7 +24,7 @@ Canvas2D.ADLVisitor = Class.extend( {
         }
 
 				var props = {};
-				Canvas2D.Types.Position( { extractFrom: ADL.Annotation } )
+				new Canvas2D.Types.Position( { extractFrom: ADL.Annotation } )
 					.extract( props, 'position', construct );
         if( props.position ) {
           parent.at(props.position.left, props.position.top).add( shape );

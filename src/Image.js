@@ -20,7 +20,7 @@ Canvas2D.Image = Canvas2D.Rectangle.extend( {
 Canvas2D.Image.MANIFEST = {
   name         : "image",
   aliasses     : [ "pic", "picture" ],
-  properties   : { "src" : Canvas2D.Types.URL() },
+  properties   : { "src" : new Canvas2D.Types.URL() },
   propertyPath : [ Canvas2D.Rectangle ],
   libraries    : [ "Canvas2D" ]
 };
