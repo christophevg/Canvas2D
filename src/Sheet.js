@@ -1,9 +1,16 @@
 Canvas2D.Sheet = Canvas2D.Shape.extend( {
+	afterInit: function afterInit() {
+    this.positions      = []; // list of positioned shapes on the sheet
+    this.shapesMap      = {}; // name to shape mapping
+    this.positionsMap   = {}; // shape to position mapping
+	},
+	
   getContainer: function getContainer() {
     return this;
   },
 
   setCanvas: function setCanvas(canvas) {
+		if( ! canvas ) { return; } 
     this.canvas = canvas;
     this.wireCanvasDelegation();
     this.setupProperties();
@@ -33,41 +40,44 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
   },
 
   setupProperties: function setupProperties() {
+		print( "setupProperties" );
     Canvas2D.Sheet.Properties.iterate( function(prop) {
-      this[prop] = Canvas2D.Sheet.Defaults[prop] || this.canvas[prop];
+      this[prop] = Canvas2D.Sheet.Defaults[prop] || 
+				this.getCurrentCanvasProperty[prop];
     }.scope(this) );
   },
 
-  transferProperties : function() {
+	getCurrentCanvasProperty: function getCurrentCanvasProperty(prop) {
+		return ( this.canvas && this.canvas[prop] ) ? this.canvas[prop] : null;
+	},
+
+  transferProperties : function transferProperties() {
     Canvas2D.Sheet.Properties.iterate(function(prop) {
       this.canvas[prop] = this[prop];
     }.scope(this) );
   },
 
-  transferBackProperties : function() {
+  transferBackProperties : function transferBackProperties() {
     Canvas2D.Sheet.Properties.iterate(function(prop) {
       this[prop] = this.canvas[prop];
     }.scope(this) );
   },
 
-  clear: function() {
-    this.positions      = []; // list of shapes on the sheet
-    this.shapesMap      = {}; // name to shape mapping
-    this.positionsMap   = {}; // shape to position mapping
-
+  clear: function clear() {
+		this.afterInit();
     this.fireEvent( "change" );
   },
 
-  freeze: function() { this.fireEvent( "freeze" ); },
-  thaw:   function() { this.fireEvent( "thaw" );   },
+  freeze: function freeze() { this.fireEvent( "freeze" ); },
+  thaw:   function thaw()   { this.fireEvent( "thaw" );   },
 
-  at: function(left, top) {
+  at: function at(left, top) {
     this.newTop  = top;
     this.newLeft = left;
     return this;
   },
 
-  put: function(shape) {
+  put: function put(shape) {
     return this.add(shape);
   },
   
@@ -120,7 +130,7 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
     return this.positionsMap[shape.getName()];
   },
 
-  render: function() {
+  render: function render() {
     var delayed = [];
     this.positions.iterate( function(shape) { 
       if( shape.delayRender() ) {

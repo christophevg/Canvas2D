@@ -1,7 +1,8 @@
 Canvas2D.Widget = Class.extend( {
   init: function init(book) {
     this.book = book;
-    this.id = this.book.HTMLElement.id;
+		// TODO: do this better ;-)
+    if( this.book.HTMLElement ) { this.id = this.book.HTMLElement.id; }
     this.setupComponents();
   },
   

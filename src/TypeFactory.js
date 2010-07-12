@@ -75,8 +75,29 @@ Canvas2D.TypeFactory = {
         }.scope(this) );
       }
 
-    }
-  } ),
+    },
+
+		insert: function insert(prop, value, construct) {
+			if( this.extractFrom == ADL.Modifier ) {
+				if( this.extractAsKey ) {
+					construct.addModifier( value );
+				} else {
+					construct.addModifier( prop, value );					
+				}
+      } else if( this.extractFrom == ADL.Annotation ) {
+        construct.addAnnotation(value);
+      } else if( this.extractFrom == ADL.Value ) { 
+				construct.setValue(value);
+      } else if( this.extractFrom == "name" ) {
+				construct.setName( value );
+      } else if( this.extractFrom == "parent" ) {
+				console.log( "WARNING: extractFrom parent should not be emitted" );
+				console.log( "         for " + prop );
+      } else {
+        console.log( "WARNING: Unknown extraction location: " + this.extractFrom + " for property " + prop );
+			}
+		}
+	} ),
 
   extend: function(builder) {
     return function() { return builder; };

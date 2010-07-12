@@ -8,10 +8,12 @@ Canvas2D.Book = Class.extend( {
       } 
     );
 
-    this.HTMLElement  = element;
-    this.canvas       = Canvas2D.Factory.setup(this.HTMLElement);
-    this.name         = element.id;
-
+		if( element ) {
+    	this.HTMLElement  = element;
+    	this.canvas       = Canvas2D.Factory.setup(this.HTMLElement);
+    	this.name         = element.id;
+		}
+		
     this.sheets       = [];
     this.currentSheet = 0;      // index of the current show sheet
 
@@ -138,7 +140,7 @@ Canvas2D.Book = Class.extend( {
 
   publishOnce : function() {
     var timer = new Timer();
-    this.canvas.clear();
+    if( this.canvas ) { this.canvas.clear(); }
 
     if( this.getCurrentSheet() ) {
       this.fireEvent("beforeRender");

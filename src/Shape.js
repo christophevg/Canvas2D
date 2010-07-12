@@ -24,16 +24,17 @@ Canvas2D.Shape = Class.extend( {
     // process each property in the propertyList
     this.getPropertyList().iterate(
       function propertyListIterator(prop) {
-        this.setProperty(prop, props[prop]);
+				this.setProperty(prop, props[prop]);
       }.scope(this) 
     );
   },
 
   setProperty : function setProperty(prop, value) {
+		value = value || null; // undefined -> null
     var config = this.getPropertiesConfig().get(prop);
     if( config.isVirtual ) { return; }
     this[prop] = value != null ? value : 
-    ( config.hasGenerator() ? config.generate(this) : null );
+    	( config.hasGenerator() ? config.generate(this) : null );
   },
 
   getProperty: function getProperty( prop ) {
@@ -42,8 +43,7 @@ Canvas2D.Shape = Class.extend( {
       var getterName = "get"+propName;
       return this[getterName]();
     } else {
-      return this[prop] != null ? 
-      this[prop] : this.getPropertyDefault(prop);
+      return this[prop] != null ? this[prop] : this.getPropertyDefault(prop);
     }
   },
 
@@ -59,16 +59,24 @@ Canvas2D.Shape = Class.extend( {
     return retVal;
   },
 
-  asConstruct: function() {
-    var construct = new ADL.Construct( this.getType(), this.getName() );
-    return construct;
-  },
+	asConstruct: function asConstruct() {
+		var construct = new ADL.Construct( this.getType(), this.getName() );
+		this.__CLASS__.getPropertiesConfig().iterate(
+			function(prop, type) {
+				var currentValue = this.getProperty(prop);
+				if( currentValue != this.getPropertyDefault(prop) ) {
+					type.insert(prop, currentValue, construct);
+				}
+			}.scope(this)
+		);
+		return construct;
+	},
 
-  delayRender: function() {
+  delayRender: function delayRender() {
     return false;
   },
 
-  drawLabel: function(sheet, left, top) {
+  drawLabel: function drawLabel(sheet, left, top) {
     if( this.getLabel() && this.getHeight() != null && this.getCenter() ) {
       left += this.getCenter().left;
 

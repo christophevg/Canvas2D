@@ -134,10 +134,16 @@ Canvas2D.Types = {
             var retval = retval_in;
             var props  = props_in;
             var match  = /\([^)]+\)/;
+						var valid  = true;
             props.iterate(function(prop) {
-              retval = retval.replace( match, this.getProperty(prop) );
+							var value = this.getProperty(prop);
+							if( value == null || typeof value == "undefined" ) {
+								valid = false;
+							} else {
+              	retval = retval.replace( match, value );
+							}
             }.scope(this) );
-            return retval;
+            return valid ? retval : null;
           };
         }
         (this._regexp, this._props);
