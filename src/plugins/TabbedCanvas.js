@@ -4,6 +4,7 @@ Canvas2D.TabbedCanvas = Class.extend( {
   },
   
   activate: function activate() {
+		if( ! this.book.HTMLElement ) { return; }
     var classes = this.book.HTMLElement.className;
     if( classes.contains("Tabbed") ) {
       var tabs = [];

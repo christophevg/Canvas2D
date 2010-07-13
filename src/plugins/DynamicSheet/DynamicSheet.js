@@ -13,6 +13,7 @@
 Canvas2D.DynamicBook = {};
 
 Canvas2D.DynamicBook.setupMouseEventHandling = function setupMouseEventHandling() {
+	if( ! this.canvas ) { return; } // no canvas available, using cli ?!
   [ "MouseDown", "MouseUp", "MouseDrag" ].iterate( function(ev) {
     this.canvas.on( ev.toLowerCase(), function(data) {
       this.fireEvent( ev.toLowerCase() );
@@ -243,7 +244,7 @@ function afterInit() {
 
 // add style property
 Canvas2D.Sheet.MANIFEST.properties.style = 
-Canvas2D.Types.Selection({ values: [ "static", "dynamic" ], asKey: true } );
+	Canvas2D.Types.Selection({ values: [ "static", "dynamic" ], asKey: true } );
 
 // re-register Sheet to add new properties/getters/setters
-Canvas2D.registerShape( Canvas2D.Sheet );
+Canvas2D.reRegisterShape( Canvas2D.Sheet );

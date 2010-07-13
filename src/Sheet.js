@@ -1,8 +1,6 @@
 Canvas2D.Sheet = Canvas2D.Shape.extend( {
 	afterInit: function afterInit() {
-    this.positions      = []; // list of positioned shapes on the sheet
-    this.shapesMap      = {}; // name to shape mapping
-    this.positionsMap   = {}; // shape to position mapping
+		this.reset();
 	},
 	
   getContainer: function getContainer() {
@@ -40,7 +38,6 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
   },
 
   setupProperties: function setupProperties() {
-		print( "setupProperties" );
     Canvas2D.Sheet.Properties.iterate( function(prop) {
       this[prop] = Canvas2D.Sheet.Defaults[prop] || 
 				this.getCurrentCanvasProperty[prop];
@@ -63,8 +60,14 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
     }.scope(this) );
   },
 
-  clear: function clear() {
-		this.afterInit();
+	reset: function reset() {
+    this.positions      = []; // list of positioned shapes on the sheet
+    this.shapesMap      = {}; // name to shape mapping
+    this.positionsMap   = {}; // shape to position mapping
+	},
+
+  clear: function clear(silent) {
+		this.reset();
     this.fireEvent( "change" );
   },
 
@@ -182,9 +185,6 @@ Canvas2D.Sheet.MANIFEST = {
   name      : "sheet",
   properties : {
     book  : Canvas2D.Types.Parent(),
-    style : Canvas2D.Types.Selection( 
-      { values: [ "static", "dynamic" ], asKey: true } 
-    )
   },
   libraries : [ "Canvas2D" ]
 };
@@ -202,5 +202,6 @@ Canvas2D.Sheet.Defaults = {
   textAlign      : "left", 
   textBaseline   : "alphabetic",
   textDecoration : "none",
-  shadowColor    : "rgba(0,0,0,0.0)"
+  shadowColor    : "rgba(0,0,0,0.0)",
+	useCrispLines  : true   // FIXME: temp solution, because getProperty turns undefined
 };

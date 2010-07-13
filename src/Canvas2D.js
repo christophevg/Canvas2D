@@ -53,6 +53,7 @@ var Canvas2D = {
       // if no getter is explicitly provided, ...
       if( typeof shape.prototype[getterName] == "undefined" ) {
         // if the prop's type config provides one ...
+				//print( "adding " + getterName + " on " + shape.getType());
         if( config.createGetter ) {
           shape.prototype[getterName] = config.createGetter();
         } else {
@@ -68,7 +69,12 @@ var Canvas2D = {
     }.scope(this));
   },
 
-  getBook : function(id) {
+	reRegisterShape: function reRegisterShape(shape) {
+		shape.clearPropertiesConfigCache();
+		this.registerShape(shape);
+	},
+
+  getBook : function getBook(id) {
     return Canvas2D.KickStarter.manager.getBook(id);
   },
 

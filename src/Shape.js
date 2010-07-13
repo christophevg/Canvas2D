@@ -30,7 +30,7 @@ Canvas2D.Shape = Class.extend( {
   },
 
   setProperty : function setProperty(prop, value) {
-		value = value || null; // undefined -> null
+		value = typeof value != "undefined" ? value : null; // undefined -> null
     var config = this.getPropertiesConfig().get(prop);
     if( config.isVirtual ) { return; }
     this[prop] = value != null ? value : 
@@ -238,7 +238,7 @@ Canvas2D.Shape.manifestHandling = $H( {
   },
 
   getPropertyList: function getPropertyList() {
-    if( !this.allPropertiesCache ) { 
+    if( !this.allPropertiesCache ) {
       this.allPropertiesCache = [];
       this.getClassHierarchy().iterate(
         function propertiesCacheFiller(shape){
@@ -246,13 +246,17 @@ Canvas2D.Shape.manifestHandling = $H( {
           .concat(shape.getLocalProperties());
         }.scope(this)
       );
-    }
+		}
     return this.allPropertiesCache;
   },
 
   getLocalPropertiesConfig: function getLocalPropertiesConfig() {
     return $H(this.getManifest().properties);
   },
+
+	clearPropertiesConfigCache: function clearPropertiesCache() {
+		this.allPropertiesConfigCache = null;
+	},
 
   getPropertiesConfig: function getPropertiesConfig() {
     if( !this.allPropertiesConfigCache ) {

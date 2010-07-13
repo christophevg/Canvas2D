@@ -4,6 +4,7 @@ Canvas2D.Splash = Class.extend( {
   },
 
   activate: function activate() {
+		if( ! this.book.HTMLElement ) { return; } // only with Canvas element
     this.book.on( "load", this.handleLoading.scope(this) );
     this.book.on( "sourceLoaded", this.handleLoaded.scope(this) );
   },
@@ -50,6 +51,7 @@ Canvas2D.Splash.Overlay = Class.extend( {
   },
   
   hide: function hide() {
+		if( ! this.target ) {  return; }
     this.overlay.style.display = "none";
   },
   
