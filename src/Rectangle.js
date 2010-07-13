@@ -70,5 +70,6 @@ Canvas2D.Rectangle.Defaults = {
   labelPos       : "center",
   labelColor     : "black",
   width          : 50,
-  height         : 50
+  height         : 50,
+  roundCorners   : false
 };

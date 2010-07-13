@@ -65,7 +65,7 @@ Canvas2D.Shape = Class.extend( {
 			function(prop, type) {
 				var currentValue = this.getProperty(prop);
 				var defaultValue = this.getPropertyDefault(prop);
-				if( defaultValue && currentValue != defaultValue ) {
+				if( defaultValue != null && currentValue != defaultValue ) {
 					type.insert(prop, currentValue, construct);
 				}
 			}.scope(this)

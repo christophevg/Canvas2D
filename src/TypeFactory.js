@@ -82,6 +82,8 @@ Canvas2D.TypeFactory = {
 				if( this.extractAsKey ) {
 					construct.addModifier( value );
 				} else {
+					// FIXME: is this the right location to do this ?
+					if( value.isString && value.isString() ) { value = new ADL.String(value); }
 					construct.addModifier( prop, value );					
 				}
       } else if( this.extractFrom == ADL.Annotation ) {
