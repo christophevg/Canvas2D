@@ -26,8 +26,15 @@ ProtoJS.Test.Runner.test( parseADL ).using(
   [ 
   { 
     name     : "001",
-    data     : "sheet mySheet;\n",
+    data     : "Sheet mySheet;",
+    result   : "sheet mySheet;\n",
     expected : true 
-  }
+  },
+	{
+    name     : "002",
+    data     : "Sheet mySheet { Rectangle myRect1; }",
+    result   : "sheet mySheet {\n  rectangle myRect1;\n}\n",
+    expected : true 
+	}
   ] 
 );

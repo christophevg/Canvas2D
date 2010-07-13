@@ -89,7 +89,7 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
     delete this.positionsMap[baseName];
     this.positions.remove(shape);
     this.fireEvent( "removeShape", shape );
-    this.makeDirty();
+    // this.makeDirty();
   },
 
   addPosition: function addPosition(position) {
@@ -103,8 +103,8 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
       return null;
     }
 
-    shape   .on( "change", this.makeDirty.scope(this) );
-    position.on( "change", this.makeDirty.scope(this) );
+    //shape   .on( "change", this.makeDirty.scope(this) );
+    //position.on( "change", this.makeDirty.scope(this) );
 
     this.positions.push(position);
     this.shapesMap[baseName] = shape;
@@ -115,7 +115,7 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
     "@" + position.getLeft() + "," +
     position.getTop() : "" ) );
 
-    this.makeDirty();
+    //this.makeDirty();
 
     return shape;
   },
