@@ -212,6 +212,10 @@ Canvas2D.Types = {
           top : parseFloat(values[1])
         };
         return props;
+      },
+      
+      toString: function toStringPosition(position) {
+        return position.left + "," + position.top;
       }
     }
   ),
@@ -243,6 +247,17 @@ Canvas2D.Types = {
         var props = {};
         props[prop] = listValues;
         return props;
+      },
+      
+      toString: function toStringList(listValues) {
+        // validate has been called normally, which has already split value
+        // into values, just check to be sure ;-)
+        var list = [];
+        listValues.iterate( function( value ) {
+          list.push( this.type.toString(value) );
+        }.scope(this) );
+        var string = list.join(";");
+        return string;
       }
     }
   )

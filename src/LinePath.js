@@ -57,6 +57,8 @@ Canvas2D.LinePath.MANIFEST = {
   libraries    : [ "Canvas2D" ]
 };
 
-Canvas2D.LinePath.Defaults = {};
+Canvas2D.LinePath.Defaults = {
+  moves : []
+};
 
 Canvas2D.registerShape( Canvas2D.LinePath );

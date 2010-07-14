@@ -78,6 +78,7 @@ Canvas2D.TypeFactory = {
     },
 
 		insert: function insert(prop, value, construct) {
+      if( typeof value == "object" ) { value = this.toString(value); }
 			if( this.extractFrom == ADL.Modifier ) {
 				if( this.extractAsKey ) {
 					construct.addModifier( value );
