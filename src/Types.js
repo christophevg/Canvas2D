@@ -103,7 +103,7 @@ Canvas2D.Types = {
       },
 
       obsoletes : function obsoletesMapper() {
-        return this._props;
+        return this._props.keys();
       },
 
       validate: function validateMapper(value) {
@@ -130,13 +130,14 @@ Canvas2D.Types = {
 
       createGetter : function createGetter() {
         return function(retval_in, props_in) {
-          return function() {
+          return function(defaultProperty) {
             var retval = retval_in;
             var props  = props_in;
             var match  = /\([^)]+\)/;
 						var valid  = true;
             props.iterate(function(prop) {
-							var value = this.getProperty(prop);
+							var value = defaultProperty ? 
+								this.getPropertyDefault(prop) : this.getProperty(prop);
 							if( value == null || typeof value == "undefined" ) {
 								valid = false;
 							} else {

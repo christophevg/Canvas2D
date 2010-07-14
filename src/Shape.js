@@ -49,27 +49,60 @@ Canvas2D.Shape = Class.extend( {
 
   getPropertyDefault: function getPropertyDefault(prop) {
     var retVal = null;
-    this.getClassHierarchy().reverse().iterate( 
-      function classHierarchyIterator(clazz) {
-        if( retVal == null && typeof clazz.Defaults[prop] != "undefined" ) {
-          retVal = clazz.Defaults[prop];
-        }
-      }
-    );
+		if( typeof this[prop] == "undefined" ) {
+      var propName = prop.substr(0,1).toUpperCase() + prop.substr(1);
+      var getterName = "get"+propName;
+      return this[getterName](true);
+		} else {
+    	this.getClassHierarchy().reverse().iterate( 
+      	function classHierarchyIterator(clazz) {
+        	if( retVal == null && typeof clazz.Defaults[prop] != "undefined" ) {
+          	retVal = clazz.Defaults[prop];
+        	}
+      	}
+    	);
+		}
     return retVal;
   },
 
 	asConstruct: function asConstruct() {
 		var construct = new ADL.Construct( this.getType(), this.getName() );
+
+		var skipProperties = [];
+
+		// construct list of properties that will be obsoleted by other properties
 		this.__CLASS__.getPropertiesConfig().iterate(
 			function(prop, type) {
-				var currentValue = this.getProperty(prop);
-				var defaultValue = this.getPropertyDefault(prop);
-				if( defaultValue != null && currentValue != defaultValue ) {
-					type.insert(prop, currentValue, construct);
+				if( type.isVirtual ) {
+				  //print( prop + " is virtual " );
+					var currentValue = this.getProperty(prop);
+					var defaultValue = this.getPropertyDefault(prop);
+					if( defaultValue != null && currentValue != defaultValue ) {
+					  //print( currentValue + " != " + defaultValue + "adding virtual " + prop );
+					  //print( "obsoletes = " + type.obsoletes().join( ", " ) );
+						type.insert(prop, currentValue, construct);
+						skipProperties = skipProperties.concat(type.obsoletes(), [ prop ]);
+					}
 				}
 			}.scope(this)
 		);
+
+    //if( skipProperties.length > 0 ) {
+    //  print( "skipping: " + skipProperties.join( ", " ) );
+    //}
+    
+		this.__CLASS__.getPropertiesConfig().iterate(
+			function(prop, type) {
+				if( ! skipProperties.has(prop) ) {
+					var currentValue = this.getProperty(prop);
+					var defaultValue = this.getPropertyDefault(prop);
+					if( defaultValue != null && currentValue != defaultValue ) {
+						type.insert(prop, currentValue, construct);
+					}
+				}
+			}.scope(this)
+		);
+
 		return construct;
 	},
 
@@ -184,13 +217,6 @@ Canvas2D.Shape.MANIFEST = {
     name               : Canvas2D.Types.Name(),
     width              : Canvas2D.Types.Size(),
     height             : Canvas2D.Types.Size(),
-    label              : Canvas2D.Types.Text(),
-    labelPos           : Canvas2D.Types.Align(),
-    labelColor         : Canvas2D.Types.Color(),
-    labelAlign         : Canvas2D.Types.Align(),
-    labelFont          : Canvas2D.Types.Font(),
-    labelUseCrispLines : Canvas2D.Types.Switch(),
-    useCrispLines      : Canvas2D.Types.Switch(),
     geo                : Canvas2D.Types.Mapper( 
       { 
         map : "([0-9]+)x([0-9]+)", 
@@ -201,12 +227,19 @@ Canvas2D.Shape.MANIFEST = {
         } 
       }
     ),
-    isSelectable      : Canvas2D.Types.Switch(),
-    isVisible         : Canvas2D.Types.Switch(),
-    hideSelection     : Canvas2D.Types.Switch(),
-    onMouseDown       : Canvas2D.Types.Handler(),
-    onMouseUp         : Canvas2D.Types.Handler(),
-    onMouseDrag       : Canvas2D.Types.Handler()
+    label              : Canvas2D.Types.Text(),
+    labelPos           : Canvas2D.Types.Align(),
+    labelColor         : Canvas2D.Types.Color(),
+    labelAlign         : Canvas2D.Types.Align(),
+    labelFont          : Canvas2D.Types.Font(),
+    labelUseCrispLines : Canvas2D.Types.Switch(),
+    useCrispLines      : Canvas2D.Types.Switch(),
+    isSelectable       : Canvas2D.Types.Switch(),
+    isVisible          : Canvas2D.Types.Switch(),
+    hideSelection      : Canvas2D.Types.Switch(),
+    onMouseDown        : Canvas2D.Types.Handler(),
+    onMouseUp          : Canvas2D.Types.Handler(),
+    onMouseDrag        : Canvas2D.Types.Handler()
   }
 };
 

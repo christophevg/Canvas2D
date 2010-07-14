@@ -53,11 +53,14 @@ var Canvas2D = {
       // if no getter is explicitly provided, ...
       if( typeof shape.prototype[getterName] == "undefined" ) {
         // if the prop's type config provides one ...
-				//print( "adding " + getterName + " on " + shape.getType());
+				// print( "adding " + getterName + " on " + shape.getType());
         if( config.createGetter ) {
           shape.prototype[getterName] = config.createGetter();
         } else {
-          shape.prototype[getterName] = function() { return this.getProperty(prop);};
+          shape.prototype[getterName] = function(defaultProperty) { 
+						return defaultProperty ? 
+							this.getPropertyDefault(prop) : this.getProperty(prop);
+					};
         }
       }
       var setterName = "set"+propName;
