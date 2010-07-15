@@ -8,8 +8,10 @@ Canvas2D.Image = Canvas2D.Rectangle.extend( {
   },
 
   updateSize: function updateSize() {
-    this.width  = this.image.width;
-    this.height = this.image.height;
+    this.width  = this.image ? 
+      this.image.width  : this.getPropertyDefault("width");
+    this.height = this.image ? 
+      this.image.height : this.getPropertyDefault("height");
   },
 
   draw: function draw(sheet, left, top) {
@@ -25,6 +27,8 @@ Canvas2D.Image.MANIFEST = {
   libraries    : [ "Canvas2D" ]
 };
 
-Canvas2D.Image.Defaults = {};
+Canvas2D.Image.Defaults = {
+  src : ""
+};
 
 Canvas2D.registerShape( Canvas2D.Image );
