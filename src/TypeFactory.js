@@ -19,7 +19,8 @@ Canvas2D.TypeFactory = {
       } else if( this.extractFrom == ADL.Annotation ) {
         this._extractAnnotation(props, prop, construct);
       } else if( this.extractFrom == ADL.Value ) { 
-        props[prop] = construct.getValue().getValue(); // value of the Value
+        props[prop] = construct.getValue() != null ? 
+          construct.getValue().getValue() : ""; // value of the Value
       } else if( this.extractFrom == "name" ) {
         props[prop] = construct.name;
       } else if( this.extractFrom == "parent" ) {
@@ -90,7 +91,9 @@ Canvas2D.TypeFactory = {
       } else if( this.extractFrom == ADL.Annotation ) {
         construct.addAnnotation(value);
       } else if( this.extractFrom == ADL.Value ) { 
-				construct.setValue(value);
+				// FIXME: is this the right location to do this ?
+				if( value.isString && value.isString() ) { value = new ADL.String(value); }
+ 				construct.setValue(value);
       } else if( this.extractFrom == "name" ) {
 				construct.setName( value );
       } else if( this.extractFrom == "parent" ) {

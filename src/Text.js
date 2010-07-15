@@ -30,6 +30,7 @@ Canvas2D.Text.MANIFEST = {
 };
 
 Canvas2D.Text.Defaults = {
+  text           : "",
   useCrispLines  : false,
   color          : "black",
   font           : "10pt Sans-Serif", 
