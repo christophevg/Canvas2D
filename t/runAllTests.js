@@ -28,7 +28,7 @@ function testADLRoundTrip(input, msg, expected ) {
 }
 
 ProtoJS.Test.Runner.prepare();
-[ "Sheet", "Line", "LinePath", "Rectangle", "Text", "Image" ]
+[ "Sheet", "Line", "LinePath", "Rectangle", "Text", "Image", "Arrow" ]
 .iterate( function(shape) {
 	eval( "var set = [ " + readFile( "t/test" + shape + ".js" ) + "];" );
 	print( "Testing " + shape );

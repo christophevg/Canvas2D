@@ -51,6 +51,9 @@ Canvas2D.Arrow.MANIFEST = {
   libraries    : [ "Canvas2D" ]
 };
 
-Canvas2D.Arrow.Defaults = {};
+Canvas2D.Arrow.Defaults = {
+  arrowHeadWidth: 10,
+  arrowHeadHeight: 10
+};
 
 Canvas2D.registerShape( Canvas2D.Arrow );
