@@ -8,7 +8,7 @@ CORE_SRCS = ${SRC_DIR}/Canvas2D.js \
 			${SRC_DIR}/ImageManager.js \
 			${SRC_DIR}/Manager.js \
 			${SRC_DIR}/ADLVisitor.js \
-			${SRC_DIR}/TypeFactory.js \
+			${SRC_DIR}/Type.js \
 			${SRC_DIR}/Types.js \
 			${SRC_DIR}/Book.js \
 			${SRC_DIR}/Shape.js \
@@ -93,7 +93,7 @@ CORE_SRCS = ${SRC_DIR}/Common.js \
 			${SRC_DIR}/ImageManager.js \
 			${SRC_DIR}/Manager.js \
 			${SRC_DIR}/ADLVisitor.js \
-			${SRC_DIR}/TypeFactory.js \
+			${SRC_DIR}/Type.js \
 			${SRC_DIR}/Types.js \
 			${SRC_DIR}/Book.js \
 			${SRC_DIR}/Shape.js \

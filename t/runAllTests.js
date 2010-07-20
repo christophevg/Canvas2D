@@ -12,6 +12,10 @@ function testADLRoundTrip(input, msg, expected ) {
   try {
 		var book = new Canvas2D.Book();
 		book.load( input );
+		// TODO: move this to Book?
+		if( book.errors != "" ) { 
+		  throw( { fileName: "Book", lineNumber: "load", message: book.errors } ); 
+		}
 		output = book.toADL();
   } catch(e) {
 		error = "ERROR: " + e["fileName"] + "@" + e["lineNumber"] + " : " + 
@@ -28,7 +32,10 @@ function testADLRoundTrip(input, msg, expected ) {
 }
 
 ProtoJS.Test.Runner.prepare();
-[ "Sheet", "Line", "LinePath", "Rectangle", "Text", "Image", "Arrow" ]
+[ 
+  "Shape", 
+  "Sheet", "Line", "LinePath", "Rectangle", "Text", "Image", "Arrow"
+]
 .iterate( function(shape) {
 	eval( "var set = [ " + readFile( "t/test" + shape + ".js" ) + "];" );
 	print( "Testing " + shape );

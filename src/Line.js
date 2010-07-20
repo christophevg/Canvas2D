@@ -15,9 +15,9 @@ Canvas2D.Line = Canvas2D.Shape.extend( {
 Canvas2D.Line.MANIFEST = {
   name     : "line",
   properties : {
-    color     : Canvas2D.Types.Color(), 
-    lineWidth : Canvas2D.Types.Size(),
-    lineStyle : Canvas2D.Types.LineStyle()
+    color     : new Canvas2D.Types.Color(), 
+    lineWidth : new Canvas2D.Types.Size(),
+    lineStyle : new Canvas2D.Types.LineStyle()
   },
   libraries: [ "Canvas2D" ]
 };

@@ -1,6 +1,6 @@
 Canvas2D.Types = {
 
-  Name: Canvas2D.TypeFactory.createType( 
+  Name: Canvas2D.Type.extend( 
     { 
       _shapeCounter : {},
       generate: function generateName( shape ) {
@@ -15,13 +15,14 @@ Canvas2D.Types = {
     }
   ),
 
-  Parent : Canvas2D.TypeFactory.createType(
+  Parent : Canvas2D.Type.extend(
     {
-      extractFrom: "parent"
+      extractFrom: "parent",
+      exportToADL: false
     }
   ),
 
-  Size   : Canvas2D.TypeFactory.createType(
+  Size   : Canvas2D.Type.extend(
     {
       sanitize: function sanitizeSize(value) {
         return parseFloat(value);
@@ -33,7 +34,7 @@ Canvas2D.Types = {
     }
   ),
 
-  Text   : Canvas2D.TypeFactory.createType(
+  Text   : Canvas2D.Type.extend(
     {
       validate: function validateText(value) {
         return value.isString();
@@ -41,7 +42,7 @@ Canvas2D.Types = {
     }
   ),
 
-  Color  : Canvas2D.TypeFactory.createType(
+  Color  : Canvas2D.Type.extend(
     {
       // TODO add http://www.w3schools.com/html/html_colornames.asp
       validate: function validateColor(value) {
@@ -56,7 +57,7 @@ Canvas2D.Types = {
     }
   ),
 
-  Font   : Canvas2D.TypeFactory.createType(
+  Font   : Canvas2D.Type.extend(
     {
       validate: function validateFont(value) {
         // TODO improve matching
@@ -65,7 +66,7 @@ Canvas2D.Types = {
     }
   ),
 
-  Switch : Canvas2D.TypeFactory.createType(
+  Switch : Canvas2D.Type.extend(
     {
       sanitize: function sanitizeSwitch(value) {
         if( [ true, "true", "yes", "on" ].contains(value) ||
@@ -80,44 +81,51 @@ Canvas2D.Types = {
     }
   ),
 
-  Selection : Canvas2D.TypeFactory.createType( 
+  Selection : Canvas2D.Type.extend( 
     {
-      _construct : function _constructSelection(config) {
-        this._values      = config.values;
+      init : function initSelection(config) {
+        config = config || {}; // which is the case with "named" selections
+        this._super(config);
+        this.values      = config.values || this.values;
         this.extractAsKey = config.asKey;
       },
 
       validate   : function validateSelection(value) {
-        return this._values.contains(value);
+        return this.values.contains(value);
       }
     }
   ),
 
-  Mapper : Canvas2D.TypeFactory.createType(
+  Mapper : Canvas2D.Type.extend(
     {
-      _construct : function _constructMapper(config) {
-        this._regexp = config.map;
-        this._props  = $H(config.to);
-        if( config.extractFrom ) { this.extractFrom  = config.extractFrom; }
-        if( config.asKey       ) { this.extractAsKey = config.asKey;       }
+      init : function _constructMapper(config) {
+        this._super(config);
+        
+        this.match = config.match || "";
+        this.map   = config.map   || [];
       },
 
       obsoletes : function obsoletesMapper() {
-        return this._props.keys();
+        return this.map;
       },
 
       validate: function validateMapper(value) {
-        return value && value.match(this._regexp);
+        return value && value.match(this.match);
       },
 
       unpack : function unpackMapper(prop, value) {
-        var result = new RegExp(this._regexp).exec(value);
+        var result = new RegExp(this.match).exec(value);
         var retval = {};
         var c = 1;
-        this._props.iterate( function(propName, propType) {
+        this.map.iterate( function(propName) {
+          //print( "extracting " + propName );
+          // TODO: retrieve propType from scoped shape's property called propName
+          var propType = this.propertiesConfig.get(propName);
           propType.setParent(this.getParent());
           if( propType.validate(result[c]) ) {
-            retval[propName] = propType.unpack(propName, propType.sanitize(result[c]))[propName];
+            var cleanValue    = propType.sanitize(result[c]);
+            var unpackedValue = propType.unpack(propName, cleanValue); 
+            retval[propName]  = unpackedValue[propName];
           } else {
             console.log( "invalid : " + propName + " = " + result[c] );
           }
@@ -129,43 +137,45 @@ Canvas2D.Types = {
       isVirtual: true,
 
       createGetter : function createGetter() {
-        return function(retval_in, props_in) {
+        return function(match_in, map_in) {
           return function(defaultProperty) {
-            var retval = retval_in;
-            var props  = props_in;
+            // TODO: improve naming
+            var retval = match_in;
+            var props  = map_in;
             var match  = /\([^)]+\)/;
-						var valid  = true;
+            var valid  = true;
             props.iterate(function(prop) {
-							var value = defaultProperty ? 
-								this.getPropertyDefault(prop) : this.getProperty(prop);
-							if( value == null || typeof value == "undefined" ) {
-								valid = false;
-							} else {
-              	retval = retval.replace( match, value );
-							}
+              var value = defaultProperty ? 
+              this.getPropertyDefault(prop) : this.getProperty(prop);
+              if( value === null || typeof value === "undefined" ) {
+                valid = false;
+              } else {
+                retval = retval.replace( match, value );
+              }
             }.scope(this) );
             return valid ? retval : null;
           };
         }
-        (this._regexp, this._props);
+        (this.match, this.map);
       }
     }
   ),
 
-  Handler : Canvas2D.TypeFactory.createType(
+  Handler : Canvas2D.Type.extend(
     {
       validate : function validateHandler(value) {
         return value.isFunction();
       }
     }
   ),
-  
-  Shape : Canvas2D.TypeFactory.createType(
+
+  Shape : Canvas2D.Type.extend(
     {
       validate: function validateShape(shapeName) {
-        return $H(this.getParent().getContainer().shapesMap).keys().contains(shapeName);
+        return $H(this.getParent().getContainer().shapesMap)
+        .keys().contains(shapeName);
       },
-      
+
       unpack: function unpackShape(prop, value) {
         var result = {};
         result[prop] = this.getParent().getContainer().shapesMap[value];
@@ -173,13 +183,13 @@ Canvas2D.Types = {
       }
     }
   ),
-  
-  ConnectorHead : Canvas2D.TypeFactory.createType(
+
+  ConnectorHead : Canvas2D.Type.extend(
     {
       validate: function validateConnectorHead(name) {
         return $H(Canvas2D.CustomConnectors).keys().contains(name);
       },
-      
+
       unpack: function unpackConnectorHead(prop, value) {
         var result = {};
         result[prop] = Canvas2D.CustomConnectors[value]
@@ -188,19 +198,19 @@ Canvas2D.Types = {
     }
   ),
 
-  URL : Canvas2D.TypeFactory.createType(
+  URL : Canvas2D.Type.extend(
     {
       validate: function validateURL(url) {
-	      var regexp = /(ftp|http|https:\/\/)?(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
-	      return regexp.test(url);
+        var regexp = /(\w+:\/\/)?(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+        return regexp.test(url);
       }
     }
   ),
 
-  Position : Canvas2D.TypeFactory.createType(
+  Position : Canvas2D.Type.extend(
     {
       validate: function validatePosition(value) {
-				if( !value ) { return false; }
+        if( !value ) { return false; }
         return value.match(/-?[0-9\.]+[, ]+-?[0-9\.]+/); // FIXME: improve ;-)
       },
 
@@ -213,16 +223,17 @@ Canvas2D.Types = {
         };
         return props;
       },
-      
+
       toString: function toStringPosition(position) {
         return position.left + "," + position.top;
       }
     }
   ),
 
-  List : Canvas2D.TypeFactory.createType(
+  List : Canvas2D.Type.extend(
     {
-      _construct : function _constructList(type) {
+      init : function initList(type) {
+        this._super();
         this.type = type;
       },
 
@@ -248,7 +259,7 @@ Canvas2D.Types = {
         props[prop] = listValues;
         return props;
       },
-      
+
       toString: function toStringList(listValues) {
         // validate has been called normally, which has already split value
         // into values, just check to be sure ;-)
@@ -265,27 +276,19 @@ Canvas2D.Types = {
 
 // extended Types
 
-Canvas2D.Types.FontDecoration = Canvas2D.TypeFactory.extend( 
-    Canvas2D.Types.Selection(
-      { values: [ "underline", "overline", "line-through", "none" ] } 
-    )
+Canvas2D.Types.FontDecoration = Canvas2D.Types.Selection.extend(
+  { values: [ "underline", "overline", "line-through", "none" ] } 
 );
 
-Canvas2D.Types.LineStyle = Canvas2D.TypeFactory.extend(
-  Canvas2D.Types.Selection(
-    { values: [ "solid", "dashed", "none" ] }
-  )
+Canvas2D.Types.LineStyle = Canvas2D.Types.Selection.extend(
+  { values: [ "solid", "dashed", "none" ] }
 );
 
-Canvas2D.Types.Direction = Canvas2D.TypeFactory.extend(
-  Canvas2D.Types.Selection(
-    { values: [ "n", "nne", "ne", "ene", "e", "ese", "se", "sse",
-                "s", "ssw", "sw", "wsw", "w", "wnw", "nw", "nnw"  ] }
-  )
+Canvas2D.Types.Direction = Canvas2D.Types.Selection.extend(
+  { values: [ "n", "nne", "ne", "ene", "e", "ese", "se", "sse",
+  "s", "ssw", "sw", "wsw", "w", "wnw", "nw", "nnw"  ] }
 );
 
-Canvas2D.Types.Align = Canvas2D.TypeFactory.createType(
-  Canvas2D.Types.Selection(
-    { values: [ "left", "center", "right", "top", "middle", "bottom" ] }
-  )
+Canvas2D.Types.Align = Canvas2D.Types.Selection.extend(
+  { values: [ "left", "center", "right", "top", "middle", "bottom" ] }
 );

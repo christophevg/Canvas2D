@@ -5,7 +5,7 @@ Canvas2D.Shape = Class.extend( {
     
     // beforeInit is used to allow Shapes to preprocess the
     // properties before they are automatically initialized
-    props = this.beforeInit(props || {});
+    props = this.beforeInit(props);
 
     // process all input properties into actual properties
     this.setProperties(props);
@@ -49,6 +49,7 @@ Canvas2D.Shape = Class.extend( {
 
   getPropertyDefault: function getPropertyDefault(prop) {
     var retVal = null;
+    // TODO: this can lead to infinte loops ... design is wrong somewhere ;-)
 		if( typeof this[prop] == "undefined" ) {
       var propName = prop.substr(0,1).toUpperCase() + prop.substr(1);
       var getterName = "get"+propName;
@@ -77,8 +78,8 @@ Canvas2D.Shape = Class.extend( {
 				  //print( prop + " is virtual " );
 					var currentValue = this.getProperty(prop);
 					var defaultValue = this.getPropertyDefault(prop);
-					if( defaultValue != null && currentValue != defaultValue ) {
-					  //print( currentValue + " != " + defaultValue + "adding virtual " + prop );
+					if( currentValue != defaultValue ) {
+					  //print( currentValue + " != " + defaultValue + " / adding virtual " + prop );
 					  //print( "obsoletes = " + type.obsoletes().join( ", " ) );
 						type.insert(prop, currentValue, construct);
 						skipProperties = skipProperties.concat(type.obsoletes(), [ prop ]);
@@ -93,10 +94,12 @@ Canvas2D.Shape = Class.extend( {
     
 		this.__CLASS__.getPropertiesConfig().iterate(
 			function(prop, type) {
-				if( ! skipProperties.has(prop) ) {
+				if( (! skipProperties.has(prop)) && type.exportToADL ) {
 					var currentValue = this.getProperty(prop);
 					var defaultValue = this.getPropertyDefault(prop);
-					if( defaultValue != null && currentValue != defaultValue ) {
+					//print( "maybe inserting " + currentValue + " / " + defaultValue );
+					if( currentValue != defaultValue ) {
+					  //print( "inserting: " + prop + " = " + currentValue );
 						type.insert(prop, currentValue, construct);
 					}
 				}
@@ -147,11 +150,11 @@ Canvas2D.Shape = Class.extend( {
   beforeRender: function prepare(sheet) {},
   afterRender : function prepare(sheet) {},
 
-  getCenter: function() {
+  getCenter: function getCenter() {
     return { left: this.getWidth()  / 2, top:  this.getHeight() / 2 };
   },
 
-  getPort: function(side) {
+  getPort: function getPort(side) {
     var modifiers = { 
       nw:  { left: 0,    top: 0   },
       nnw: { left: 0.25, top: 0   },
@@ -181,11 +184,11 @@ Canvas2D.Shape = Class.extend( {
     };
   },
 
-  hit: function(x,y) {
+  hit: function hit(x,y) {
     return ( this.getWidth() >= x && this.getHeight() >= y );
   },
 
-  hitArea: function(left, top, right, bottom) {
+  hitArea: function hitArea(left, top, right, bottom) {
     return ! ( 0 > right     ||
       this.getWidth() < left ||
       0 > bottom             ||
@@ -214,32 +217,28 @@ ProtoJS.mix(
 Canvas2D.Shape.MANIFEST = {
   name : "shape",
   properties: {
-    name               : Canvas2D.Types.Name(),
-    width              : Canvas2D.Types.Size(),
-    height             : Canvas2D.Types.Size(),
-    geo                : Canvas2D.Types.Mapper( 
+    name               : new Canvas2D.Types.Name(),
+    width              : new Canvas2D.Types.Size(),
+    height             : new Canvas2D.Types.Size(),
+    geo                : new Canvas2D.Types.Mapper( 
       { 
-        map : "([0-9]+)x([0-9]+)", 
-        to  : 
-        { 
-          width  : Canvas2D.Types.Size(), 
-          height : Canvas2D.Types.Size() 
-        } 
+        match : "([0-9]+)x([0-9]+)",
+        map   : [ "width", "height" ]
       }
     ),
-    label              : Canvas2D.Types.Text(),
-    labelPos           : Canvas2D.Types.Align(),
-    labelColor         : Canvas2D.Types.Color(),
-    labelAlign         : Canvas2D.Types.Align(),
-    labelFont          : Canvas2D.Types.Font(),
-    labelUseCrispLines : Canvas2D.Types.Switch(),
-    useCrispLines      : Canvas2D.Types.Switch(),
-    isSelectable       : Canvas2D.Types.Switch(),
-    isVisible          : Canvas2D.Types.Switch(),
-    hideSelection      : Canvas2D.Types.Switch(),
-    onMouseDown        : Canvas2D.Types.Handler(),
-    onMouseUp          : Canvas2D.Types.Handler(),
-    onMouseDrag        : Canvas2D.Types.Handler()
+    label              : new Canvas2D.Types.Text(),
+    labelPos           : new Canvas2D.Types.Align(),
+    labelColor         : new Canvas2D.Types.Color(),
+    labelAlign         : new Canvas2D.Types.Align(),
+    labelFont          : new Canvas2D.Types.Font(),
+    labelUseCrispLines : new Canvas2D.Types.Switch(),
+    useCrispLines      : new Canvas2D.Types.Switch(),
+    isSelectable       : new Canvas2D.Types.Switch(),
+    isVisible          : new Canvas2D.Types.Switch(),
+    hideSelection      : new Canvas2D.Types.Switch(),
+    onMouseDown        : new Canvas2D.Types.Handler(),
+    onMouseUp          : new Canvas2D.Types.Handler(),
+    onMouseDrag        : new Canvas2D.Types.Handler()
   }
 };
 

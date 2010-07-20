@@ -51,10 +51,10 @@ Canvas2D.Rectangle.MANIFEST = {
   name         : "rectangle",
   aliasses     : [ "box" ],
   properties   : { 
-    lineWidth    : Canvas2D.Types.Size(), 
-    lineColor    : Canvas2D.Types.Color(),
-    fillColor    : Canvas2D.Types.Color(),
-    roundCorners : Canvas2D.Types.Switch()
+    lineWidth    : new Canvas2D.Types.Size(), 
+    lineColor    : new Canvas2D.Types.Color(),
+    fillColor    : new Canvas2D.Types.Color(),
+    roundCorners : new Canvas2D.Types.Switch()
   },
   libraries    : [ "Canvas2D" ]
 };

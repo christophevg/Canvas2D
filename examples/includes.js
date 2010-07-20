@@ -16,7 +16,7 @@ var scripts = [
     "src/ImageManager.js", 
     "src/Manager.js", 
     "src/ADLVisitor.js", 
-    "src/TypeFactory.js",
+    "src/Type.js",
     "src/Types.js",
     "src/Book.js", 
     "src/Shape.js", 

@@ -40,7 +40,6 @@ Canvas2D.Alias.from = function( construct, parent ) {
 
 Canvas2D.Alias.MANIFEST = {
   name     : "alias",
-  aliasses : [ "shape" ],
   libraries: [] 
 };
 
