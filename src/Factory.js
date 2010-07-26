@@ -612,7 +612,11 @@ Canvas2D.Factory.setup = function(element) {
 
   // TextFunctions are problematic ;-)
   // it took a while before all major browser supported the text functions
-  if( ctx.strokeText && ctx.fillText && ctx.measureText ) {
+  // and even though MobileSafari 3.2 contains these functions, they do not
+  // work correctly :-(
+  if( ctx.strokeText && ctx.fillText && ctx.measureText &&
+      !navigator.userAgent.contains( "OS 3_2" ) ) 
+  {
     // standard native functions are present, extend them a bit further
     ctx = Canvas2D.Factory.extensions.HTML5CanvasText.__extend__(ctx);
   } else if( ctx.mozMeasureText && ctx.mozPathText ) {
@@ -621,11 +625,6 @@ Canvas2D.Factory.setup = function(element) {
   } else {
     // browser has no native text functions, use CanvasText to simulate it
     ProtoJS.mix( Canvas2D.Factory.extensions.CanvasText, ctx, true );
-    if( ProtoJS.Browser.IE ) {
-      // IE already uses an emulation layer (explorercanvas)
-      // which is slow, so we disable the additional watermark text
-      Canvas2D.Book.prototype.addWaterMark = function() { };
-    }
   }	
 
   // Additional Browser Specific Configuration
