@@ -1,8 +1,8 @@
 EXCANVAS-AG=http://excanvas.svn.sourceforge.net/viewvc/excanvas/silverlight/excanvas.js
 EXCANVAS-URL=http://explorercanvas.googlecode.com/svn/trunk/excanvas.js
 CANVASTEXT-URL=../local/canvastext.js
-ADL-URL=http://git.thesoftwarefactory.be/pub/ADL.git
-PROTOJS-URL=http://git.thesoftwarefactory.be/pub/ProtoJS.git
+ADL-URL=http://github.com/christophevg/ADL.git
+PROTOJS-URL=http://github.com/christophevg/ProtoJS.git
 TABBER-DIST=tabber.zip
 TABBER-URL=http://www.barelyfitz.com/projects/tabber/${TABBER-DIST}
 

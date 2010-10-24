@@ -1,17 +1,16 @@
 Canvas2D
-by Christophe VG <xtof@thesoftwarefactory.be>
-Copyright 2009, TheSoftwareFactory
+by Christophe VG <contact@christophe.vg>
+Copyright 2009-2010, Christophe VG
 
 ---
 
 Canvas2D is a lightweight OO wrapper API around the HTML5 canvas
 element. It offers an extensible shape-oriented interface.
 
-...
-
-Note: I'm trying to get things as polished as possible, but my current
-focus is on a project that uses Canvas2D. When that reaches a stable
-state, I'll add documentation and examples here also :-)
+WARNING: the current Canvas2D repository is not stable. Yes, shame on me.
+not even the master, I know. I'm currently migrating from our old more closed
+git repositories to the open GitHub world. Some issues still need to be
+addressed.
 
 In a nutshell:
 $ make
