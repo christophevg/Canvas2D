@@ -1,9 +1,9 @@
 [submodule "lib/ADL"]
 	path = lib/ADL
-	url = http://git.thesoftwarefactory.be/pub/ADL.git
-[submodule "lib/ProtoJS"]
-	path = lib/ProtoJS
-	url = http://git.thesoftwarefactory.be/pub/ProtoJS.git
+	url = git@github.com:christophevg/ADL.git
 [submodule "lib/common.make"]
 	path = lib/common.make
-	url = http://git.thesoftwarefactory.be/pub/common.make.git
+	url = git@github.com:christophevg/common.make.git
+[submodule "lib/ProtoJS"]
+	path = lib/ProtoJS
+	url = git@github.com:christophevg/ProtoJS.git
