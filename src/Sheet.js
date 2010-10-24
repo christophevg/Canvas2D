@@ -184,7 +184,8 @@ Canvas2D.Sheet.Operations = [
 Canvas2D.Sheet.MANIFEST = {
   name      : "sheet",
   properties : {
-    book  : new Canvas2D.Types.Parent(),
+    book   : new Canvas2D.Types.Parent(),
+    origin : new Canvas2D.Types.Position()
   },
   libraries : [ "Canvas2D" ]
 };

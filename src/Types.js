@@ -52,7 +52,19 @@ Canvas2D.Types = {
         value.match(/#[a-fA-F0-9]{3}/)             ||
         value.match(/#[a-fA-F0-9]{6}/)             || 
         value.match(/rgb\([0-9]+,[0-9]+,[0-9]+\)/) || 
-        value.match(/rgba\([0-9]+,[0-9]+,[0-9]+,[0-9\.]+\)/);
+        value.match(/rgba\([0-9]+,[0-9]+,[0-9]+,[0-9\.]+\)/) ||
+        value.match(/[a-zA-Z]+ [0-9\.]+/);
+      },
+      unpack: function unpackColor(prop, value) {
+        // TODO: improve, this is for showcase only
+        var props = {};
+        var result = new RegExp("([a-zA-Z]+) ([0-9\.]+)").exec(value);
+        if( result !== null ) {
+          var map = { red: "255,0,0", green: "0,255,0", blue: "0,0,255" };
+          value = "rgba(" + map[result[1]] + "," + result[2] + ")";
+        }
+        props[prop] = value;
+        return props;
       }
     }
   ),
@@ -86,8 +98,8 @@ Canvas2D.Types = {
       init : function initSelection(config) {
         config = config || {}; // which is the case with "named" selections
         this._super(config);
-        this.values      = config.values || this.values;
-        this.extractAsKey = config.asKey;
+        this.values       = config.values || this.values;
+        this.extractAsKey = config.asKey; // FIXME: this can be done by Type
       },
 
       validate   : function validateSelection(value) {

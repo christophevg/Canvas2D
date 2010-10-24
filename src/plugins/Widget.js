@@ -35,7 +35,7 @@ Canvas2D.Widget = Class.extend( {
   setupSource: function setupSource() {
     this.source = this._getElement(this.id, "source" );
     if( this.source ) {
-      this.book.show(this.source);
+      this.book.show(this.source.innerHTML);
     }
   },
 

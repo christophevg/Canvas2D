@@ -46,7 +46,7 @@ Canvas2D.TabbedCanvas = Class.extend( {
 
     about.innerHTML = '<span style="font: 9pt Verdana, sans-serif;">' +
     '<b>Canvas2D ' + Canvas2D.version  + 
-    '</b><br>Copyright &copy 2009, ' +
+    '</b><br>Copyright &copy 2009-2010, ' +
     '<a href="http://christophe.vg" target="_blank">Christophe VG</a>'+ 
     ' & <a href="http://thesoftwarefactory.be" ' +
     'target="_blank">The Software Factory</a><br>' + 

@@ -45,7 +45,9 @@ Canvas2D.Position = Class.extend( {
   },
 
   render: function( sheet ) {
-    this.shape.render( sheet, this.getLeft(), this.getTop() );
+    var origin = sheet.getOrigin() || { left: 0, top: 0 };
+    this.shape.render( sheet, this.getLeft() + origin.left, 
+                              this.getTop()  + origin.top );
   },
 
   move: function( dleft, dtop ) {

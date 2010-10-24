@@ -30,6 +30,7 @@ var scripts = [
     "src/LinePath.js", 
     "src/Alias.js", 
     "src/Rectangle.js", 
+    "src/Circle.js", 
     "src/Text.js", 
     "src/Image.js", 
     "src/Arrow.js",
