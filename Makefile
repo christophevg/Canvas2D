@@ -58,10 +58,10 @@ UPDATE_LIBS = ${LIB_DIR}/ADL ${LIB_DIR}/ProtoJS
 have-common := $(wildcard lib/common.make/Makefile.inc)
 ifeq ($(strip $(have-common)),)
 all:
-        @echo "*** one-time initialization of common.make"
-        @git submodule -q init
-        @git submodule -q update
-        @$(MAKE) -s $@
+	@echo "*** one-time initialization of common.make"
+	@git submodule -q init
+	@git submodule -q update
+	@$(MAKE) -s $@
 endif
 
 -include lib/common.make/Makefile.inc
