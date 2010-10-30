@@ -18,8 +18,16 @@ Canvas2D.Type = Class.extend( {
     this.propertiesConfig = config;
   },
 
-  hasGenerator: function hasGenerator() { return typeof this.generate == "function"; },
-  hasGetter   : function hasGetter() { return typeof this.createGetter == "function"; },
+  hasGenerator     : function hasGenerator() {
+    return typeof this.generate == "function";
+  },
+  hasGetter        : function hasGetter() {
+    return typeof this.createGetter == "function";
+  },
+  hasDefaultGetter : function hasDefaultGetter() {
+    return typeof this.createDefaultGetter == "function";
+  },
+  
   obsoletes   : function obsoletes() { return []; },
   validate    : function validate(value) { return false; },
   setParent   : function setParent(parent) { this._parent = parent; },

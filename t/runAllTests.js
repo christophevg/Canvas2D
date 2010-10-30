@@ -31,6 +31,7 @@ function testADLRoundTrip(input, msg, expected ) {
   return { result: true, info: "" };
 }
 
+print( "Testing Syntax..." );
 ProtoJS.Test.Runner.test( testADLRoundTrip );
 [ 
   "Shape",
@@ -47,3 +48,21 @@ print( "-----------------------" );
 print( ProtoJS.Test.Runner.getResults().total   + " tests run." );
 print( ProtoJS.Test.Runner.getResults().failed  + " failed." );
 print();
+
+print( "Testing API..." );
+
+[
+  "Canvas2D", "RectangleClass"
+].iterate( function( unit ) {
+  load( "t/test" + unit + ".js"    );
+} );
+
+function showResults(tester) {
+  print( "-----------------------" );
+  print( tester.getResults().total   + " tests run." );
+  print( tester.getResults().failed  + " failed." );
+  print();
+}
+
+ProtoJS.Test.Runner.on( "ready", showResults );
+ProtoJS.Test.Runner.start();

@@ -1,8 +1,12 @@
 Canvas2D.Shape = Class.extend( {
   init: function initialize( props ) {
-    // reference to our parent shape
-    this.__parent = props.__parent;
+    props = props || {};
     
+    // reference to our parent shape
+    if( props['__parent'] ) {
+      this.setParent(props.__parent);
+    }
+
     // beforeInit is used to allow Shapes to preprocess the
     // properties before they are automatically initialized
     props = this.beforeInit(props);
@@ -17,7 +21,11 @@ Canvas2D.Shape = Class.extend( {
   },
 
   getContainer: function getContainer() {
-    return this.__parent.getContainer();
+    return this.__parent ? this.__parent.getContainer() : null;
+  },
+
+  setParent : function setParent(parent) {
+    this.__parent = parent;
   },
   
   setProperties : function setProperties(props) {
@@ -33,6 +41,9 @@ Canvas2D.Shape = Class.extend( {
 		value = typeof value != "undefined" ? value : null; // undefined -> null
     var config = this.getPropertiesConfig().get(prop);
     if( config.isVirtual ) { return; }
+    //print( "set " + prop + " = " + value )
+    // TODO: need to preset, to make sure that generate can use defaultgetter
+    this[prop] = null;
     this[prop] = value != null ? value : 
     	( config.hasGenerator() ? config.generate(this) : null );
   },
@@ -49,12 +60,14 @@ Canvas2D.Shape = Class.extend( {
 
   getPropertyDefault: function getPropertyDefault(prop) {
     var retVal = null;
-    // TODO: this can lead to infinte loops ... design is wrong somewhere ;-)
 		if( typeof this[prop] == "undefined" ) {
+		  //print( "[default] " + prop + " is virtual" );
       var propName = prop.substr(0,1).toUpperCase() + prop.substr(1);
-      var getterName = "get"+propName;
-      return this[getterName](true);
-		} else {
+      var getterName = "get" + propName + "Default";
+      if( typeof this[getterName] == "function" ) {
+        retVal = this[getterName]();
+      }
+    } else {
     	this.getClassHierarchy().reverse().iterate( 
       	function classHierarchyIterator(clazz) {
         	if( retVal == null && typeof clazz.Defaults[prop] != "undefined" ) {
@@ -75,7 +88,6 @@ Canvas2D.Shape = Class.extend( {
 		this.__CLASS__.getPropertiesConfig().iterate(
 			function(prop, type) {
 				if( type.isVirtual ) {
-				  //print( prop + " is virtual " );
 					var currentValue = this.getProperty(prop);
 					var defaultValue = this.getPropertyDefault(prop);
 					if( currentValue != defaultValue ) {

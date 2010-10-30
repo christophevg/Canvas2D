@@ -148,17 +148,38 @@ Canvas2D.Types = {
 
       isVirtual: true,
 
-      createGetter : function createGetter() {
+      createDefaultGetter : function createDefaultGetter() {
         return function(match_in, map_in) {
-          return function(defaultProperty) {
+          return function() {
             // TODO: improve naming
             var retval = match_in;
             var props  = map_in;
             var match  = /\([^)]+\)/;
             var valid  = true;
             props.iterate(function(prop) {
-              var value = defaultProperty ? 
-              this.getPropertyDefault(prop) : this.getProperty(prop);
+              var value = this.getPropertyDefault(prop);
+              if( value === null || typeof value === "undefined" ) {
+                valid = false;
+              } else {
+                retval = retval.replace( match, value );
+              }
+            }.scope(this) );
+            return valid ? retval : null;
+          };
+        }
+        (this.match, this.map);
+      },
+
+      createGetter : function createGetter() {
+        return function(match_in, map_in) {
+          return function() {
+            // TODO: improve naming
+            var retval = match_in;
+            var props  = map_in;
+            var match  = /\([^)]+\)/;
+            var valid  = true;
+            props.iterate(function(prop) {
+              var value = this.getProperty(prop);
               if( value === null || typeof value === "undefined" ) {
                 valid = false;
               } else {

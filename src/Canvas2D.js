@@ -46,23 +46,32 @@ var Canvas2D = {
       Canvas2D.libraries.get(library).push(shape);
     } );
 
-    // setup getters
+    // setup getters and setters
     shape.getPropertiesConfig().iterate(function propertyConfigIterator(prop, config) {
       var propName = prop.substr(0,1).toUpperCase() + prop.substr(1);
+      // GETTER
       var getterName = "get"+propName;
       // if no getter is explicitly provided, ...
       if( typeof shape.prototype[getterName] == "undefined" ) {
         // if the prop's type config provides one ...
-				// print( "adding " + getterName + " on " + shape.getType());
-        if( config.createGetter ) {
+				//print( "adding " + getterName + " on " + shape.getType());
+        if( config.hasGetter() ) {
           shape.prototype[getterName] = config.createGetter();
         } else {
-          shape.prototype[getterName] = function(defaultProperty) { 
-						return defaultProperty ? 
-							this.getPropertyDefault(prop) : this.getProperty(prop);
+          shape.prototype[getterName] = function() {
+            return this.getProperty(prop);
+					};
+        }
+        // if the prop's type config provides a default property getter ...
+        if( config.hasDefaultGetter() ) {
+          shape.prototype[getterName+"Default"] = config.createDefaultGetter();
+        } else {
+          shape.prototype[getterName+"Default"] = function() {
+            return this.getPropertyDefault(prop);
 					};
         }
       }
+      // SETTER
       var setterName = "set"+propName;
       if( typeof shape.prototype[setterName] == "undefined" ) {
         shape.prototype[setterName] = function(value) {
