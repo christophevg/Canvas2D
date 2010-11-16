@@ -1,9 +1,0 @@
-[submodule "lib/ADL"]
-	path = lib/ADL
-	url = git@github.com:christophevg/ADL.git
-[submodule "lib/common.make"]
-	path = lib/common.make
-	url = git@github.com:christophevg/common.make.git
-[submodule "lib/ProtoJS"]
-	path = lib/ProtoJS
-	url = git@github.com:christophevg/ProtoJS.git
