@@ -126,6 +126,7 @@ Canvas2D.DynamicSheet.Selection.Marker = Class.extend( {
   },
 
   hide: function hide() {
+    if( ! this.showing ) { return; }
     $H(this.marks).iterate(function(key, mark) {
       this.sheet.remove(mark);
     }.scope(this) );
