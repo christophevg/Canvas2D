@@ -5,8 +5,8 @@
 },
 {
   name   : "with text",
-  data   : "sheet mySheet { text myText1 := \"hello world\"; }",
-  result : "sheet mySheet {\n  text myText1 := \"hello world\";\n}\n"
+  data   : "sheet mySheet { text myText1 <= \"hello world\"; }",
+  result : "sheet mySheet {\n  text myText1 <= \"hello world\";\n}\n"
 },
 {
   name   : "color property",
