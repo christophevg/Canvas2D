@@ -50,7 +50,7 @@ Canvas2D.DynamicSheet.Selection = Class.extend( {
       this.selections.push(shape);
       this.markers[shape.getName()].show();
       this.sheet.fireEvent( "shapeSelected", shape );
-      if( this.selections.length > 1 ) {
+      if( this.hasMultipleSelectedShapes() ) {
         this.groupMarker.show();
       }
     }
@@ -66,7 +66,7 @@ Canvas2D.DynamicSheet.Selection = Class.extend( {
     if( shape.shape.getIsSelectable() ) {
       this.markers[shape.getName()].hide();
       this.selections.remove(shape);
-      if( this.selections.length < 2 ) {
+      if( ! this.hasMultipleSelectedShapes() ) {
         this.groupMarker.hide();
       }
     }

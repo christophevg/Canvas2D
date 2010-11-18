@@ -54,6 +54,7 @@ Canvas2D.DynamicSheet.Selection.Marker = Class.extend( {
 
   show: function show() {
     if( this.shape.shape.getHideSelection() ) { return; }
+    if( this.showing ) { this.hide(); }
     var box = this.shape.getBox();
     var dx = ( box.right - box.left ) / 2;
     var dy = ( box.bottom - box.top ) / 2;
