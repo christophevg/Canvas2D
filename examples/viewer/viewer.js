@@ -1,6 +1,6 @@
 /**
 * Canvas2D Viewer
-* Copyright 2010 Christophe VG & TheSoftwareFactory
+* Copyright 2010 Christophe VG
 */
 
 Canvas2D.Repository = Class.extend( {

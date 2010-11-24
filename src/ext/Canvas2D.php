@@ -16,8 +16,8 @@ $wgExtensionFunctions[] = 'Canvas2DInit';
 $wgExtensionCredits['parserhook'][] = array(
 	'name'         => 'Canvas2D',
 	'version'      => '0.1.1',
-	'author'       => 'Christophe VG <xtof@thesoftwarefactory.be>', 
-	'url'          => 'http://thesoftwarefactory.be/wiki/Canvas2D',
+	'author'       => 'Christophe VG <xtof@canvas2d.org>', 
+	'url'          => 'http://canvas2d.org',
 	'description'  => 'Allows wiki editors to use a textual DSL, ' .
 	                  'which gets rendered into shapes on an HTML5 '.
 	                  'canvas element.'

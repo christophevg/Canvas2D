@@ -47,14 +47,11 @@ Canvas2D.TabbedCanvas = Class.extend( {
     about.innerHTML = '<span style="font: 9pt Verdana, sans-serif;">' +
     '<b>Canvas2D ' + Canvas2D.version  + 
     '</b><br>Copyright &copy 2009-2010, ' +
-    '<a href="http://christophe.vg" target="_blank">Christophe VG</a>'+ 
-    ' & <a href="http://thesoftwarefactory.be" ' +
-    'target="_blank">The Software Factory</a><br>' + 
-    'Visit <a href="http://thesoftwarefactory.be/wiki/Canvas2D" ' +
-    'target="_blank">http://thesoftwarefactory.be/wiki/Canvas2D</a> ' +
-    'for more info. Licensed under the ' +
-    '<a href="http://thesoftwarefactory.be/wiki/BSD_License" ' + 
-    'target="_blank">BSD License</a>.' + libraries + '</span>';
+    '<a href="http://christophe.vg" target="_blank">Christophe VG</a>.'+ 
+    'Visit <a href="http://canvas2d.org" ' +
+    'target="_blank">http://canvas2d.org</a> ' +
+    'for more info. Licensed under the BSD License.' + 
+     libraries + '</span>';
     return this.makeTab("About", height, about );
   },
 

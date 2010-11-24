@@ -1,10 +1,10 @@
 /**
 * Factory.js
 *
-* Author: Christophe VG & TheSoftwareFactory
-* http://thesoftwarefactory.be/wiki/Canvas2D
+* Author: Christophe VG
+* http://canvas2d.org
 *
-* License: http://thesoftwarefactory.be/wiki/BSD_License
+* License: BSD License, see LICENSE file
 *
 * This factory takes a standard HTML5 Canvas element, adds (clearly
 * missing) features and tries to overcome the differences between
