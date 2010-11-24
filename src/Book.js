@@ -30,15 +30,30 @@ Canvas2D.Book = Class.extend( {
     }.scope(this) );
     sheet.setCanvas(this.canvas);
     sheet.on( "change", this.rePublish.scope(this) );
-    sheet.on( "newShape", this.log.scope(this) );
+    sheet.on( "newShape", this.logInfo.scope(this) );
     this.sheets.push(sheet);
     return sheet;
   },
 
-  log: function( msg ) {
-    this.logs = "[" + (new Date()).toLocaleString() + "] " + 
-                msg + "\n" + this.logs;
+  _log: function( msg, suppressNativeConsole ) {
+    msg = "[" + (new Date()).toLocaleString() + "] " + msg; 
+    this.logs = msg + "\n" + this.logs;
     this.fireEvent("logUpdated");
+    if( !suppressNativeConsole && console && console.log ) { 
+      console.log( msg ); 
+    }
+  },
+  
+  logInfo : function( msg ) {
+    this._log( msg, true );
+  },
+
+  logError : function( msg ) {
+    this._log( "ERROR: " + msg, false );
+  },
+
+  logWarning : function( msg ) {
+    this._log( "Warning: " + msg, false );
   },
 
   getCurrentSheet: function() {
@@ -79,6 +94,8 @@ Canvas2D.Book = Class.extend( {
   load: function load(input) {
     if( ! input || input.trim() == "" ) { return; }
     this.fireEvent("load");
+    // FIXME: &lt; is needed in HTML, but we don't handle it well
+    input = input.replace(/&lt;/g, "<");
     this.applyLoadFilters(input, 0, this.show.scope(this));
   },
 
@@ -98,13 +115,13 @@ Canvas2D.Book = Class.extend( {
       if( visitor.errors.length > 0 ) {
         this.errors = "ADLVisitor reported errors:";
         visitor.errors.iterate( function(error) {
-          this.log(error);
+          this.logErroradd(error);
           this.errors += "\n   - " + error;
         }.scope(this));
       }
       success = true;
     } else {
-      this.log( parser.errors );
+      this.logError( parser.errors );
       this.errors = parser.errors;
     }
     
@@ -148,7 +165,7 @@ Canvas2D.Book = Class.extend( {
       this.fireEvent("afterRender");
     }
 
-    this.log( "Canvas2D::publish: RenderTime: " + timer.stop() + "ms" );
+    this.logInfo( "Canvas2D::publish: RenderTime: " + timer.stop() + "ms" );
   }
 } );
 

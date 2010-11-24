@@ -23,18 +23,6 @@ Canvas2D.KickStart.Starter = Class.extend( {
       if( classes.containsOneOf(Canvas2D.KickStart.triggers) ) {
         var name = htmlCanvas.id;
         var book = this.makeInstance(htmlCanvas);
-        var sourceElement = document.getElementById(name+"Source");
-        if( sourceElement ) {
-          var source;
-          try {
-            // some HTML element, PRE, DIV, ...
-            source = sourceElement.firstChild.nodeValue;
-          } catch(err) {
-            // TEXTAREA
-            source = sourceElement.value;
-          }
-          book.load(source);
-        }
       }
     }
     this.fireEvent( "ready" );

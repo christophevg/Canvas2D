@@ -40,5 +40,5 @@
   [@50,210] 
   Text text1 +textDecoration="underline overline line-through"
              +color="purple"
-             := "Default Font with all Decorations";
+             <= "Default Font with all Decorations";
 }

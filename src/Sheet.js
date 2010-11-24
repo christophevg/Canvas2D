@@ -101,7 +101,7 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
     var baseName = shape.getName().replace(/<.*$/,'');
     if( this.shapesMap[baseName] ) {
       var logger = this.book ? this.book : console;
-      logger.log( "WARNING: Shape with name '" + baseName + 
+      logger.logWarning( "Shape with name '" + baseName + 
       "' already exists. Skipping." );
       return null;
     }
