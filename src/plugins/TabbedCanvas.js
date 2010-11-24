@@ -100,7 +100,7 @@ Canvas2D.TabbedCanvas = Class.extend( {
 
   makeTabbed: function makeTabbed(tabs) {
     if( !this.tabber ) { this.applyTabber(); }
-    if( !Object.isArray(tabs) ) { return; }
+    if( !tabs.isArray() ) { return; }
 
     if( tabs.contains("console") ) { 
       this.tabber.appendChild(this.getConsoleTab());
