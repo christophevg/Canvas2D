@@ -203,7 +203,7 @@ Canvas2D.DynamicSheet = {
 
   selectAllShapes: function() {
     // all positions, not yet included: connectors
-    this.positions.iterate( this.selection.addShape.scope(this) );
+    this.positions.iterate( this.selection.addShape.scope(this.selection) );
     this.makeDirty();
   },
 
