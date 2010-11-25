@@ -48,6 +48,7 @@ var scripts = [
     "src/plugins/TabbedCanvas.js", 
     "src/plugins/AutoLayout.js", 
     "src/plugins/Watermark.js",
+    "src/plugins/KeyboardStatus.js",
     "src/plugins/Splash.js"
 ];
 
