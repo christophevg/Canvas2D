@@ -8,5 +8,30 @@
 		id    : "round_corners", 
 		label : "Rectangle with rounded corners",
 		info  : "Showing of the new rounded corners feature of the Rectangle shape."
+	},
+	{
+		id    : "lines",
+		label : "Various styles of lines",
+		info  : "Natively, the HTML Canvas doesn't support dashed lines. We do ;-)"
+	},
+	{
+		id    : "dsl",
+		label : "The Original DSL example",
+		info  : "This was about the first Canvas2D diagram."
+	},
+	{
+		id    : "text",
+		label : "Text of all kinds",
+		info  : "Originally not all browsers has text support, we provided it cross-browser and including italics."
+	},
+	{
+		id    : "images",
+		label : "Using custom images",
+		info  : "Images can be loaded, just as with HTML."
+	},
+	{
+		id    : "crisp",
+		label : "Crisp line support",
+		info  : "Drawing crisp lines can be a problem due to anti-aliasing."
 	}
 ]

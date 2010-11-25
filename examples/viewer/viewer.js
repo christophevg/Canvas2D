@@ -103,11 +103,7 @@ Canvas2D.Grow = Class.extend( {
   }
 } );
 
-Canvas2D.Viewer = Class.extend( {
-  init: function init() {
-    this.setupElements();
-    this.refreshNavigator();
-  },
+Canvas2D.ViewerClass = Class.extend( {
 
   setupElements: function setupElements() {
     this.navigator  = document.getElementById(Canvas2D.Viewer.config.navigator);
@@ -115,6 +111,7 @@ Canvas2D.Viewer = Class.extend( {
     this.book       = Canvas2D.getBook(Canvas2D.Viewer.config.canvas);
     this.repository = this.book.getPlugin( "Repository" );
     new Canvas2D.Grow(this.book);
+    this.refreshNavigator();
   },
 
   _createLink: function _createLink(label, handler) {
@@ -153,6 +150,8 @@ Canvas2D.Viewer = Class.extend( {
   }
 });
 
+Canvas2D.Viewer = new Canvas2D.ViewerClass();
+
 Canvas2D.Viewer.config = {
   repository : "./",
   canvas     : "C2D_Viewer",
@@ -160,4 +159,4 @@ Canvas2D.Viewer.config = {
   info       : "C2D_Info"
 };
 
-Canvas2D.on( "ready", function() { new Canvas2D.Viewer(); } );
+Canvas2D.on( "ready", function() { Canvas2D.Viewer.setupElements(); } );

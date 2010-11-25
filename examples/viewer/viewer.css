@@ -51,3 +51,15 @@ HTML, BODY {
   border: none;
   height: 140px;
 }
+
+.header UL {
+  margin: 0px;
+  padding: 0px;
+  float: right;
+  list-style-type: none;
+}
+
+.header UL LI {
+  float: left;
+  font-size: 10pt;
+}
