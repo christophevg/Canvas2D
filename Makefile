@@ -15,31 +15,36 @@ CORE_SRCS = ${SRC_DIR}/Canvas2D.js \
 			${SRC_DIR}/Sheet.js \
 			${SRC_DIR}/Position.js \
 			${SRC_DIR}/Connector.js \
+			${SRC_DIR}/Alias.js \
 			${SRC_DIR}/ShapeFactory.js \
 			${SRC_DIR}/KickStart.js
 
-SHAPE_SRCS = ${SRC_DIR}/Line.js \
-     		 ${SRC_DIR}/LinePath.js \
-     		 ${SRC_DIR}/Alias.js \
-     		 ${SRC_DIR}/Rectangle.js \
-     		 ${SRC_DIR}/Text.js \
-     		 ${SRC_DIR}/Image.js \
-     		 ${SRC_DIR}/Arrow.js
+SHAPES_DIR=${SRC_DIR}/shapes
 
-PLUGIN_SRCS = ${SRC_DIR}/plugins/DynamicSheet/DynamicSheet.js \
-			  ${SRC_DIR}/plugins/DynamicSheet/Selection.js \
-			  ${SRC_DIR}/plugins/DynamicSheet/Overlay.js \
-			  ${SRC_DIR}/plugins/DynamicSheet/Marker.js \
-			  ${SRC_DIR}/plugins/DynamicSheet/Box.js \
-			  ${SRC_DIR}/plugins/DynamicSheet/Border.js \
-			  ${SRC_DIR}/plugins/DynamicSheet/Position.js \
-			  ${SRC_DIR}/plugins/DynamicSheet/Group.js \
-			  ${SRC_DIR}/plugins/Splash.js \
-			  ${SRC_DIR}/plugins/Widget.js \
-			  ${SRC_DIR}/plugins/TabbedCanvas.js \
-     		${SRC_DIR}/plugins/AutoLayout.js \
-     		${SRC_DIR}/plugins/Watermark.js \
-     		${SRC_DIR}/plugins/KeyboardStatus.js
+SHAPE_SRCS = ${SHAPES_DIR}/Line.js \
+     		 ${SHAPES_DIR}/LinePath.js \
+     		 ${SHAPES_DIR}/Rectangle.js \
+     		 ${SHAPES_DIR}/Text.js \
+     		 ${SHAPES_DIR}/Image.js \
+     		 ${SHAPES_DIR}/Arrow.js \
+				 ${SHAPES_DIR}/Circle.js
+
+PLUGINS_DIR=${PLUGINS_DIR}
+
+PLUGIN_SRCS = ${PLUGINS_DIR}/DynamicSheet/DynamicSheet.js \
+			  ${PLUGINS_DIR}/DynamicSheet/Selection.js \
+			  ${PLUGINS_DIR}/DynamicSheet/Overlay.js \
+			  ${PLUGINS_DIR}/DynamicSheet/Marker.js \
+			  ${PLUGINS_DIR}/DynamicSheet/Box.js \
+			  ${PLUGINS_DIR}/DynamicSheet/Border.js \
+			  ${PLUGINS_DIR}/DynamicSheet/Position.js \
+			  ${PLUGINS_DIR}/DynamicSheet/Group.js \
+			  ${PLUGINS_DIR}/Splash.js \
+			  ${PLUGINS_DIR}/Widget.js \
+			  ${PLUGINS_DIR}/TabbedCanvas.js \
+     		${PLUGINS_DIR}/AutoLayout.js \
+     		${PLUGINS_DIR}/Watermark.js \
+     		${PLUGINS_DIR}/KeyboardStatus.js
 
 SHARED_EXTRA_SRCS = ${SRC_DIR}/SanityChecks.js
 
