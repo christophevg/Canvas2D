@@ -33,5 +33,10 @@
 		id    : "crisp",
 		label : "Crisp line support",
 		info  : "Drawing crisp lines can be a problem due to anti-aliasing."
+	},
+	{
+		id    : "alias",
+		label : "Using aliases",
+		info  : "With aliases new shapes can be created and used on the fly."
 	}
 ]

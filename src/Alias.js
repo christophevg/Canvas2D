@@ -2,17 +2,18 @@ Canvas2D.Alias = Canvas2D.Shape.extend( {} );
 
 Canvas2D.Alias.mapper = {
   sheet : function(shape) { 
-    return function(construct, parent) { 
-      return Canvas2D.Sheet.from(construct, parent);
+    return function(construct, parent) {
+      construct.type = "sheet";
+      return Canvas2D.ShapeFactory.createShape(construct, parent);
     };
   },
 
   connector : function(shape) {
     return function(construct, parent) { 
-      var modifier = new ADL.Modifier( "routing", 
-      new ADL.String("vertical" ) );
+      var modifier = new ADL.Modifier( "routing", new ADL.String("vertical"));
       construct.modifiers.set( modifier.key, modifier );
-      return Canvas2D.Connector.from(construct, parent);
+      construct.type = "connector";
+      return Canvas2D.ShapeFactory.createShape(construct, parent);
     };
   },
 
@@ -22,7 +23,8 @@ Canvas2D.Alias.mapper = {
       modifiers.iterate(function(key, value) {
         construct.modifiers.set(key, value); 
       } );
-      return Canvas2D.Image.from(construct, parent);
+      construct.type = "image";
+      return Canvas2D.ShapeFactory.createShape(construct, parent);
     };
   }
 };
@@ -31,8 +33,8 @@ Canvas2D.Alias.from = function( construct, parent ) {
   Canvas2D.registerShape( { 
     prototype : {},
     MANIFEST : { 
-      name      : construct.name, 
-      libraries : [ "Aliasses" ] 
+      name      : construct.name,
+      libraries : [ "Aliasses" ]
     },
     from: Canvas2D.Alias.mapper[construct.supers[0]](construct, parent)
   } );

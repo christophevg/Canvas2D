@@ -1,5 +1,5 @@
-shape diagram    : sheet;
-shape pc         : image +src="workstation.png" +labelPos="bottom";
-shape server     : image +src="server.png"      +labelPos="bottom";
-shape cloud      : image +src="cloud.png"       +labelPos="bottom";
-shape connection : connector;
+alias diagram    : sheet;
+alias pc         : image +src="workstation.png" +labelPos="bottom";
+alias server     : image +src="server.png"      +labelPos="bottom";
+alias cloud      : image +src="cloud.png"       +labelPos="bottom";
+alias connection : connector;
