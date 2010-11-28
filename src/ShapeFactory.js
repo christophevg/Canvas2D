@@ -1,14 +1,9 @@
 Canvas2D.ShapeFactory = {
   createShape: function createShape(construct, parent) {
     var shape = Canvas2D.shapes.get(construct.type.toLowerCase());
-    if( ! shape || ! shape instanceof Canvas2D.Shape ) { return false; }
-
-    if( shape.from ) {
-      // TODO: REMOVE THIS ASAP !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      console.log( "WARNING: " + shape.getType() + ".from() is deprecated.");
-      console.log( "WARNING: using old FROM !!!" );
-      return shape.from( construct, parent );
-      // TODO: REMOVE THIS ASAP !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if( ! shape || ! shape instanceof Canvas2D.Shape ) { 
+      this.errors = [ "Unknown Construct Type: " + construct.type ];
+      return false; 
     }
 
     var properties = { __parent: parent };
@@ -19,6 +14,9 @@ Canvas2D.ShapeFactory = {
         type.extract(properties, prop, construct, parent);
       }
     );
+
+    // allow a shape to take control
+    if( shape.from ) { return shape.from( construct, parent ); }
     
     //console.log( "constructing " + shape.getType() + " using :" ); console.log( props );
     return new shape(properties);

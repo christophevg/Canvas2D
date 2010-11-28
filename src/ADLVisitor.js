@@ -37,8 +37,6 @@ Canvas2D.ADLVisitor = Class.extend( {
       return construct;
     } 
 
-    this.errors.push("Unknown Construct Type: " + construct.type);
-    // if we don't know the construct type, no need to go further
     return parent;
   }
 } );
