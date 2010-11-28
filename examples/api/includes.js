@@ -64,7 +64,7 @@ function loadScripts(prefix) {
 }
 
 if( typeof window.loadingPrefix == "undefined" ) {
-  window.loadingPrefix = "../";
+  window.loadingPrefix = "../../";
 }
 
 loadScripts(window.loadingPrefix);

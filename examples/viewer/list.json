@@ -38,5 +38,20 @@
 		id    : "alias",
 		label : "Using aliases",
 		info  : "With aliases new shapes can be created and used on the fly."
+	},
+	{
+		id    : "arrow",
+		label : "A simple Arrow shape",
+		info  : "Creating your own shapes is easy. The standard Arrow is an example."
+	},
+	{
+		id    : "custom_connectors",
+		label : "Custom Connectors",
+		info  : "Using custom connectors, one can route connectors in great detail."
+	},
+	{
+		id    : "circle",
+		label : "Circle Shape",
+		info  : "Comparing SVG circles versus Canvas2D Circles."
 	}
 ]

@@ -1,0 +1,53 @@
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="examples.css" />
+
+  <script type="text/javascript" src="includes.js"></script>
+</head>
+<body>
+  <h1>Canvas2D Debugger</h1>
+  <table>
+    <tr>
+      <td>
+        <canvas class="Canvas2D" id="diagram" width="300" height="250"></canvas>
+      </td>
+      <td>
+        <textarea id="dump" style="width:300px;height:300px"></textarea>
+      </td>
+    </tr>
+  </table>
+
+  <pre id="source_for_diagram" style="display:none">
+    Sheet mySheet +style="dynamic" {
+      /* define some shapes */
+      [@ 75, 55] Rectangle rect1 +width=75 +height=75 +lineColor="green" 
+      +label="green" +labelPos="top";
+      [@ 50,175] Rectangle rect2 +width=50 +height=50 +lineColor="red"   +label="red";
+      [@200,100] Rectangle rect3 +width=50 +height=50 +lineColor="blue"  +label="blue";
+      [@200, 25] Rectangle rect4 +width=50 +height=50 +lineColor="yellow";  
+      [@125,175] Rectangle rect5 +width=50 +height=50 +lineColor="red"
+      +label="red" +labelColor="red" +labelPos="bottom";
+
+      /* connect them  */
+      Connector conn1 +from="rect1" +to="rect2" +routing="vertical";  
+      Connector conn2 +from="rect1" +to="rect3" +routing="horizontal";  
+      Connector conn3 +from="rect1" +to="rect4" +routing="horizontal";  
+      Connector conn4 +from="rect1" +to="rect5" +routing="vertical";  
+    }
+  </pre>
+  
+  <script>
+    Canvas2D.on( "ready", function() {
+      Canvas2D.getBook("diagram").getCurrentSheet().on( "afterRender",
+        function(sheet) {
+          var dump = [];
+          sheet.positions.iterate( function(position) {
+            dump.unshift( position.left + "," + position.top + " : " + position.shape.getName() );
+          } );
+          document.getElementById("dump").value = dump.join("\n");
+        }
+      );
+    } );
+  </script>
+</body>
+</html>

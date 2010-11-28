@@ -1,0 +1,5 @@
++dynamic sheet mySheet +origin="180,60" {
+  [@  0, 50] circle c1 +radius=100 +line="4 black" +fill="red 0.7";
+  [@ 70,150] circle c2 +radius=100 +line="4 black" +fill="blue 0.7";
+  [@-70,150] circle c3 +radius=100 +line="4 black" +fill="green 0.7";
+}
