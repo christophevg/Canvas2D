@@ -63,3 +63,7 @@ HTML, BODY {
   float: left;
   font-size: 10pt;
 }
+
+#navigatorPane {
+  overflow: auto;
+}

@@ -115,7 +115,7 @@ Canvas2D.Book = Class.extend( {
       if( visitor.errors.length > 0 ) {
         this.errors = "ADLVisitor reported errors:";
         visitor.errors.iterate( function(error) {
-          this.logErroradd(error);
+          this.logError(error);
           this.errors += "\n   - " + error;
         }.scope(this));
       }

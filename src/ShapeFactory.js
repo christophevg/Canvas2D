@@ -1,7 +1,7 @@
 Canvas2D.ShapeFactory = {
   createShape: function createShape(construct, parent) {
     var shape = Canvas2D.shapes.get(construct.type.toLowerCase());
-    if( ! shape instanceof Canvas2D.Shape ) { return false; }
+    if( ! shape || ! shape instanceof Canvas2D.Shape ) { return false; }
 
     if( shape.from ) {
       // TODO: REMOVE THIS ASAP !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
