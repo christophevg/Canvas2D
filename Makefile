@@ -29,7 +29,7 @@ SHAPE_SRCS = ${SHAPES_DIR}/Line.js \
      		 ${SHAPES_DIR}/Arrow.js \
 				 ${SHAPES_DIR}/Circle.js
 
-PLUGINS_DIR=${PLUGINS_DIR}
+PLUGINS_DIR=${SRC_DIR}/plugins
 
 PLUGIN_SRCS = ${PLUGINS_DIR}/DynamicSheet/DynamicSheet.js \
 			  ${PLUGINS_DIR}/DynamicSheet/Selection.js \
