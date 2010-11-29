@@ -1,7 +1,3 @@
-0.5
-- introduce extended MANIFEST
-- add support for visual resizing of shapes
-
 1.0
 - add keyboard short cuts to align/distribute shapes
 - add multi-connectorhead support
