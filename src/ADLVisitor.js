@@ -2,6 +2,10 @@ Canvas2D.ADLVisitor = Class.extend( {
   init: function() {
     this.errors = [];  
   },
+  
+  encounteredErrors: function encounteredErrors() {
+    return this.errors.length > 0;
+  },
 
   visit: function( construct, parent ) {
     if( construct.getName() == "root" ) {

@@ -9,9 +9,9 @@ Canvas2D.Book = Class.extend( {
     );
 
 		if( element ) {
-    	this.HTMLElement  = element;
-    	this.canvas       = Canvas2D.Factory.setup(this.HTMLElement);
-    	this.name         = element.id;
+  	  this.HTMLElement  = element;
+  	  this.name         = this.HTMLElement.id;
+      this.canvas       = Canvas2D.Factory.setup(this.HTMLElement); 
 		}
 		
     this.sheets       = [];
@@ -34,12 +34,23 @@ Canvas2D.Book = Class.extend( {
     this.sheets.push(sheet);
     return sheet;
   },
-
+  
+  setLogHeaderGenerator : function setLogHeaderGenerator(generator) {
+    this.logHeaderGenerator = generator;
+    return this;
+  },
+  
+  getLogHeader : function getLogHeader() {
+    return this.logHeaderGenerator ? 
+           this.logHeaderGenerator()
+           : "[" + (new Date()).toLocaleString() + "] ";
+  },
+  
   _log: function( msg, suppressNativeConsole ) {
-    msg = "[" + (new Date()).toLocaleString() + "] " + msg; 
-    this.logs = msg + "\n" + this.logs;
+    msg = this.getLogHeader() + msg; 
+    this.logs = typeof this.logs == "undefined" ? msg : msg + "\n" + this.logs;
     this.fireEvent("logUpdated");
-    if( !suppressNativeConsole && console && console.log ) { 
+    if( !suppressNativeConsole && console && console.log && !Envjs) { 
       console.log( msg ); 
     }
   },
@@ -68,6 +79,7 @@ Canvas2D.Book = Class.extend( {
     this.stop();
     this.rePublish();
     this.publish();
+    return this;
   },
 
   stop : function() {
@@ -109,10 +121,10 @@ Canvas2D.Book = Class.extend( {
       this.clear();
       this.freeze();
       var visitor = new Canvas2D.ADLVisitor();
-      tree.getRoot().accept(visitor, this );
+      tree.getRoot().accept(visitor, this);
       this.thaw();
       this.rePublish();
-      if( visitor.errors.length > 0 ) {
+      if( visitor.encounteredErrors() ) {
         this.errors = "ADLVisitor reported errors:";
         visitor.errors.iterate( function(error) {
           this.logError(error);
@@ -125,10 +137,8 @@ Canvas2D.Book = Class.extend( {
       this.errors = parser.errors;
     }
     
-    if( this.getCurrentSheet() ) {
-      var newSource = this.toADL();
-      this.fireEvent( "sourceLoaded", newSource );
-    }
+    this.fireEvent( "sourceLoaded", this.toADL() );
+
     return success;
   },
 

@@ -1,8 +1,6 @@
 Canvas2D.Widget = Class.extend( {
   init: function init(book) {
     this.book = book;
-		// TODO: do this better ;-)
-    if( this.book.HTMLElement ) { this.id = this.book.HTMLElement.id; }
     this.setupComponents();
   },
   
@@ -25,7 +23,7 @@ Canvas2D.Widget = Class.extend( {
   },
 
   setupConsole: function setupConsole() {
-    this.console = this._getElement(this.id, "console" );
+    this.console = this._getElement(this.book.name, "console" );
     if( ! this.console ) { return; }
     this.book.on( "logUpdated", function() {
       this.console.value = this.book.logs;
@@ -33,16 +31,17 @@ Canvas2D.Widget = Class.extend( {
   },
 
   setupSource: function setupSource() {
-    this.source = this._getElement(this.id, "source" );
+    this.source = this._getElement(this.book.name, "source" );
     if( this.source ) {
       this.book.load(this.source.innerHTML);
     }
   },
 
   setupGenerated: function setupGenerated() {
-    this.generated = this._getElement(this.id, "generated" );
+    this.generated = this._getElement(this.book.name, "generated" );
     if( ! this.generated ) { return; }
-    this.book.on( "sourceLoaded", function(newSource) {
+    this.book.on( "afterRender", function() {
+      var newSource = this.book.toADL();
       if( this.generated.value != newSource ) {
         this.generated.value = newSource;
       }

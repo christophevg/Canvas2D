@@ -52,7 +52,7 @@ print();
 print( "Testing API..." );
 
 [
-  "Canvas2D", "RectangleClass"
+  "Canvas2D", "RectangleClass", "WidgetClass"
 ].iterate( function( unit ) {
   load( "t/test" + unit + ".js"    );
 } );
