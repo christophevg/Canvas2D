@@ -213,6 +213,10 @@ Canvas2D.Shape = Class.extend( {
     this.setHeight(this.getHeight() + dy);
     this.fireEvent( "resize" );
   },
+  
+  announceChange: function announceChange() {
+    this.fireEvent("change", this);
+  },
 
   // the remaining methods are not applicable for abstract shapes
   beforeInit : function beforeInit(props)      { return props; },

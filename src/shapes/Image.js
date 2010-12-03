@@ -12,6 +12,7 @@ Canvas2D.Image = Canvas2D.Rectangle.extend( {
       this.image.width  : this.getPropertyDefault("width");
     this.height = this.image ? 
       this.image.height : this.getPropertyDefault("height");
+    this.announceChange();
   },
 
   draw: function draw(sheet, left, top) {

@@ -124,6 +124,7 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
   },
 
   add: function add(shape) {
+    shape.on( "change", this.book.rePublish.scope(this.book) );
     return this.addPosition( 
       new Canvas2D.Position( shape, this.newLeft, this.newTop)
     );
