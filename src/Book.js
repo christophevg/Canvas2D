@@ -1,5 +1,5 @@
 Canvas2D.Book = Class.extend( {
-  init: function(element) {
+  init: function init(element) {
     // overloaded constructor implementation allows the passing of an id
     unless( element && element.nodeType && 
       element.nodeType == Node.ELEMENT_NODE, 
@@ -20,11 +20,11 @@ Canvas2D.Book = Class.extend( {
     this.loadFilters  = [];
   },
 
-  add: function( sheet ) {
+  add: function add( sheet ) {
     return this.addSheet(sheet);
   },
 
-  addSheet : function( sheet ) {
+  addSheet : function addSheet( sheet ) {
     unless( sheet instanceof Canvas2D.Sheet, function() {
       sheet = new Canvas2D.Sheet( { book: this } );
     }.scope(this) );
@@ -43,11 +43,16 @@ Canvas2D.Book = Class.extend( {
   getLogHeader : function getLogHeader() {
     return this.logHeaderGenerator ? 
            this.logHeaderGenerator()
-           : "[" + (new Date()).toLocaleString() + "] ";
+           : "@" + (new Date()).toLocaleString();
   },
   
-  _log: function( msg, suppressNativeConsole ) {
-    msg = this.getLogHeader() + msg; 
+  buildLogHeader : function buildLogHeader() {
+    var additionalInfo = this.getLogHeader() || "";
+    return "[" + this.name + additionalInfo + "] ";
+  },
+  
+  _log: function _log( msg, suppressNativeConsole ) {
+    msg = this.buildLogHeader() + msg; 
     this.logs = typeof this.logs == "undefined" ? msg : msg + "\n" + this.logs;
     this.fireEvent("logUpdated");
     if( !suppressNativeConsole && console && console.log && !Envjs) { 
@@ -55,39 +60,47 @@ Canvas2D.Book = Class.extend( {
     }
   },
   
-  logInfo : function( msg ) {
+  logInfo : function logInfo( msg ) {
     this._log( msg, true );
   },
 
-  logError : function( msg ) {
+  logError : function logError( msg ) {
     this._log( "ERROR: " + msg, false );
   },
 
-  logWarning : function( msg ) {
+  logWarning : function logWarning( msg ) {
     this._log( "Warning: " + msg, false );
   },
 
-  getCurrentSheet: function() {
+  getCurrentSheet: function getCurrentSheet() {
     return this.sheets[this.currentSheet];
   },
 
-  clear : function() {
+  clear : function clear() {
     this.sheets.length = 0;
   },
+  
+  renderImmediate : function renderImmediate() {
+    this.renderMode = "immediate";
+    return this;
+  },
 
-  start : function() {
+  start : function start() {
+    if( this.renderMode == "immediate" ) { return this; }
     this.stop();
     this.rePublish();
     this.publish();
     return this;
   },
 
-  stop : function() {
+  stop : function stop() {
+    if( this.renderMode == "immediate" ) { return this; }
     if( this.nextPublish ) { window.clearTimeout( this.nextPublish ); }
+    return this;
   },
 
-  freeze: function() { this.wait = true;  },
-  thaw: function()   { this.wait = false; },
+  freeze: function freeze() { this.wait = true;  return this; },
+  thaw: function thaw()   { this.wait = false; return this; },
 
   addLoadFilter: function addLoadFilter(filter) {
     this.loadFilters.push(filter);
@@ -142,7 +155,7 @@ Canvas2D.Book = Class.extend( {
     return success;
   },
 
-  toADL: function() {
+  toADL: function toADL() {
     var s = "";
     this.sheets.iterate(function(sheet) {
       s += sheet.asConstruct().toString() + "\n";
@@ -150,22 +163,24 @@ Canvas2D.Book = Class.extend( {
     return s;
   },
 
-  rePublish: function() {
-    this.rePublishNeeded = true;	
+  rePublish: function rePublish() {
+    if( this.renderMode == "immediate" ) { return this.publishOnce(); }
+    this.rePublishNeeded = true;
   },
 
-  publish : function() {
+  publish : function publish() {
+    if( this.renderMode == "immediate" ) { return this.publishOnce(); }
+
     if( this.rePublishNeeded && !this.wait ) {
       this.publishOnce();
       this.rePublishNeeded = false;
-      this.fireEvent( "afterPublish" );
     }
 
     // reshedule publish in 10ms
     this.nextPublish = this.publish.scope(this).after(10);
   },
 
-  publishOnce : function() {
+  publishOnce : function publishOnce() {
     var timer = new Timer();
     if( this.canvas ) { this.canvas.clear(); }
 
@@ -175,7 +190,10 @@ Canvas2D.Book = Class.extend( {
       this.fireEvent("afterRender");
     }
 
-    this.logInfo( "Canvas2D::publish: RenderTime: " + timer.stop() + "ms" );
+    if( this.renderMode != "immediate" ) {
+      this.logInfo( "RenderTime: " + timer.stop() + "ms" );
+    }
+    this.fireEvent( "afterPublish" );
   }
 } );
 
