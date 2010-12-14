@@ -54,8 +54,9 @@ Canvas2D.Position = Class.extend( {
     this.left += dleft;
     this.top  += dtop;
     this.fireEvent( "change", 
-    "from " + this.getLeft() - dleft + "," + this.getTop() - dtop +
-    " to " + this.getLeft() + "," + this.getTop() );
+        this.shape.getName() + " moved " +
+        "from " + (this.getLeft() - dleft) + "," + (this.getTop() - dtop) +
+        " to " + this.getLeft() + "," + this.getTop() );
     this.fireEvent( "move", { x: dleft, y: dtop } );
   },
   
