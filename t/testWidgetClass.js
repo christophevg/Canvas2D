@@ -2,7 +2,7 @@ ProtoJS.Test.Runner.addTestUnit(
   ProtoJS.Test.extend( {
     getScope: function() { return "Widget"; },
 
-    test001Generated: function test001BookWithSheetAndShape() {
+    test001Generated: function test001Generated() {
       var generated = { value: "" };
       this.createDocumentMock( { generated: generated } );
       var book  = this.createSimpleBook();
@@ -13,17 +13,32 @@ ProtoJS.Test.Runner.addTestUnit(
       var position = sheet.getPosition(shape);
       position.move(15,25);
 
-      // we delay starting the book to this point, because we might run
-      // into timing issues before ... will look into it later
-      book.start();
       this.assertEqual( generated.value, 
         "sheet newSheet0 {\n  [@25,35]\n  rectangle mockRectangle;\n}\n" );
-      book.stop();
+    },
+    
+    test002Console: function test002Console() {
+      var consoleElement = { value: "" };
+      this.createDocumentMock( { console: consoleElement } );
+      var book  = this.createSimpleBook();
+      var sheet = book.addSheet();
+      
+      var shape = new Canvas2D.Rectangle({name:"mockRectangle"});
+      sheet.at(10,10).put( shape );
+      var position = sheet.getPosition(shape);
+      position.move(15,25);
+      position.move(25,35);
+
+      this.assertEqual( consoleElement.value,
+        "[mockBook] mockRectangle moved from 25,35 to 50,70\n" +
+        "[mockBook] mockRectangle moved from 10,10 to 25,35\n" +
+        "[mockBook] added new shape@10,10" );
     },
     
     createSimpleBook: function createSimpleBook() {
       return (new Canvas2D.Book("mockBook"))
-             .setLogHeaderGenerator( function() { return ""; } );
+             .renderImmediate()
+             .setLogHeaderGenerator( function() { return null; } );
     },
     
     createDocumentMock: function createDocumentMock(elements) {
@@ -52,7 +67,8 @@ ProtoJS.Test.Runner.addTestUnit(
         addEventListener : function() {},
         map: {
           "mockBook" : canvas,
-          "generated_for_mockBook" : elements.generated
+          "generated_for_mockBook" : elements.generated,
+          "console_for_mockBook"   : elements.console
         },
         getElementById: function(id) { 
           return this.map[id];
