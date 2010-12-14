@@ -92,7 +92,7 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
     delete this.positionsMap[baseName];
     this.positions.remove(shape);
     this.fireEvent( "removeShape", shape );
-    // this.makeDirty();
+    this.book.rePublish();
   },
 
   addPosition: function addPosition(position) {
@@ -102,31 +102,36 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
     if( this.shapesMap[baseName] ) {
       var logger = this.book ? this.book : console;
       logger.logWarning( "Shape with name '" + baseName + 
-      "' already exists. Skipping." );
+                         "' already exists. Skipping." );
       return null;
     }
 
-    //shape   .on( "change", this.makeDirty.scope(this) );
-    //position.on( "change", this.makeDirty.scope(this) );
+    position.on( "change", function( msg ) {
+      this.book.logInfo( msg );
+      this.book.rePublish();
+    }.scope(this) );
+
+    shape.on( "change", function( msg ) {
+      this.book.logInfo( msg );
+      this.book.rePublish();
+    }.scope(this) );
 
     this.positions.push(position);
     this.shapesMap[baseName] = shape;
     this.positionsMap[shape.getName()] = position;
 
     this.fireEvent( "newShape", "added new shape" + 
-    ( position.getLeft() != null ? 
-    "@" + position.getLeft() + "," +
-    position.getTop() : "" ) );
+      ( position.getLeft() != null ? "@" + position.getLeft() + "," +
+        position.getTop() : "" ) );
 
-    //this.makeDirty();
+    this.book.rePublish();
 
     return shape;
   },
 
   add: function add(shape) {
-    shape.on( "change", this.book.rePublish.scope(this.book) );
-    return this.addPosition( 
-      new Canvas2D.Position( shape, this.newLeft, this.newTop)
+    return this.addPosition(
+      new Canvas2D.Position( shape, this.newLeft, this.newTop ) 
     );
   },
 
