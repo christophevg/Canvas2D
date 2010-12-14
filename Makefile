@@ -109,3 +109,6 @@ CORE_SRCS = ${SRC_DIR}/Common.js \
 			${SRC_DIR}/ShapeFactory.js
 
 CLI_SRCS = ${CORE_SRCS} ${SHAPE_SRCS} ${PLUGIN_SRCS}
+
+test-case: bin/canvas2d.sh build/Canvas2D.cli.js ${TESTCASE}
+	bin/canvas2d.sh ${TESTCASE}
