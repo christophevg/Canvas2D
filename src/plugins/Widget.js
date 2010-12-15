@@ -5,9 +5,11 @@ Canvas2D.Widget = Class.extend( {
   },
   
   setupComponents: function setupComponents() {
+    this.book.logInfo( "Setup Widget Components..." );
     this.setupConsole();
     this.setupSource();
     this.setupGenerated();
+    this.setupAbout();
   },
 
   _getElement: function _getElement(id, type) {
@@ -16,7 +18,7 @@ Canvas2D.Widget = Class.extend( {
       var suffix= type.substr(0, 1).toUpperCase() + type.substr(1);
       element = document.getElementById( id + suffix );
       if( element ) {
-        console.log( "WARNING: deprecated widget pattern: " + id + suffix );
+        this.book.logWarning( "Deprecated widget pattern: " + id + suffix );
       }
     }
     return element;
@@ -28,6 +30,7 @@ Canvas2D.Widget = Class.extend( {
     this.book.on( "logUpdated", function() {
       this.console.value = this.book.logs;
     }.scope(this) );
+    this.book.logInfo( "  Console set up for " + this.book.getName() );
   },
 
   setupSource: function setupSource() {
@@ -35,6 +38,7 @@ Canvas2D.Widget = Class.extend( {
     if( this.source ) {
       this.book.load(this.source.innerHTML);
     }
+    this.book.logInfo( "  Source set up for " + this.book.getName() );
   },
 
   setupGenerated: function setupGenerated() {
@@ -46,7 +50,30 @@ Canvas2D.Widget = Class.extend( {
         this.generated.value = newSource;
       }
     }.scope(this) );
+    this.book.logInfo("  Generated Source set up for " + this.book.getName());
   },
+
+  setupAbout: function setupAbout() {
+    this.about = this._getElement(this.book.name, "about" );
+    if( ! this.about ) { return; }
+        var libraries = "";
+    Canvas2D.extensions.iterate(function(library) {
+      libraries += "\n<hr>\n";
+      libraries += "<b>Library: " +
+      library.name + " " + library.version + "</b> " + 
+      "by " + library.author + "<br>" +
+      library.info;
+    });
+    this.about.innerHTML = '<span style="font: 9pt Verdana, sans-serif;">' +
+      '<b>Canvas2D ' + Canvas2D.version  + 
+      '</b><br>Copyright &copy 2009-2010, ' +
+      '<a href="http://christophe.vg" target="_blank">Christophe VG</a>.'+ 
+      'Visit <a href="http://canvas2d.org" ' +
+      'target="_blank">http://canvas2d.org</a> ' +
+      'for more info. Licensed under the BSD License.' + 
+      libraries + '</span>';
+    this.book.logInfo("  About set up for " + this.book.getName());
+  }
 } );
 
 Canvas2D.Widget.getInstance = function getInstance(book) {

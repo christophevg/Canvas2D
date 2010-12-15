@@ -32,11 +32,15 @@ ProtoJS.Test.Runner.addTestUnit(
       this.assertEqual( consoleElement.value,
         "[mockBook] mockRectangle moved from 25,35 to 50,70\n" +
         "[mockBook] mockRectangle moved from 10,10 to 25,35\n" +
-        "[mockBook] added new shape@10,10" );
+        "[mockBook] added new shape@10,10\n" +
+        "[mockBook]   Source set up for mockBook\n" +
+        "[mockBook]   Console set up for mockBook\n" +
+        "[mockBook] Setup Widget Components..." 
+      );
     },
     
     createSimpleBook: function createSimpleBook() {
-      return (new Canvas2D.Book("mockBook"))
+      return (new Canvas2D.Book("mockBook", true))
              .renderImmediate()
              .setLogHeaderGenerator( function() { return null; } );
     },
@@ -47,7 +51,7 @@ ProtoJS.Test.Runner.addTestUnit(
         width: 0,
         height: 0,
         id: "mockBook",
-        className : "",
+        className : "withoutInspector",
         addEventListener : function() {},
       };
       var ctx = {

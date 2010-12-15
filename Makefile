@@ -44,7 +44,8 @@ PLUGIN_SRCS = ${PLUGINS_DIR}/DynamicSheet/DynamicSheet.js \
 			  ${PLUGINS_DIR}/TabbedCanvas.js \
      		${PLUGINS_DIR}/AutoLayout.js \
      		${PLUGINS_DIR}/Watermark.js \
-     		${PLUGINS_DIR}/KeyboardStatus.js
+     		${PLUGINS_DIR}/KeyboardStatus.js \
+     		${PLUGINS_DIR}/Inspector.js
 
 SHARED_EXTRA_SRCS = ${SRC_DIR}/SanityChecks.js
 

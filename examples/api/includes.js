@@ -50,7 +50,8 @@ var scripts = [
     "src/plugins/AutoLayout.js", 
     "src/plugins/Watermark.js",
     "src/plugins/KeyboardStatus.js",
-    "src/plugins/Splash.js"
+    "src/plugins/Splash.js",
+    "src/plugins/Inspector.js"
 ];
 
 function addScript(url) {

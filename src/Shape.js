@@ -224,11 +224,8 @@ Canvas2D.Shape = Class.extend( {
   draw       : function draw(sheet, left, top) { }
 } );
 
-// add-in some common functionality
-ProtoJS.mix( 
-  Canvas2D.Factory.extensions.all.EventHandling,
-  Canvas2D.Shape.prototype 
-);
+// mix in event handling
+ProtoJS.mix( ProtoJS.Event.Handling, Canvas2D.Shape.prototype );
 
 Canvas2D.Shape.MANIFEST = {
   name : "shape",

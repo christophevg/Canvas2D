@@ -1,3 +1,4 @@
+(function() {
 var head = document.getElementsByTagName('head')[0],
 style = document.createElement('style'),
 rules = document.createTextNode(
@@ -23,3 +24,4 @@ if( style.styleSheet ) {
   style.appendChild(rules);
   head.appendChild(style);
 }
+})();

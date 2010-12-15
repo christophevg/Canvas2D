@@ -1,5 +1,11 @@
 Canvas2D.Book = Class.extend( {
   init: function init(element) {
+    // TODO: fix this temp solution to avoid post-init aspect-style
+    //       triggered logging before we can reset the logheadergenerator
+    if( element && element == "mockBook" ) {
+      this.setLogHeaderGenerator( function() { return null; } );
+    }
+    
     // overloaded constructor implementation allows the passing of an id
     unless( element && element.nodeType && 
       element.nodeType == Node.ELEMENT_NODE, 
@@ -15,9 +21,24 @@ Canvas2D.Book = Class.extend( {
 		}
 		
     this.sheets       = [];
-    this.currentSheet = 0;      // index of the current show sheet
+    this.currentSheet = 0;      // index of the currently shown sheet
 
     this.loadFilters  = [];
+  },
+  
+  getName : function getName() {
+    return this.name;
+  },
+  
+  hasCanvasElement : function hasCanvasElement() {
+    return this.canvas && this.canvas.canvas;
+  },
+  
+  hasTag: function hasTag(tag) {
+    if( this.canvas && this.canvas.canvas ) {
+      return this.canvas.canvas.className.contains(tag);
+    }
+    return false;
   },
 
   add: function add( sheet ) {
@@ -55,7 +76,9 @@ Canvas2D.Book = Class.extend( {
     msg = this.buildLogHeader() + msg; 
     this.logs = typeof this.logs == "undefined" ? msg : msg + "\n" + this.logs;
     this.fireEvent("logUpdated");
-    if( !suppressNativeConsole && console && console.log && !Envjs) { 
+    if( !suppressNativeConsole && console && console.log && 
+        typeof Envjs == "undefined" ) 
+    { 
       console.log( msg ); 
     }
   },
@@ -194,6 +217,32 @@ Canvas2D.Book = Class.extend( {
       this.logInfo( "RenderTime: " + timer.stop() + "ms" );
     }
     this.fireEvent( "afterPublish" );
+  },
+  
+  getWidth: function getWidth() {
+    if( ! this.canvas ) { return 0; }
+    return parseInt(this.canvas.canvas.width);
+  },
+
+  getHeight: function getHeight() {
+    if( ! this.canvas ) { return 0; }
+    return parseInt(this.canvas.canvas.height);
+  },
+
+  getLeft: function getLeft() {
+    if( ! this.canvas ) { return 0; }
+    return this.canvas.getLeft();
+  },
+
+  getTop: function getTop() {
+    if( ! this.canvas ) { return 0; }
+    return this.canvas.getTop();
+  },
+
+  setSize: function setSize(width, height) {
+    this.canvas.canvas.width  = width;
+    this.canvas.canvas.height = height;
+    this.rePublish();
   }
 } );
 
