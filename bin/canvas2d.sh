@@ -7,8 +7,8 @@ else
 fi
 
 START_RUNNER=""
-if [[ ${SCRIPT} =~ "t/test" ]]; then
-  START_RUNNER="-f t/startTestRunner.js"
+if [[ ${SCRIPT} =~ "t/api/test" ]]; then
+  START_RUNNER="-f t/api/startTestRunner.js"
 fi
 
 java -jar lib/common.make/js.jar -w -debug  -opt -1 \
