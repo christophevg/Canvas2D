@@ -7,6 +7,7 @@ Canvas2D.DynamicSheet.Selection.Overlay = Class.extend( {
       fillColor: "rgba( 0, 255, 0, 0.1 )",
       isSelectable: false
     } );
+    this.overlay.asConstruct = function() { return null; }
   },
 
   show: function show() {

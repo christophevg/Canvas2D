@@ -7,7 +7,7 @@ Canvas2D.Position = Class.extend( {
 
   asConstruct: function asConstruct() {
     var construct = this.shape.asConstruct();
-    if( this.getLeft() !== null && this.getTop() !== null ) {
+    if( construct && this.getLeft() !== null && this.getTop() !== null ) {
       construct.addAnnotation(this.getLeft() + "," + this.getTop() );
     }
     return construct;

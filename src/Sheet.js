@@ -157,7 +157,8 @@ Canvas2D.Sheet = Canvas2D.Shape.extend( {
   asConstruct: function asConstruct() {
     var construct = this._super();
     this.positions.iterate(function(position) {
-      construct.children.push( position.asConstruct() );
+      var c = position.asConstruct();
+      if( c ) { construct.children.push( c ); }
     } );
     return construct;
   }

@@ -15,6 +15,10 @@ Canvas2D.DynamicSheet.Selection.Marker.Box = Canvas2D.Rectangle.extend( {
   
   getIsVisible: function getIsVisible() {
     return this.marker.isShowingBoxes();
+  },
+
+  asConstruct: function asConstruct() {
+    return null;
   }
 } );
 

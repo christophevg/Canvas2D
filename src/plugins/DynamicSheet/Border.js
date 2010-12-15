@@ -21,6 +21,10 @@ Canvas2D.DynamicSheet.Selection.Marker.Border = Canvas2D.Rectangle.extend( {
 
   hit: function hit() {
     return false;
+  },
+
+  asConstruct: function asConstruct() {
+    return null;
   }
 } );
 
