@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="examples.css" />
+
+    <script type="text/javascript" src="includes.js"></script>
+  </head>
+  <body>
+    <h1>Using Source and Console</h1>
+    <div class="box">
+      <h2>Your Source</h2>
+      <textarea id="myDiagramSource" cols="70" rows="18"
+>Sheet mySheet +dynamic {
+  [@75,55]
+  rectangle rect1 +label="green" +labelPos="top" +geo="75x75" +lineColor="green";
+  [@50,175]
+  rectangle rect2 +label="red" +geo="50x50" +lineColor="red";
+  [@200,100]
+  rectangle rect3 +label="blue" +geo="50x50" +lineColor="blue";
+  [@200,25]
+  rectangle rect4 +geo="50x50" +lineColor="yellow";
+  [@125,175]
+  rectangle rect5 +label="red" +labelPos="bottom" +labelColor="red" +geo="50x50" +lineColor="red";
+  connector conn1 +rect1-rect2 +routing="vertical";
+  connector conn2 +rect1-rect3 +routing="horizontal";
+  connector conn3 +rect1-rect4 +routing="horizontal";
+  connector conn4 +rect1-rect5 +routing="vertical";
+}</textarea>
+    </div>
+
+    <div id="generated" class="box">
+      <h2>Generated Source</h2>
+      <textarea id="myDiagramGenerated" cols="70" rows="18"></textarea>
+    </div>
+
+    <div class="box">
+      <h2>Console</h2>
+      <textarea id="myDiagramConsole" cols="70" rows="18"></textarea>
+    </div>
+
+    <div class="box">
+      <h2>The Canvas</h2>
+      <canvas id="myDiagram" class="Canvas2D"
+	      width="300" height="250"></canvas>
+    </div>
+
+    <script>
+      Canvas2D.on( "ready", function() {
+
+      Canvas2D.getBook("myDiagram").on( "sourceUpdated",
+      function() {
+        document.getElementById( "generated" ).style.backgroundColor =
+         document.getElementById( "myDiagramSource" ).value ==
+         document.getElementById( "myDiagramGenerated" ).value ?
+         "green" : "red";
+      } );
+
+      } );
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,7 @@
++dynamic sheet mySheet {
+  [@100,75]
+  rectangle myRounded +geo="100x100" +roundCorners 
+                      +fillColor="rgb(255,240,175)" +lineColor="rgb(250,125,0)"
+                      +label="Hello Roundings" +labelPos="top-inner" 
+                      +labelColor="rgb(250,125,0)";
+}

@@ -16,8 +16,8 @@ $wgExtensionFunctions[] = 'Canvas2DInit';
 $wgExtensionCredits['parserhook'][] = array(
 	'name'         => 'Canvas2D',
 	'version'      => '0.1.1',
-	'author'       => 'Christophe VG <xtof@thesoftwarefactory.be>', 
-	'url'          => 'http://thesoftwarefactory.be/wiki/Canvas2D',
+	'author'       => 'Christophe VG <xtof@canvas2d.org>', 
+	'url'          => 'http://canvas2d.org',
 	'description'  => 'Allows wiki editors to use a textual DSL, ' .
 	                  'which gets rendered into shapes on an HTML5 '.
 	                  'canvas element.'
@@ -61,7 +61,7 @@ function Canvas2DRender( $input, $args, $parser ) {
     $classes .= ( $showAbout   ? " withAbout"   : "" );
   }
     
-  $canvas = '<div class="Canvas2D-container" style="float:'.$float.'">' .
+  $canvas = '<div style="margin-left:10px;margin-right: 10px;float:'.$float.'">' .
     '<canvas class="Canvas2D'.$classes.'" id="' . $name . 
     '" width="'.$width.'" height="'.$height.'"></canvas></div>';
   $canvas .= '<pre id="'.$name.'Source" style="display:none">' . 

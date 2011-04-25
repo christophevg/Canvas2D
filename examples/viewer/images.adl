@@ -1,0 +1,4 @@
+sheet mySheet +style="dynamic" {
+  [@5,5]   box myBox +geo="132x132" +lineColor="orange";  
+  [@10,10] image myImage +src="test.png";  
+}

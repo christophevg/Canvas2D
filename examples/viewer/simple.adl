@@ -1,0 +1,44 @@
++dynamic sheet mySheet {
+  [@50,50]
+  rectangle rect1 +width=60 +height=60 +lineColor="yellow" 
+                  +lineWidth=10 +roundCorners;
+  [@100,100]
+  rectangle rect2 +geo="150x75" +lineColor="red" 
+                  +fillColor="rgba(125,125,255,0.5)";
+
+  [@corner:ene-nne]
+  connector conn1 +lineColor="red"
+                  +lineStyle="dashed"
+                  +lineWidth=5
+                  +from="rect1" +to="rect2"
+                  +routing="vertical"
+                  +beginLabel="begin"
+                  +centerLabel="center"
+                  +endLabel="end"
+                  +end="Triangle";
+
+  [@direct:wsw-ssw]
+  connector conn2 +rect2-rect1 +end="Triangle";
+
+  [@30,30]
+  arrow arrow1 +width=50           +height=30
+               +arrowHeadWidth=10  +arrowHeadHeight=25
+               +lineColor="blue"   +fillColor="red"
+               +lineWidth=4;
+
+  [@250,10]
+  image image1 +src="../test.png";
+
+  [@375,50]
+  line line1 +width=100 +height=75
+             +color="red"
+             +lineWidth=3 +lineStyle="dashed";
+
+  [@300,125]
+  linePath linePath1 +moves="50,0;0,50;-100,0;0,-100;150,0";
+  
+  [@50,210] 
+  Text text1 +textDecoration="underline overline line-through"
+             +color="purple"
+             <= "Default Font with all Decorations";
+}

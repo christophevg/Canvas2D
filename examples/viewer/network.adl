@@ -1,0 +1,5 @@
+alias diagram    : sheet;
+alias pc         : image +src="images/workstation.png" +labelPos="bottom";
+alias server     : image +src="images/server.png"      +labelPos="bottom";
+alias cloud      : image +src="images/cloud.png"       +labelPos="bottom";
+alias connection : connector;

@@ -1,0 +1,6 @@
+Sheet mySheet +dynamic {
+  [@30,30] Arrow myArrow +width=50 +height=30 
+                         +lineColor="blue"   +fillColor="green"
+  			 								 +lineWidth=4
+  			 								 +arrowHeadWidth=10  +arrowHeadHeight=25;
+}

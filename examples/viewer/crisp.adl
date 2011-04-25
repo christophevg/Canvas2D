@@ -1,0 +1,12 @@
+sheet crispyOrNot {
+  [@ 10,10] rectangle fuzzy +geo="35x35" +lineWidth=1 +black
+                            +useCrispLines=false;
+  [@ 28,37] text fuzzyText1 +textAlign="center" +font="20pt Sans-Serif" <="+";
+
+  [@ 55,10] rectangle crisp +geo="35x35"  +lineWidth=1 +black; 
+  [@ 73,37] text crispText1 +textAlign="center" +font="20pt Sans-Serif"
+                            +useCrispLines=true <="+";
+
+  [@100,10] rectangle mixed +geo="35x35"  +lineWidth=1 +black;
+  [@118,37] text fuzzyText2 +textAlign="center" +font="20pt Sans-Serif" <="+";
+}

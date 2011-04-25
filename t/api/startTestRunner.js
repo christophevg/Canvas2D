@@ -1,0 +1,1 @@
+ProtoJS.Test.Runner.start();

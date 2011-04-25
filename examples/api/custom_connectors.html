@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="examples.css" />
+
+    <script type="text/javascript" src="includes.js"></script>
+  </head>
+  <body>
+    <h1>Custom Connectors and Console</h1>
+    <div class="box">
+      <h2>Canvas</h2>
+      <canvas id="myDiagram"  width="300" height="250"></canvas>
+    </div>
+    <div class="box">
+      <h2>Console</h2>
+      <textarea id="myDiagramConsole" style="height:250" cols="50"></textarea>
+    </div>
+  
+    <script>
+    Canvas2D.on( "ready", function() {
+      var custom_connector = 
+        {n:{lines:[[ -5, -10],[ +5,-10],[  0,  0]],end:[ 0,-10]},
+         e:{lines:[[+10,  +5],[+10, -5],[  0,  0]],end:[10,  0]},
+         s:{lines:[[ +5, +10],[ -5,+10],[  0,  0]],end:[ 0, 10]},
+         w:{lines:[[-10,  -5],[-10, +5],[  0,  0]],end:[-10, 0]}};
+
+      var manager = new Canvas2D.Manager();
+      var book = manager.setupBook("myDiagram")
+      with( book.addSheet() ) {
+        freeze();
+        var rect1 = at(100, 10)
+        .put(new Canvas2D.Rectangle({width:75,height:75,lineColor:"green"} ));
+        var rect2 = at( 25,150)
+        .put(new Canvas2D.Rectangle({width:50,height:50,lineColor:"red"  } ));
+        var rect3 = at(150,150)
+        .put(new Canvas2D.Rectangle({width:50,height:50,lineColor:"red"  } ));
+
+        var conn1 = put(new Canvas2D.Connector( { 
+          from: rect1, 
+          to:   rect2, 
+          routing: "horizontal",
+          end: custom_connector
+        }));
+        var conn2 = put(new Canvas2D.Connector( { 
+          from: rect1, 
+          to:   rect3, 
+          routing: "vertical",
+          lineStyle: "dashed",
+          begin: custom_connector 
+        }));
+        makeDynamic();
+        thaw();
+      }
+      manager.startAll();
+    });
+    </script>
+
+  </body>
+</html>

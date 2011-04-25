@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="examples.css" />
+
+    <script type="text/javascript" src="includes.js"></script>
+  </head>
+  <body>
+    <h1>Simple</h1>
+    <canvas id="mySheet" class="Canvas2D" width="300" height="250"></canvas>
+<!--    <textarea id="shapes" cols="50" rows="17"></textarea> -->
+    <pre id="mySheetSource" style="display:none;">
+      +dynamic sheet mySheet {
+        [@50,50]
+        rectangle rect1 +width=60 +height=60 +lineColor="yellow" 
+                        +lineWidth=10 +roundCorners;
+        [@75,75]
+        rectangle rect2 +geo="150x75" +lineColor="red" 
+                        +fillColor="rgba(125,125,255,0.5)";
+      }
+    </pre>
+    <script>
+    Canvas2D.on("ready", function() {
+      with( Canvas2D.getBook("mySheet").getCurrentSheet() ) {
+        on( 'afterRender', function(sheet) {
+          //var shapes = document.getElementById("shapes");
+          //shapes.value = "";
+          //sheet.positions.iterate( function(position) {
+            //shapes.value = position.shape.getName() + "\n" + shapes.value;
+          //} );
+        } );
+        
+        var target = new Canvas2D.Rectangle( { isSelectable: false } );
+        at(87,87).put( target );
+
+        var handle = new Canvas2D.Rectangle( 
+          { 
+            height: 10, width: 10,
+            fillColor: "rgb(0,0,255)", 
+            hideSelection: true,
+            onMouseDown: function() { this.isSelected = true;  },
+            onMouseUp:   function() { this.isSelected = false; },
+            onMouseDrag: function(sheet, dx, dy) { 
+              if( this.isSelected ) {
+                sheet.getPosition(target).move(dx, dy);
+                return true; 
+              }
+            }
+          } );
+        at(1,1).put( handle );
+        remove(handle);
+        at(187,187).put( handle );
+      }
+    } );
+    </script>
+<!--    <textarea rows="17" cols="85" id="mySheetGenerated"></textarea> -->
+  </body>
+</html>

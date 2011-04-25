@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="examples.css" />
+
+    <script type="text/javascript" src="includes.js"></script>
+  </head>
+  <body>
+    <h1>Libraries &amp; Shapes</h1>
+
+    <script>
+      Canvas2D.Alias.from( { name: "mySheet", supers: [ "sheet" ] } );
+      Canvas2D.Alias.from( { name: "myImage", supers: [ "image" ] } );
+    </script>
+
+    <div class="box">
+      <h2>All Shapes</h2>
+      <ol>
+	<script>
+	  Canvas2D.shapes.iterate(function(name, clazz) {
+            document.writeln("<li>" + name + " : " + clazz.getType() + "</li>");
+          } );
+	</script>
+      </ol>
+    </div>
+
+    <div class="box">
+      <h2>Registered Libraries</h2>
+      <ol>
+	<script>
+	  Canvas2D.libraries.iterate(function(key, value) {
+            document.writeln("<li>" + key + "</li>");
+          } );
+	</script>
+      </ol>
+    </div>
+
+    <div class="box">
+      <h2>Shapes in Canvas2D library</h2>
+      <ol>
+	<script>
+	  Canvas2D.libraries.get("Canvas2D").iterate(function(shape) {
+            document.writeln("<li>" + shape.getType() + "</li>");
+          } );
+	</script>
+      </ol>
+    </div>
+
+    <div class="box">
+      <h2>Shapes in Aliasses library</h2>
+      <ol>
+	<script>
+	  Canvas2D.libraries.get("Aliasses").iterate(function(shape) {
+            document.writeln("<li>" + shape.getType() + "</li>");
+          } );
+	</script>
+      </ol>
+    </div>
+
+  </body>
+</html>

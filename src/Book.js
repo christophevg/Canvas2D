@@ -1,218 +1,256 @@
 Canvas2D.Book = Class.extend( {
-  init: function(element) {
+  init: function init(element) {
+    // TODO: fix this temp solution to avoid post-init aspect-style
+    //       triggered logging before we can reset the logheadergenerator
+    if( element && element == "mockBook" ) {
+      this.setLogHeaderGenerator( function() { return null; } );
+    }
+    
     // overloaded constructor implementation allows the passing of an id
     unless( element && element.nodeType && 
       element.nodeType == Node.ELEMENT_NODE, 
       function(){
         element = document.getElementById(element);
-    } );
+      } 
+    );
 
-    this.canvas = Canvas2D.Factory.setup(element);
+		if( element ) {
+  	  this.HTMLElement  = element;
+  	  this.name         = this.HTMLElement.id;
+      this.canvas       = Canvas2D.Factory.setup(this.HTMLElement); 
+		}
+		
+    this.sheets       = [];
+    this.currentSheet = 0;      // index of the currently shown sheet
 
-    this.sheets = [];
-    this.currentSheet = 0;      // index of the current show sheet
-
-    this.canvas.on( "mousedown", function(data) {
-      this.fireEvent("mousedown");
-      var sheet;
-      if(sheet = this.getCurrentSheet() ) {
-        sheet.handleMouseDown(data);
-      }
-    }.scope(this) );
-
-    this.canvas.on( "mouseup", function(data) {
-      this.fireEvent("mouseup");
-      var sheet;
-      if(sheet = this.getCurrentSheet() ) {
-        sheet.handleMouseUp(data);
-      }
-    }.scope(this) );
-
-    this.canvas.on( "mousedrag", function(data) {
-      this.fireEvent("mousedrag");
-      var sheet;
-      if(sheet = this.getCurrentSheet()) {
-        sheet.handleMouseDrag(data);
-      }
-    }.scope(this) );
-
-
-    // look for a console and sources for this book
-    this.console   = document.getElementById( element.id + "Console"   );
-    this.source    = document.getElementById( element.id + "Source"    );
-    this.generated = document.getElementById( element.id + "Generated" );
-
-    this.name = element.id;
-
-    this.setupExtensions();
-    this.setupPlugins();
+    this.loadFilters  = [];
+  },
+  
+  getName : function getName() {
+    return this.name;
+  },
+  
+  hasCanvasElement : function hasCanvasElement() {
+    return this.canvas && this.canvas.canvas;
+  },
+  
+  hasTag: function hasTag(tag) {
+    if( this.canvas && this.canvas.canvas ) {
+      return this.canvas.canvas.className.contains(tag);
+    }
+    return false;
   },
 
-  add: function( sheet ) {
+  add: function add( sheet ) {
     return this.addSheet(sheet);
   },
 
-  addSheet : function( sheet ) {
+  addSheet : function addSheet( sheet ) {
     unless( sheet instanceof Canvas2D.Sheet, function() {
       sheet = new Canvas2D.Sheet( { book: this } );
     }.scope(this) );
     sheet.setCanvas(this.canvas);
     sheet.on( "change", this.rePublish.scope(this) );
-    sheet.on( "newShape", this.log.scope(this) );
+    sheet.on( "newShape", this.logInfo.scope(this) );
     this.sheets.push(sheet);
     return sheet;
   },
-
-  setupExtensions: function() {
-    this.extensions = new Hash();
-    Canvas2D.extensions.iterate(function(extension) {
-      this.extensions.set(extension.name, extension);
-    }.scope(this) );
+  
+  setLogHeaderGenerator : function setLogHeaderGenerator(generator) {
+    this.logHeaderGenerator = generator;
+    return this;
   },
-
-  setupPlugins: function() {
-    this.plugins = {};
-    $H(Canvas2D.Book.plugins).iterate(function(key, value) {
-      var plugin = new (value)(this);
-      this.plugins[key] = plugin;
-      if( value['exposes'] ) {
-        value.exposes.iterate(function(func) {
-          this[func] = function(arg1, arg2, arg3) { 
-            this.plugins[key][func](arg1, arg2, arg3);
-          };
-        }.scope(this) );
-      }
-    }.scope(this) );
+  
+  getLogHeader : function getLogHeader() {
+    return this.logHeaderGenerator ? 
+           this.logHeaderGenerator()
+           : "@" + (new Date()).toLocaleString();
   },
-
-  log: function( msg ) {
-    if( this.console ) { 
-      this.console.value = "[" + (new Date).toLocaleString() + "] " 
-      + msg + "\n" + this.console.value;
+  
+  buildLogHeader : function buildLogHeader() {
+    var additionalInfo = this.getLogHeader() || "";
+    return "[" + this.name + additionalInfo + "] ";
+  },
+  
+  _log: function _log( msg, suppressNativeConsole ) {
+    msg = this.buildLogHeader() + msg; 
+    this.logs = typeof this.logs == "undefined" ? msg : msg + "\n" + this.logs;
+    this.fireEvent("logUpdated");
+    if( !suppressNativeConsole && console && console.log && 
+        typeof Envjs == "undefined" ) 
+    { 
+      console.log( msg ); 
     }
   },
+  
+  logInfo : function logInfo( msg ) {
+    this._log( msg, true );
+  },
 
-  getCurrentSheet: function() {
+  logError : function logError( msg ) {
+    this._log( "ERROR: " + msg, false );
+  },
+
+  logWarning : function logWarning( msg ) {
+    this._log( "Warning: " + msg, false );
+  },
+
+  getCurrentSheet: function getCurrentSheet() {
     return this.sheets[this.currentSheet];
   },
 
-  clear : function() {
+  clear : function clear() {
     this.sheets.length = 0;
   },
+  
+  renderImmediate : function renderImmediate() {
+    this.renderMode = "immediate";
+    return this;
+  },
 
-  start : function() {
+  start : function start() {
+    if( this.renderMode == "immediate" ) { return this; }
     this.stop();
     this.rePublish();
     this.publish();
+    return this;
   },
 
-  stop : function() {
+  stop : function stop() {
+    if( this.renderMode == "immediate" ) { return this; }
     if( this.nextPublish ) { window.clearTimeout( this.nextPublish ); }
+    return this;
   },
 
-  freeze: function() { this.wait = true;  },
-  thaw: function()   { this.wait = false; },
+  freeze: function freeze() { this.wait = true;  return this; },
+  thaw: function thaw()   { this.wait = false; return this; },
 
-  load: function(source) {    
+  addLoadFilter: function addLoadFilter(filter) {
+    this.loadFilters.push(filter);
+  },
+
+  applyLoadFilters: function applyLoadFilters(input, filterIndex, onReadyHandler) {
+    if( filterIndex < this.loadFilters.length ) {
+      this.loadFilters[filterIndex].apply( input, function(result) {
+        this.applyLoadFilters(result, filterIndex+1, onReadyHandler);
+      }.scope(this) );
+    } else {
+      onReadyHandler(input);
+    }
+  },
+
+  load: function load(input) {
+    if( ! input || input.trim() == "" ) { return; }
+    this.fireEvent("load");
+    // FIXME: &lt; is needed in HTML, but we don't handle it well
+    input = input.replace(/&lt;/g, "<");
+    this.applyLoadFilters(input, 0, this.show.scope(this));
+  },
+
+  show: function show(source) {
     var parser = new ADL.Parser();
     var tree;
     this.errors = "";
+    var success = false;
+    
     if( ( tree = parser.parse( source ) ) ) {
       this.clear();
       this.freeze();
       var visitor = new Canvas2D.ADLVisitor();
-      tree.getRoot().accept(visitor, this );
+      tree.getRoot().accept(visitor, this);
       this.thaw();
       this.rePublish();
-      if( visitor.errors.length > 0 ) {
-        this.errors = "ADLVisitor reported errors:"
+      if( visitor.encounteredErrors() ) {
+        this.errors = "ADLVisitor reported errors:";
         visitor.errors.iterate( function(error) {
-          this.log(error);
+          this.logError(error);
           this.errors += "\n   - " + error;
         }.scope(this));
       }
-      this.fireEvent("sourceLoaded");
-      return true;
+      success = true;
     } else {
-      this.log( parser.errors );
+      this.logError( parser.errors );
       this.errors = parser.errors;
-      this.fireEvent("sourceLoaded");
-      return false;
     }
+    
+    this.fireEvent( "sourceLoaded", this.toADL() );
+
+    return success;
   },
 
-  toADL: function() {
+  toADL: function toADL() {
     var s = "";
     this.sheets.iterate(function(sheet) {
-      s += sheet.toADL() + "\n";
+      s += sheet.asConstruct().toString() + "\n";
     } );
     return s;
   },
 
-  rePublish: function() {
-    this.rePublishNeeded = true;	
+  rePublish: function rePublish() {
+    if( this.renderMode == "immediate" ) { return this.publishOnce(); }
+    this.rePublishNeeded = true;
   },
 
-  publish : function() {
+  publish : function publish() {
+    if( this.renderMode == "immediate" ) { return this.publishOnce(); }
+
     if( this.rePublishNeeded && !this.wait ) {
       this.publishOnce();
       this.rePublishNeeded = false;
-      this.afterPublish();
     }
 
     // reshedule publish in 10ms
     this.nextPublish = this.publish.scope(this).after(10);
   },
 
-  publishOnce : function() {
+  publishOnce : function publishOnce() {
     var timer = new Timer();
-    this.canvas.clear();
+    if( this.canvas ) { this.canvas.clear(); }
 
     if( this.getCurrentSheet() ) {
-      this.beforeRender();
+      this.fireEvent("beforeRender");
       this.getCurrentSheet().render();
-      this.afterRender();
+      this.fireEvent("afterRender");
     }
 
-    this.log( "Canvas2D::publish: RenderTime: " + timer.stop() + "ms" );
-  },
-
-  afterPublish: function afterPublish() {
-    $H(this.plugins).iterate( function( name, plugin ) {
-      if( plugin["afterPublish"] ) { plugin.afterPublish(this); }
-    }.scope(this) );
-  },
-
-  beforeRender: function beforeRender() {
-    $H(this.plugins).iterate( function( name, plugin ) {
-      if( plugin["beforeRender"] ) { plugin.beforeRender(this); }
-    }.scope(this) );
-  },
-
-  afterRender: function afterRender() {
-    $H(this.plugins).iterate( function( plugin ) {
-      if( plugin["afterRender"] ) { plugin.afterRender(this); }
-    }.scope(this) );
-
-    this.updateExternalSource();
-  },
-
-  updateExternalSource: function updateExternalSource() {
-    if( this.getCurrentSheet() ) {
-      var newSource = this.getCurrentSheet().toADL();
-      // this should be moved to Widget
-      if( this.generated && newSource != this.generated.value ) {
-        this.generated.value = newSource;
-      }
-      this.fireEvent( "sourceUpdated", newSource );
+    if( this.renderMode != "immediate" ) {
+      this.logInfo( "RenderTime: " + timer.stop() + "ms" );
     }
+    this.fireEvent( "afterPublish" );
+  },
+  
+  getWidth: function getWidth() {
+    if( ! this.canvas ) { return 0; }
+    return parseInt(this.canvas.canvas.width);
+  },
+
+  getHeight: function getHeight() {
+    if( ! this.canvas ) { return 0; }
+    return parseInt(this.canvas.canvas.height);
+  },
+
+  getLeft: function getLeft() {
+    if( ! this.canvas ) { return 0; }
+    return this.canvas.getLeft();
+  },
+
+  getTop: function getTop() {
+    if( ! this.canvas ) { return 0; }
+    return this.canvas.getTop();
+  },
+
+  setSize: function setSize(width, height) {
+    this.canvas.canvas.width  = width;
+    this.canvas.canvas.height = height;
+    this.rePublish();
   }
-
 } );
 
 // mix-in some common functionality at class level
-ProtoJS.mix( Canvas2D.Factory.extensions.all.EventHandling,
-  Canvas2D.Book.prototype );
+ProtoJS.mix( 
+  Canvas2D.Factory.extensions.all.EventHandling,
+  Canvas2D.Book.prototype 
+);
 
-  // add support for plugins
-  Canvas2D.Book.plugins = {};
+// enable plugins to register themselves with this class
+Canvas2D.makePluggable( Canvas2D.Book );
