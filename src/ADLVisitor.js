@@ -23,11 +23,11 @@ Canvas2D.ADLVisitor = Class.extend( {
             }.scope(this) );
           }
           var left, top;
-          if( construct.annotation && parent.at ) {
-            var pos = construct.annotation.data.split(",");
+          if( construct.annotations && construct.annotations.length > 0 ) {
+            var pos = construct.annotations[0].value.split(",");
             left = parseInt(pos[0]);
             top  = parseInt(pos[1]);
-            parent.at(left,top).add( shape );
+            parent.book.getCurrentSheet().at(left,top).add( shape );
           } else {
             parent.add( shape );
           }
